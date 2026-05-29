@@ -12,6 +12,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Locale;
 
+//aggiungere i 3 puntini nell ultima colonna al centro
+
 
 public class DocenteDashboardMateriali {
     // componenti principali
@@ -24,7 +26,13 @@ public class DocenteDashboardMateriali {
     private JScrollPane contentMateriali;
     private JPanel contentAggiungi;
     private JButton btnAggiungi;
-    private JLabel lblIconaRicerca;
+    private JLabel lblMateriali;
+    private JLabel lblCorso;
+    private JPanel descrizioneDashboard;
+    private JLabel iconaLogo;
+    private JLabel lblDocente;
+    private JLabel lbl_informazioniDocenti;
+    private JButton btnLogout;
 
     //componenti per le operazioni sui materiali didattici
     private DefaultTableModel tableModel;
@@ -50,13 +58,10 @@ public class DocenteDashboardMateriali {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(4, 1, new Insets(10, 10, 10, 10), -1, 15));
+        contentPane.setLayout(new GridLayoutManager(5, 2, new Insets(10, 10, 10, 10), -1, 15));
         contentRicerca = new JPanel();
-        contentRicerca.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), 10, -1));
-        contentPane.add(contentRicerca, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        txtRicerca = new JTextField();
-        txtRicerca.setText("Inserisci parola chiave ...");
-        contentRicerca.add(txtRicerca, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        contentRicerca.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), 10, -1));
+        contentPane.add(contentRicerca, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         cmbFiltro = new JComboBox();
         final DefaultComboBoxModel defaultComboBoxModel1 = new DefaultComboBoxModel();
         defaultComboBoxModel1.addElement("titolo");
@@ -69,24 +74,58 @@ public class DocenteDashboardMateriali {
         if (btnRicercaFont != null) btnRicerca.setFont(btnRicercaFont);
         btnRicerca.setText("Ricerca");
         contentRicerca.add(btnRicerca, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        lblIconaRicerca = new JLabel();
-        lblIconaRicerca.setText("");
-        contentRicerca.add(lblIconaRicerca, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        txtRicerca = new JTextField();
+        txtRicerca.setText("Inserisci parola chiave ...");
+        contentRicerca.add(txtRicerca, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         contentMateriali = new JScrollPane();
-        contentPane.add(contentMateriali, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        contentPane.add(contentMateriali, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tblMateriali = new JTable();
         tblMateriali.setRowHeight(25);
         contentMateriali.setViewportView(tblMateriali);
-        final Spacer spacer1 = new Spacer();
-        contentPane.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         contentAggiungi = new JPanel();
-        contentAggiungi.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        contentPane.add(contentAggiungi, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        contentAggiungi.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.add(contentAggiungi, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         btnAggiungi = new JButton();
         Font btnAggiungiFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnAggiungi.getFont());
         if (btnAggiungiFont != null) btnAggiungi.setFont(btnAggiungiFont);
-        btnAggiungi.setText("Aggiungi +");
-        contentAggiungi.add(btnAggiungi, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnAggiungi.setText("+ Aggiungi Materiale");
+        contentAggiungi.add(btnAggiungi, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lblMateriali = new JLabel();
+        Font lblMaterialiFont = this.$$$getFont$$$(null, Font.BOLD, 16, lblMateriali.getFont());
+        if (lblMaterialiFont != null) lblMateriali.setFont(lblMaterialiFont);
+        lblMateriali.setText("Materiali Didattici Corso");
+        contentAggiungi.add(lblMateriali, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lblCorso = new JLabel();
+        Font lblCorsoFont = this.$$$getFont$$$(null, Font.BOLD, 16, lblCorso.getFont());
+        if (lblCorsoFont != null) lblCorso.setFont(lblCorsoFont);
+        lblCorso.setText("\"nome_corso\"");
+        contentAggiungi.add(lblCorso, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        contentAggiungi.add(spacer1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        descrizioneDashboard = new JPanel();
+        descrizioneDashboard.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.add(descrizioneDashboard, new GridConstraints(0, 0, 5, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        iconaLogo = new JLabel();
+        iconaLogo.setText("");
+        descrizioneDashboard.add(iconaLogo, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lblDocente = new JLabel();
+        lblDocente.setText("Docente");
+        descrizioneDashboard.add(lblDocente, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lbl_informazioniDocenti = new JLabel();
+        lbl_informazioniDocenti.setText("\"nome docente\"");
+        descrizioneDashboard.add(lbl_informazioniDocenti, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        descrizioneDashboard.add(spacer2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        btnLogout = new JButton();
+        Font btnLogoutFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnLogout.getFont());
+        if (btnLogoutFont != null) btnLogout.setFont(btnLogoutFont);
+        btnLogout.setMargin(new Insets(10, 10, 10, 10));
+        btnLogout.setText("Logout");
+        descrizioneDashboard.add(btnLogout, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer3 = new Spacer();
+        contentPane.add(spacer3, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer4 = new Spacer();
+        contentPane.add(spacer4, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -132,6 +171,12 @@ public class DocenteDashboardMateriali {
         inizializzaTabella();
         inizializzaMenu();
 
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoPiattaforma.png"));
+        Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
+        iconaLogo.setIcon(new ImageIcon(img));
+        iconaLogo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        iconaLogo.setHorizontalAlignment(SwingConstants.CENTER);
+
     }
 
     private void inizializzaMenu() {
@@ -146,24 +191,33 @@ public class DocenteDashboardMateriali {
 
         //collegamento per far apparire il menu
         tblMateriali.addMouseListener(new MouseAdapter() {
+
+            // tasto destro
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    mostraMenu(e);
-                }
+                if (e.isPopupTrigger()) mostraMenu(e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) {
-                    mostraMenu(e);
+                if (e.isPopupTrigger()) mostraMenu(e);
+            }
+
+            // click sinistro sulla colonna ⋮
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int col = tblMateriali.columnAtPoint(e.getPoint());
+                int row = tblMateriali.rowAtPoint(e.getPoint());
+                if (col == 5 && row >= 0) {
+                    tblMateriali.setRowSelectionInterval(row, row);
+                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
 
             private void mostraMenu(MouseEvent e) {
-                int rigaCliccata = tblMateriali.rowAtPoint(e.getPoint());
-                if (rigaCliccata >= 0 && rigaCliccata < tblMateriali.getRowCount()) {
-                    tblMateriali.setRowSelectionInterval(rigaCliccata, rigaCliccata);
+                int row = tblMateriali.rowAtPoint(e.getPoint());
+                if (row >= 0 && row < tblMateriali.getRowCount()) {
+                    tblMateriali.setRowSelectionInterval(row, row);
                     contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
@@ -172,7 +226,7 @@ public class DocenteDashboardMateriali {
 
     private void inizializzaTabella() {
         // Definisci i nomi delle colonne
-        String[] nomiColonne = {"Titolo", "Categoria", "Data Pubblicazione", "Sezione", "Stato"};
+        String[] nomiColonne = {"Titolo", "Categoria", "Data Pubblicazione", "Sezione", "Stato", ""};
 
         // Crea il modello personalizzato bloccando la modifica delle celle
         DefaultTableModel modelloTabella = new DefaultTableModel(nomiColonne, 0) {
@@ -181,7 +235,6 @@ public class DocenteDashboardMateriali {
                 return false;
             }
         };
-
 
         // Assegna il modello alla tabella
         modelloTabella.addRow(new Object[]{"Slide Requisiti", "Slide", "28/05/2026", "Modulo 1", "pubblicato"});
