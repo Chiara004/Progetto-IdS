@@ -5,9 +5,12 @@ import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Locale;
@@ -171,6 +174,7 @@ public class DocenteDashboardMateriali {
 
         inizializzaTabella();
         inizializzaMenu();
+        setAzioni();
 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoPiattaforma.png"));
         Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -227,10 +231,10 @@ public class DocenteDashboardMateriali {
 
     private void inizializzaTabella() {
         // Definisci i nomi delle colonne
-        String[] nomiColonne = {"Titolo", "Categoria", "Data Pubblicazione", "Sezione", "Stato", ""};
+        String[] nomiColonne = {"Titolo", "Categoria", "Data Pubblicazione", "Sezione", "Stato", "Azioni"};
 
         // Crea il modello personalizzato bloccando la modifica delle celle
-        DefaultTableModel modelloTabella = new DefaultTableModel(nomiColonne, 0) {
+        tableModel = new DefaultTableModel(nomiColonne, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -238,13 +242,71 @@ public class DocenteDashboardMateriali {
         };
 
         // Assegna il modello alla tabella
-        modelloTabella.addRow(new Object[]{"Slide Requisiti", "Slide", "28/05/2026", "Modulo 1", "pubblicato"});
+        tableModel.addRow(new Object[]{"Slide Requisiti", "Slide", "28/05/2026", "Modulo 1", "pubblicato","⋮"});
 
 
         // Imposta il modello della tabella come modello della visualizzazione
-        tblMateriali.setModel(modelloTabella);
+        tblMateriali.setModel(tableModel);
+
+        // Centra il contenuto dell'ultima colonna (indice 5)
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        tblMateriali.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        tblMateriali.getColumnModel().getColumn(5).setPreferredWidth(50);
     }
 
+    public void setAzioni() {
+        //Azione click Aggiungi
+        btnAggiungi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        //Azione click Modifica
+        menuModifica.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                int rigaSelezionata = tblMateriali.getSelectedRow();
+                //recupero dati e passaggio al form
+            }
+        });
+
+        //Azione click Rimuovi
+        menuRimuovi.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+
+            }
+        });
+
+        //Azione click Apri (aggiungere il percorso del file)
+        menuApri.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int rigaSelezionata = tblMateriali.getSelectedRow();
+
+                if (rigaSelezionata != -1) {
+                    // Recupera il percorso del file
+                    //TBD
+
+                    try {
+                        java.io.File file = new java.io.File("TBD AGGIUNGERE PERCORSO");
+                        if (file.exists() && java.awt.Desktop.isDesktopSupported()) {
+                            java.awt.Desktop.getDesktop().open(file);
+                        } else {
+                            JOptionPane.showMessageDialog(contentPane, "Impossibile aprire il file o file non trovato.", "Errore", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+
+        });
+
+    }
 
     //prova per visualizzare
     public static void main(String[] args) {

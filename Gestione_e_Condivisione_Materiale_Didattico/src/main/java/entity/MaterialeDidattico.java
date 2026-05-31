@@ -1,20 +1,24 @@
 package entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.time.LocalDate;
 
 @Entity
 public class MaterialeDidattico {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idMateriale;
 
     private String titolo;
     private String descrizione;
     private LocalDate dataPubblicazione;
     private String percorsoFile;
+
+    @Enumerated(EnumType.STRING)
     private Categoria categoria;
+
+    @Enumerated(EnumType.STRING)
     private Visibilita visibilita;
 
     public MaterialeDidattico() {
