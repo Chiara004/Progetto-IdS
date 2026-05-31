@@ -168,6 +168,7 @@ public class DocenteDashboardMateriali {
         frame.setVisible(true);
         frame.setResizable(false);
 
+
         inizializzaTabella();
         inizializzaMenu();
 

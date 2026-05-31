@@ -1,6 +1,7 @@
 package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -13,7 +14,7 @@ public class LoginForm {
     private JLabel labelEmail;
     private JLabel labelPassword;
     private JPasswordField txtPassword;
-    private JButton btnConferma;
+    private JButton accediButton;
     private JLabel benvenutoLabel;
     private JButton registratiQuiButton;
     private JLabel txtRegistrazione;
@@ -35,35 +36,39 @@ public class LoginForm {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(8, 2, new Insets(10, 10, 10, 10), -1, -1));
-        contentPane.setPreferredSize(new Dimension(600, 400));
+        contentPane.setLayout(new GridLayoutManager(10, 2, new Insets(10, 10, 10, 10), -1, -1));
+        contentPane.setPreferredSize(new Dimension(500, 400));
         contentPane.setRequestFocusEnabled(false);
         contentPane.setBorder(BorderFactory.createTitledBorder(null, "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         labelEmail = new JLabel();
         labelEmail.setText("Email");
-        contentPane.add(labelEmail, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(labelEmail, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtEmail = new JTextField();
-        contentPane.add(txtEmail, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        contentPane.add(txtEmail, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         logo = new JLabel();
         logo.setText("");
-        contentPane.add(logo, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(logo, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelPassword = new JLabel();
         labelPassword.setText("Password");
-        contentPane.add(labelPassword, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(labelPassword, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtPassword = new JPasswordField();
-        contentPane.add(txtPassword, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
-        btnConferma = new JButton();
-        btnConferma.setText("Conferma");
-        contentPane.add(btnConferma, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(txtPassword, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        accediButton = new JButton();
+        accediButton.setText("Accedi");
+        contentPane.add(accediButton, new GridConstraints(7, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         benvenutoLabel = new JLabel();
-        benvenutoLabel.setText("Benvenuto");
+        benvenutoLabel.setText("Benvenuto su StudioParadigm!");
         contentPane.add(benvenutoLabel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtRegistrazione = new JLabel();
         txtRegistrazione.setText("Non sei ancora registrato?");
-        contentPane.add(txtRegistrazione, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(txtRegistrazione, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         registratiQuiButton = new JButton();
         registratiQuiButton.setText("Registrati qui");
-        contentPane.add(registratiQuiButton, new GridConstraints(7, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(registratiQuiButton, new GridConstraints(9, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        contentPane.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        contentPane.add(spacer2, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -71,6 +76,37 @@ public class LoginForm {
      */
     public JComponent $$$getRootComponent$$$() {
         return contentPane;
+    }
+
+
+    public JFrame apriLoginForm() {
+
+        JFrame frame = new JFrame("Piattaforma Didattica - Accesso alla piattaforma");
+
+        frame.setContentPane(contentPane);
+
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.setResizable(false);
+        frame.setVisible(true);
+        frame.setLocationRelativeTo(null); //centra la finestra sulla schermo
+
+        ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoLogin.png"));
+        Image img = logoIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        logo.setIcon(new ImageIcon(img));
+        logo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
+        logo.setHorizontalAlignment(SwingConstants.CENTER);
+
+
+        return frame;
+
+    }
+
+    public static void main(String[] args) {
+
+        LoginForm loginForm = new LoginForm();
+
+        loginForm.apriLoginForm();
     }
 
 }
