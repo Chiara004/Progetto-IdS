@@ -156,7 +156,7 @@ public class RegistrazioneForm {
             return;
         }
 
-        //va scelto e cambiato il dominio universitario e forse questo controllo va spostato nella classe GestoreUtente
+       /*va scelto e cambiato il dominio universitario e forse questo controllo va spostato nella classe GestoreUtente
         if (!email.endsWith("@studenti.unina.it") && !email.endsWith("@unina.it")) {
             JOptionPane.showMessageDialog(
                     null,
@@ -166,6 +166,8 @@ public class RegistrazioneForm {
             );
             return;
         }
+        */
+
 
         if (!isStudente && !isDocente) {
             JOptionPane.showMessageDialog(
