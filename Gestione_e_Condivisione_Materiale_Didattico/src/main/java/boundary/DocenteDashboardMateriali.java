@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.util.Locale;
 
 //aggiungere i 3 puntini nell ultima colonna al centro
@@ -43,6 +44,9 @@ public class DocenteDashboardMateriali {
     private JMenuItem menuApri;
     private JMenuItem menuModifica;
     private JMenuItem menuRimuovi;
+
+    //frame per la registrazione dei materiali didattici
+    private JFrame frameAggiungi;
 
 
     {
@@ -161,17 +165,7 @@ public class DocenteDashboardMateriali {
     }
 
 
-    public void apriDocenteDashboard() {
-        // 1. Impostazioni base della finestra
-        JFrame frame = new JFrame("Piattaforma Didattica - Dashboard Docente");
-        frame.setContentPane(contentPane); // Collega il pannello principale
-
-        frame.setSize(800, 600);
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        frame.setResizable(false);
-
-
+    public DocenteDashboardMateriali(){
         inizializzaTabella();
         inizializzaMenu();
         setAzioni();
@@ -181,6 +175,20 @@ public class DocenteDashboardMateriali {
         iconaLogo.setIcon(new ImageIcon(img));
         iconaLogo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         iconaLogo.setHorizontalAlignment(SwingConstants.CENTER);
+    }
+
+    public void apriDocenteDashboard() {
+        // 1. Impostazioni base della finestra
+        JFrame frame = new JFrame("Studio Paradigm - Dashboard Docente");
+        frame.setContentPane(contentPane); // Collega il pannello principale
+        txtRicerca.setForeground(Color.GRAY);
+
+        frame.setSize(800, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+        frame.setResizable(false);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
     }
 
@@ -255,14 +263,36 @@ public class DocenteDashboardMateriali {
         tblMateriali.getColumnModel().getColumn(5).setPreferredWidth(50);
     }
 
-    public void setAzioni() {
+    //metodo per popolare la tabella
+    /*
+    public void popolaTabella(List<MaterialeDidattico> materiali) {
+        tableModel.setRowCount(0); // pulisce prima
+        for (MaterialeDidattico m : materiali) {
+            tableModel.addRow(new Object[]{
+                    m.getTitolo(), m.getCategoria(), m.getDataPubblicazione(),
+                    m.getSezione(), m.getStato(), "⋮"
+            });
+        }
+    }
+    */
+
+    private void setAzioni() {
         //Azione click Aggiungi
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (frameAggiungi == null || !frameAggiungi.isDisplayable()) {
+                    DocenteAggiungiModificaMateriali form = new DocenteAggiungiModificaMateriali();
+                    frameAggiungi = form.apriDocenteAggiungiModificaMateriali();
+                    frameAggiungi.setLocationRelativeTo(null);
+                    frameAggiungi.setVisible(true);
+                } else {
+                    frameAggiungi.toFront();
+                    frameAggiungi.requestFocus();
+                }
             }
         });
+
 
         //Azione click Modifica
         menuModifica.addActionListener(new ActionListener() {
@@ -282,6 +312,7 @@ public class DocenteDashboardMateriali {
         });
 
         //Azione click Apri (aggiungere il percorso del file)
+        //va delegato al controller
         menuApri.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -298,12 +329,33 @@ public class DocenteDashboardMateriali {
                         } else {
                             JOptionPane.showMessageDialog(contentPane, "Impossibile aprire il file o file non trovato.", "Errore", JOptionPane.ERROR_MESSAGE);
                         }
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(contentPane,
+                                "Errore nell'apertura del file: " + ex.getMessage(),
+                                "Errore", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
 
+        });
+
+        //Azione click ricerca
+        txtRicerca.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (txtRicerca.getText().equals("Inserisci parola chiave ...")) {
+                    txtRicerca.setText("");
+                    txtRicerca.setForeground(Color.BLACK);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (txtRicerca.getText().isBlank()) {
+                    txtRicerca.setText("Inserisci parola chiave ...");
+                    txtRicerca.setForeground(Color.GRAY);
+                }
+            }
         });
 
     }
