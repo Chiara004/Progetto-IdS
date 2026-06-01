@@ -6,6 +6,8 @@ import com.intellij.uiDesigner.core.Spacer;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class LoginForm {
     private JPanel contentPane;
@@ -18,6 +20,34 @@ public class LoginForm {
     private JLabel benvenutoLabel;
     private JButton registratiQuiButton;
     private JLabel txtRegistrazione;
+
+    private JFrame frameRegistrazione;
+    private JFrame myFrame;
+
+
+    public LoginForm() {
+
+        accediButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                eseguiLogin();
+            }
+        });
+
+        registratiQuiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (frameRegistrazione == null || !frameRegistrazione.isDisplayable()) {
+                    RegistrazioneForm form = new RegistrazioneForm();
+                    frameRegistrazione = form.apriRegistrazioneForm();
+                    myFrame.dispose();
+                } else {
+                    frameRegistrazione.toFront();
+                    frameRegistrazione.requestFocus();
+                }
+            }
+        });
+    }
 
 
     {
@@ -36,39 +66,41 @@ public class LoginForm {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(10, 2, new Insets(10, 10, 10, 10), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(11, 2, new Insets(10, 10, 10, 10), -1, -1));
         contentPane.setPreferredSize(new Dimension(500, 400));
         contentPane.setRequestFocusEnabled(false);
         contentPane.setBorder(BorderFactory.createTitledBorder(null, "", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         labelEmail = new JLabel();
         labelEmail.setText("Email");
-        contentPane.add(labelEmail, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(labelEmail, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtEmail = new JTextField();
-        contentPane.add(txtEmail, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        contentPane.add(txtEmail, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         logo = new JLabel();
         logo.setText("");
         contentPane.add(logo, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         labelPassword = new JLabel();
         labelPassword.setText("Password");
-        contentPane.add(labelPassword, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(labelPassword, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtPassword = new JPasswordField();
-        contentPane.add(txtPassword, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        contentPane.add(txtPassword, new GridConstraints(6, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         accediButton = new JButton();
         accediButton.setText("Accedi");
-        contentPane.add(accediButton, new GridConstraints(7, 0, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(accediButton, new GridConstraints(8, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         benvenutoLabel = new JLabel();
         benvenutoLabel.setText("Benvenuto su StudioParadigm!");
         contentPane.add(benvenutoLabel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         txtRegistrazione = new JLabel();
         txtRegistrazione.setText("Non sei ancora registrato?");
-        contentPane.add(txtRegistrazione, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(txtRegistrazione, new GridConstraints(10, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         registratiQuiButton = new JButton();
         registratiQuiButton.setText("Registrati qui");
-        contentPane.add(registratiQuiButton, new GridConstraints(9, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        contentPane.add(registratiQuiButton, new GridConstraints(10, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         contentPane.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        contentPane.add(spacer2, new GridConstraints(8, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        contentPane.add(spacer2, new GridConstraints(9, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer3 = new Spacer();
+        contentPane.add(spacer3, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -83,13 +115,9 @@ public class LoginForm {
 
         JFrame frame = new JFrame("Piattaforma Didattica - Accesso alla piattaforma");
 
-        frame.setContentPane(contentPane);
+        this.myFrame = frame;
 
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
-        frame.setResizable(false);
-        frame.setVisible(true);
-        frame.setLocationRelativeTo(null); //centra la finestra sulla schermo
+        frame.setContentPane(contentPane);
 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoLogin.png"));
         Image img = logoIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
@@ -97,6 +125,11 @@ public class LoginForm {
         logo.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 10));
         logo.setHorizontalAlignment(SwingConstants.CENTER);
 
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(500, 400);
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null); //centra la finestra sulla schermo
+        frame.setVisible(true);
 
         return frame;
 
@@ -107,6 +140,52 @@ public class LoginForm {
         LoginForm loginForm = new LoginForm();
 
         loginForm.apriLoginForm();
+    }
+
+    private void eseguiLogin(){
+        String email = txtEmail.getText();
+        String password = new String(txtPassword.getPassword());
+
+        if (email.isEmpty() || password.isEmpty()) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Attenzione: inserisci email e password per accedere.",
+                    "Errore di accesso",
+                    JOptionPane.ERROR_MESSAGE
+            );
+            return;
+        }
+
+
+        // boolean esito = AutenticazioneControllerStub.verificaCredenziali(email, password); na cosa simile
+
+
+        boolean esito = true; // simulazione per vedere se funziona
+
+        if (esito) {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Accesso effettuato con successo!",
+                    "Login completato",
+                    JOptionPane.INFORMATION_MESSAGE
+            );
+
+            //se lo lascio una volta che premo accedi la schermata si chiude e il programma si ferma
+            //se lo tolgo una volta che clicco accedi rimane aperto, però se clicco su registra qui si chiude
+            /*if (myFrame != null) {
+                myFrame.dispose();
+            }*/
+
+            // qui si potrebbe passare alla dashboard studente o decente? boh
+
+        } else {
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Email o password errati. Riprova.",
+                    "Errore di accesso",
+                    JOptionPane.ERROR_MESSAGE
+            );
+        }
     }
 
 }
