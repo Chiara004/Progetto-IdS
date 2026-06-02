@@ -4,6 +4,7 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.Persistence;
 
+
 public class JpaUtil {
 
      //Istanza unica di JpaUtil.(pattern Singleton)
@@ -18,19 +19,9 @@ public class JpaUtil {
      */
     private EntityManagerFactory emf;
 
-    //costruttore privato
     private JpaUtil() {
-        /*
-         * Creiamo la EntityManagerFactory usando la persistence unit
-         * definita nel file persistence.xml.
-         *
-         * Il nome "db_progetto_studio_paradigm" deve coincidere con:
-         *
-         * <persistence-unit name="db_progetto_studio_paradigm">
-         */
         emf = Persistence.createEntityManagerFactory("db_progetto_studio_paradigm");
     }
-
 
      //Punto di accesso globale all'unica istanza di JpaUtil.
     public static JpaUtil getInstance() {

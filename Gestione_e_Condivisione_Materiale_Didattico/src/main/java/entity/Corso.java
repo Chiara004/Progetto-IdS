@@ -1,8 +1,9 @@
 package entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Corso {
@@ -16,6 +17,18 @@ public class Corso {
     @Column(nullable = true)
     private String annoAccademico;
 
+    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL)
+    private Set<Sezione> sezioni;
+    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL)
+    private Set<MaterialeDidattico> materialeDidattico;
+
+    @ManyToOne
+    @JoinColumn(name = "docente_id")
+    private Docente docente;
+
+    @ManyToMany
+    private Set<Studente> studenti = new HashSet<>();
+
     public Corso() {
     }
 
@@ -24,12 +37,16 @@ public class Corso {
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.annoAccademico = annoAccademico;
+        this.sezioni = new HashSet<>();
+        this.materialeDidattico = new HashSet<>();
     }
 
     public Corso(int codice,String titolo, String descrizione) {
         this.codice = codice;
         this.titolo = titolo;
         this.descrizione = descrizione;
+        this.sezioni = new HashSet<>();
+        this.materialeDidattico = new HashSet<>();
     }
 
     public int getCodice() {
@@ -62,5 +79,21 @@ public class Corso {
 
     public void setAnnoAccademico(String annoAccademico) {
         this.annoAccademico = annoAccademico;
+    }
+
+    public Set<Sezione> getSezioni() {
+        return sezioni;
+    }
+
+    public void setSezioni(Set<Sezione> sezioni) {
+        this.sezioni = sezioni;
+    }
+
+    public Set<MaterialeDidattico> getMaterialeDidattico() {
+        return materialeDidattico;
+    }
+
+    public void setMaterialeDidattico(Set<MaterialeDidattico> materialeDidattico) {
+        this.materialeDidattico = materialeDidattico;
     }
 }

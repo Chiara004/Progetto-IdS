@@ -21,6 +21,14 @@ public class MaterialeDidattico {
     @Enumerated(EnumType.STRING)
     private Visibilita visibilita;
 
+    @ManyToOne
+    @JoinColumn(name = "corso_id")
+    private Corso corso;
+
+    @ManyToOne
+    @JoinColumn(name = "sezione_titolo")
+    private Sezione sezione;
+
     public MaterialeDidattico() {
     }
 

@@ -1,9 +1,6 @@
 package entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Notifica {
@@ -12,6 +9,10 @@ public class Notifica {
     private int idNotifica;
 
     private String messaggio;
+
+    @ManyToOne
+    @JoinColumn(name = "studente_id")
+    private Studente studente;
 
     public Notifica() {
     }
