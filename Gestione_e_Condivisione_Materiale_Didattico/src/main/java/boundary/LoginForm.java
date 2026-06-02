@@ -2,6 +2,7 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import control.GestorePiattaformaSara;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -24,8 +25,11 @@ public class LoginForm {
     private JFrame frameRegistrazione;
     private JFrame myFrame;
 
+    private GestorePiattaformaSara gestorePiattaforma;
 
     public LoginForm() {
+
+        this.gestorePiattaforma = new GestorePiattaformaSara();
 
         accediButton.addActionListener(new ActionListener() {
             @Override
@@ -157,34 +161,45 @@ public class LoginForm {
         }
 
 
-        // boolean esito = AutenticazioneControllerStub.verificaCredenziali(email, password); na cosa simile
+        int esito = gestorePiattaforma.inserimentoCredenziali(email, password);
 
+        switch (esito) {
 
-        boolean esito = true; // simulazione per vedere se funziona
-
-        if (esito) {
-            JOptionPane.showMessageDialog(
+            case GestorePiattaformaSara.LOGIN_SUCCESS_STUDENTE:
+                JOptionPane.showMessageDialog(
                     null,
-                    "Accesso effettuato con successo!",
+                    "Accesso effettuato con successo! Benvenuto Studente.",
                     "Login completato",
                     JOptionPane.INFORMATION_MESSAGE
-            );
+                );
+                //qua andrà aperta la dashboard studente
+                if (myFrame != null) {
+                    myFrame.dispose();
+                }
+                break;
 
-            //se lo lascio una volta che premo accedi la schermata si chiude e il programma si ferma
-            //se lo tolgo una volta che clicco accedi rimane aperto, però se clicco su registra qui si chiude
-            /*if (myFrame != null) {
-                myFrame.dispose();
-            }*/
-
-            // qui si potrebbe passare alla dashboard studente o decente? boh
-
-        } else {
-            JOptionPane.showMessageDialog(
+            case GestorePiattaformaSara.LOGIN_SUCCESS_DOCENTE:
+                JOptionPane.showMessageDialog(
                     null,
-                    "Email o password errati. Riprova.",
-                    "Errore di accesso",
-                    JOptionPane.ERROR_MESSAGE
-            );
+                    "Accesso effettuato con successo! Benvenuto Docente.",
+                    "Login completato",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+                //qua andrà aperta la dashboard docente
+                if (myFrame != null) {
+                    myFrame.dispose();
+                }
+                break;
+
+            case GestorePiattaformaSara.LOGIN_FALLITO:
+            default:
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Credenziali errate o utente non registrato. Riprova.",
+                        "Errore di accesso",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                break;
         }
     }
 

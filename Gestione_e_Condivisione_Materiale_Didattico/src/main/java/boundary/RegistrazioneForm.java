@@ -3,6 +3,8 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import control.GestorePiattaformaSara;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +29,12 @@ public class RegistrazioneForm {
 
     private JFrame frameRegistrazione;
 
+    private GestorePiattaformaSara gestorePiattaforma;
+
     public RegistrazioneForm() {
+
+        this.gestorePiattaforma = new GestorePiattaformaSara();
+
         btnRegistra.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -180,49 +187,62 @@ public class RegistrazioneForm {
         }
 
 
-        String ruolo = "";
-        if (isStudente) {
-            ruolo = "Studente";
-        } else {
-            ruolo = "Docente";
+        int esito = gestorePiattaforma.inserimentoDatiUtente(email, nome, cognome, password, isStudente);
+
+        switch (esito) {
+
+            case GestorePiattaformaSara.REGISTRAZIONE_AVVENUTA:
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Registrazione salvata correttamente! Ora puoi effettuare l'accesso.",
+                        "Esito",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                LoginForm loginForm = new LoginForm();
+                loginForm.apriLoginForm();
+
+                if (frameRegistrazione != null) {
+                    frameRegistrazione.dispose();
+                }
+                break;
+
+            case GestorePiattaformaSara.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO:
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Devi utilizzare un'email istituzionale dell'Ateneo (@studenti.unina.it o @unina.it).", //ancora da cambiare il dominio
+                        "Errore di inserimento",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                break;
+
+            case GestorePiattaformaSara.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE:
+                // [ESTENSIONE 1.1.a] - Email già utilizzata
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Attenzione: questa email è già associata a un account esistente.",
+                        "Email già utilizzata",
+                        JOptionPane.WARNING_MESSAGE
+                );
+
+                LoginForm loginEsistente = new LoginForm();
+                loginEsistente.apriLoginForm();
+
+                if (frameRegistrazione != null) {
+                    frameRegistrazione.dispose();
+                }
+                break;
+
+            default:
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Si è verificato un errore imprevisto durante la registrazione.",
+                        "Errore di sistema",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                break;
         }
 
-        //esito deve venire dal controller
-        // boolean esito = RegistrazioneControllerStub.salvaUtente(email, nome, cognome, password, ruolo) una roba simile;
-        boolean esito = true;
-
-
-        if (esito) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Registrazione salvata correttamente",
-                    "Esito",
-                    JOptionPane.INFORMATION_MESSAGE
-            );
-
-
-            if (frameRegistrazione != null) {
-                frameRegistrazione.dispose();
-            }
-
-        } else {
-            // [ESTENSIONE 1.1.a] - Email già utilizzata
-            // 1. Notifica l'utente riguardo la precedente registrazione
-            JOptionPane.showMessageDialog(
-                    null,
-                    "Attenzione: questa email è già associata a un account esistente.",
-                    "Email già utilizzata",
-                    JOptionPane.WARNING_MESSAGE
-            );
-
-            // 2. Il sistema reindirizza l'utente alla schermata di accesso
-            LoginForm login = new LoginForm();
-            login.apriLoginForm();
-
-            if (frameRegistrazione != null) {
-                frameRegistrazione.dispose();
-            }
-        }
     }
 
 }
