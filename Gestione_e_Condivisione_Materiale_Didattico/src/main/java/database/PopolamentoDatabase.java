@@ -11,18 +11,17 @@ import java.util.Properties;
 public class PopolamentoDatabase {
 
     private final CSVImporter importer;
-    private GestorePersistenza gestore;
+    ;
 
     public PopolamentoDatabase(EntityManager em) {
         this.importer = new CSVImporter(em);
-        this.gestore = new GestorePersistenza();
     }
 
     public void popolaDatabase() {
         System.out.println("--- Avvio popolamento database da CSV ---");
 
         // Tabella Utente
-        importer.importaSeTabellaVuota("utenti.csv", "Utente", campi -> {
+        importer.importaSeTabellaVuota("utenti.csv", "Utente", (campi,em) -> {
             try {
                 if(campi[5].trim().equals("Docente")){
                     Utente u = new Docente();
@@ -43,10 +42,10 @@ public class PopolamentoDatabase {
         });
 
         //Tabella Corso
-        importer.importaSeTabellaVuota("corsi.csv", "Corso", campi -> {
+        importer.importaSeTabellaVuota("corsi.csv", "Corso", (campi,em) -> {
             try {
                 Corso c = new Corso();
-                Docente d = gestore.trovaPerId(Docente.class, campi[4].trim());
+                Docente d = em.find(Docente.class, campi[4].trim());
                 c.setCodice(Integer.parseInt(campi[0].trim()));
                 c.setAnnoAccademico(campi[1].trim());
                 c.setDescrizione(campi[2].trim());
@@ -62,10 +61,10 @@ public class PopolamentoDatabase {
 
 
         //Tabella Sezione
-        importer.importaSeTabellaVuota("sezioni.csv", "Sezione", campi -> {
+        importer.importaSeTabellaVuota("sezioni.csv", "Sezione", (campi,em) -> {
             try {
                 Sezione s = new Sezione();
-                Corso c = gestore.trovaPerId(Corso.class, Integer.parseInt(campi[2].trim()));
+                Corso c = em.find(Corso.class, Integer.parseInt(campi[2].trim()));
                 s.setTitolo(campi[1].trim());
                 s.setCorso(c);
 
@@ -77,10 +76,10 @@ public class PopolamentoDatabase {
         });
 
         //Tabella Notifiche
-        importer.importaSeTabellaVuota("notifiche.csv", "Notifica", campi -> {
+        importer.importaSeTabellaVuota("notifiche.csv", "Notifica", (campi,em) -> {
             try {
                 Notifica n = new Notifica();
-                Studente s = gestore.trovaPerId(Studente.class, campi[2].trim());
+                Studente s = em.find(Studente.class, campi[2].trim());
                 n.setMessaggio(campi[1].trim());
                 n.setStudente(s);
 
@@ -92,11 +91,11 @@ public class PopolamentoDatabase {
         });
 
         //Tabella MaterialeDidattico
-        importer.importaSeTabellaVuota("materialeDidattico.csv", "MaterialeDidattico", campi -> {
+        importer.importaSeTabellaVuota("materialeDidattico.csv", "MaterialeDidattico", (campi,em) -> {
             try {
                 MaterialeDidattico m= new MaterialeDidattico();
-                Corso c = gestore.trovaPerId(Corso.class, Integer.parseInt(campi[7].trim()));
-                Sezione s = gestore.trovaPerId(Sezione.class, Integer.parseInt(campi[8].trim()));
+                Corso c = em.find(Corso.class, Integer.parseInt(campi[7].trim()));
+                Sezione s = em.find(Sezione.class, Integer.parseInt(campi[8].trim()));
                 m.setCategoria(Categoria.valueOf(campi[1].trim()));
                 m.setDataPubblicazione(campi[2].trim());
                 m.setDescrizione(campi[3].trim());
@@ -115,14 +114,15 @@ public class PopolamentoDatabase {
         });
 
         //Tabella CorsoStudente
-        importer.importaSeTabellaVuota("corso_studente.csv", "Corso_studente", campi -> {
+        importer.importaSeTabellaVuota("corso_studente.csv", "Corso_studente", (campi,em) -> {
             try {
-                Corso c = gestore.trovaPerId(Corso.class, Integer.parseInt(campi[0].trim()));
-                Studente s = gestore.trovaPerId(Studente.class, campi[1].trim());
+                Corso c = em.find(Corso.class, Integer.parseInt(campi[0].trim()));
+                Studente s = em.find(Studente.class, campi[1].trim());
 
 
                 c.getStudenti().add(s);
                 s.getCorsi().add(c);
+
 
                 return c;
             } catch (Exception e) {

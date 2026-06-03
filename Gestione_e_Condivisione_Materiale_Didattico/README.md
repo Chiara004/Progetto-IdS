@@ -9,7 +9,7 @@ Nella **cartella radice (root)** del progetto (allo stesso livello del file `pom
 `secrets.properties`
 
 ### 2. Inserisci i tuoi dati locali
-Apri il file appena creato e incolla le seguenti righe, modificando i valori con quelli del tuo database locale:
+Apri il file appena creato e incolla le seguenti righe, modificando i valori con quelli del tuo database locale (creare un nuovo schema di nome:db_progetto_studio_paradigm)
 
 ```properties
 # Sostituisci i valori con le tue credenziali locali
