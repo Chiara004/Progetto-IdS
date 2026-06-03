@@ -1,0 +1,10 @@
+#ELENCO FILE DA COPIARE
+ACP01-Python_Introduzione.pdf
+ACP02-Moduli_e_Package.pdf
+avviso_esame.docx
+FdI-05_Esercizio_Proposizioni_logiche_Algebra_di_Boole.pdf
+FdI-05_Soluzione_Esercizio.pdf
+IdS6_CasiDUso.pdf
+IdS6_E_CasiDUso.pdf
+IdS_Guida_Installazione_Licenza_IntelliJ.pdf
+SO1-Introduzione.pdf

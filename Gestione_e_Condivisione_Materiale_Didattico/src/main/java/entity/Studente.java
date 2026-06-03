@@ -14,14 +14,16 @@ public class Studente extends Utente{
     @ManyToMany(mappedBy = "studenti")
     private Set<Corso> corsi= new HashSet<>();
 
+    @OneToMany(mappedBy = "studente", cascade = CascadeType.ALL)
+    private List<Notifica> notifiche = new ArrayList<>();
+
+
     public Studente() {
 
         super();
 
     }
 
-    @OneToMany(mappedBy = "studente", cascade = CascadeType.ALL)
-    private List<Notifica> notifiche = new ArrayList<>();
 
     public Studente(String idUtente, String nome, String cognome,
                     String emailIstituzionale, String password, String ruolo) {
@@ -35,5 +37,13 @@ public class Studente extends Utente{
 
     public void setCorsi(Set<Corso> corsi) {
         this.corsi = corsi;
+    }
+
+    public List<Notifica> getNotifiche() {
+        return notifiche;
+    }
+
+    public void setNotifiche(List<Notifica> notifiche) {
+        this.notifiche = notifiche;
     }
 }

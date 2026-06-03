@@ -12,7 +12,7 @@ public class MaterialeDidattico {
 
     private String titolo;
     private String descrizione;
-    private LocalDate dataPubblicazione;
+    private String dataPubblicazione;
     private String percorsoFile;
 
     @Enumerated(EnumType.STRING)
@@ -22,17 +22,17 @@ public class MaterialeDidattico {
     private Visibilita visibilita;
 
     @ManyToOne
-    @JoinColumn(name = "corso_id")
+    @JoinColumn(name = "corso_id", nullable = false)
     private Corso corso;
 
     @ManyToOne
-    @JoinColumn(name = "sezione_titolo")
+    @JoinColumn(name = "sezione_id", nullable = true)
     private Sezione sezione;
 
     public MaterialeDidattico() {
     }
 
-    public MaterialeDidattico(int idMateriale, String titolo, String descrizione, LocalDate dataPubblicazione,
+    public MaterialeDidattico(int idMateriale, String titolo, String descrizione, String dataPubblicazione,
                               String percorsoFile, Categoria categoria, Visibilita visibilita) {
         this.idMateriale = idMateriale;
         this.titolo = titolo;
@@ -67,11 +67,11 @@ public class MaterialeDidattico {
         this.descrizione = descrizione;
     }
 
-    public LocalDate getDataPubblicazione() {
+    public String getDataPubblicazione() {
         return dataPubblicazione;
     }
 
-    public void setDataPubblicazione(LocalDate dataPubblicazione) {
+    public void setDataPubblicazione(String dataPubblicazione) {
         this.dataPubblicazione = dataPubblicazione;
     }
 
@@ -97,5 +97,21 @@ public class MaterialeDidattico {
 
     public void setVisibilita(Visibilita visibilita) {
         this.visibilita = visibilita;
+    }
+
+    public Corso getCorso() {
+        return corso;
+    }
+
+    public void setCorso(Corso corso) {
+        this.corso = corso;
+    }
+
+    public Sezione getSezione() {
+        return sezione;
+    }
+
+    public void setSezione(Sezione sezione) {
+        this.sezione = sezione;
     }
 }

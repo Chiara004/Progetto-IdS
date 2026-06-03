@@ -86,7 +86,7 @@ public class GestorePersistenza {
 
     //Cerca un oggetto persistente a partire dalla sua classe e dal suo id
      //Il metodo è generico: può essere usato con qualunque Entity.
-    public <T> T trovaPerId(Class<T> classe, Long id) {
+    public <T> T trovaPerId(Class<T> classe, Object id) {
 
         EntityManager em = JpaUtil.getInstance().getEntityManager();
 

@@ -5,6 +5,7 @@ target/
 .kotlin
 
 ##per la realizzazione sicura del database in modo che nessuno possa conoscere le informazioni
+src/main/resources/url.properties
 secrets.properties
 
 ### IntelliJ IDEA ###

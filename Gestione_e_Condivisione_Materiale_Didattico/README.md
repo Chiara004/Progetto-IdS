@@ -16,3 +16,13 @@ Apri il file appena creato e incolla le seguenti righe, modificando i valori con
 db.url=jdbc:mysql://127.0.0.1:3306/db_progetto_studio_paradigm
 db.user=tuo_username
 db.password=tua_password
+```
+
+### 3. Creare il file url.properties in src/main/resources
+Apri il file `url.properties` e inserisci la seguente riga:
+
+```properties
+# Sostituisci i valori il tuo percorso dove vuoi salvare i file di materiale didattico
+upload.dir=C:/il tuo percorso
+
+```

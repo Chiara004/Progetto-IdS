@@ -1,0 +1,6 @@
+﻿codice;annoAccademico;descrizione;titolo;docente_id
+1;2023-2024;insegnamento di Fondamenti di Informatica tenuto a San Giovanni;Fondamenti di Informatica;DOC0002
+2;2025-2026;insegnamento di Programmazione tenuto a San Giovanni;Programmazione;DOC0001
+3;2025-2026;insegnamento di Sistemi Operativi tenuto a San Giovanni;Sistemi Operativi;DOC0003
+4;;insegnamento di  Advanced Computer Programming tenuto a San Giovanni;Advanced Computer Programming;DOC0002
+5;2025-2026;insegnamento di Ingegneria del Software tenuto a San Giovanni;Ingegneria del Software;DOC0001

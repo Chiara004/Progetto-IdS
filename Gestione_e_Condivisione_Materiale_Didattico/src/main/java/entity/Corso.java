@@ -27,6 +27,11 @@ public class Corso {
     private Docente docente;
 
     @ManyToMany
+    @JoinTable(
+            name = "corso_studente",
+            joinColumns = @JoinColumn(name = "corso_id"),
+            inverseJoinColumns = @JoinColumn(name = "studente_id")
+    )
     private Set<Studente> studenti = new HashSet<>();
 
     public Corso() {
@@ -95,5 +100,21 @@ public class Corso {
 
     public void setMaterialeDidattico(Set<MaterialeDidattico> materialeDidattico) {
         this.materialeDidattico = materialeDidattico;
+    }
+
+    public Docente getDocente() {
+        return docente;
+    }
+
+    public void setDocente(Docente docente) {
+        this.docente = docente;
+    }
+
+    public Set<Studente> getStudenti() {
+        return studenti;
+    }
+
+    public void setStudenti(Set<Studente> studenti) {
+        this.studenti = studenti;
     }
 }

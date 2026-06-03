@@ -21,6 +21,7 @@ public class Notifica {
         this.messaggio = messaggio;
     }
 
+
     public int getIdNotifica() {
         return idNotifica;
     }
@@ -31,5 +32,13 @@ public class Notifica {
 
     public void setMessaggio(String messaggio) {
         this.messaggio = messaggio;
+    }
+
+    public Studente getStudente() {
+        return studente;
+    }
+
+    public void setStudente(Studente studente) {
+        this.studente = studente;
     }
 }
