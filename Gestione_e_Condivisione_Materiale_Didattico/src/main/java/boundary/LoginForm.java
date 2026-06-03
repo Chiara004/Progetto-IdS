@@ -185,7 +185,7 @@ public class LoginForm {
                     "Login completato",
                     JOptionPane.INFORMATION_MESSAGE
                 );
-                //qua andrà aperta la dashboard docente
+                //qua andrà aperta la dashboard docente e andrà passata l'email
                 if (myFrame != null) {
                     myFrame.dispose();
                 }

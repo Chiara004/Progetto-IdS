@@ -141,7 +141,16 @@ public class PopolamentoDatabase {
         u.setCognome(campi[1].trim());
         u.setEmailIstituzionale(campi[2].trim());
         u.setNome(campi[3].trim());
-        u.setPassword(campi[4].trim());
+
+        String passwordInChiaro = campi[4].trim();
+        // Se nel CSV la password è vuota, usa la matricola come password provvisoria
+        if (passwordInChiaro.isEmpty()) {
+            passwordInChiaro = campi[0].trim();
+        }
+        // Password cifrata
+        String passwordCifrata = org.mindrot.jbcrypt.BCrypt.hashpw(passwordInChiaro, org.mindrot.jbcrypt.BCrypt.gensalt());
+
+        u.setPassword(passwordCifrata);
         u.setRuolo(campi[5].trim());
     }
 

@@ -2,6 +2,7 @@ package entity;
 
 import control.GestorePiattaformaSara;
 import database.GestorePersistenza;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,34 @@ public class GestoreUtente {
         gestorePersistenza = new GestorePersistenza();
     }
 
-    public int inserimentoDatiUtente(String email, String nome, String cognome, String password, boolean isStudente) {
+    private String hashPassword(String passwordInChiaro) {
+        if (passwordInChiaro == null) return null;
+        return BCrypt.hashpw(passwordInChiaro, BCrypt.gensalt());
+    }
 
-        // bisogna ancora scegliere il domino
+    private boolean verificaPassword(String passwordInChiaro, String hashSalvato) {
+        if (passwordInChiaro == null || hashSalvato == null) return false;
+        return BCrypt.checkpw(passwordInChiaro, hashSalvato);
+    }
+
+    public int inserimentoDatiUtente(String email, String matricola, String nome, String cognome, String password, boolean isStudente) {
+
+        String mat = matricola.trim();
+
+        if (isStudente) {
+            // Regola Studente: Deve iniziare con N4600 ed essere lunga esattamente 9 caratteri
+            if (!mat.startsWith("N4600") || mat.length() != 9) {
+                return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
+            }
+        } else {
+            // Regola Docente: Deve iniziare con DOC ed essere più lunga di 3 caratteri
+            if (!mat.startsWith("DOC") || mat.length() <= 3) {
+                return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
+            }
+        }
+
         String emailLower = email.toLowerCase().trim();
-        if (!emailLower.endsWith("@unina.it") && !emailLower.endsWith("@studenti.unina.it")) {
+        if (!emailLower.endsWith("@unina.it")) {
             return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO;
         }
 
@@ -34,14 +58,25 @@ public class GestoreUtente {
             return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE;
         }
 
-        String idGenerato = UUID.randomUUID().toString();
+        List<Utente> matricoleEsistenti = gestorePersistenza.cercaPerCampo(
+                Utente.class,
+                "idUtente",
+                mat
+        );
+
+        if (!matricoleEsistenti.isEmpty()) {
+            return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;
+        }
+
         Utente nuovoUtente;
+        String passwordSicura = hashPassword(password);
 
         if (isStudente) {
-            nuovoUtente = new Studente(idGenerato, nome, cognome, emailLower, password, "Studente");
+            nuovoUtente = new Studente(matricola, nome, cognome, emailLower, passwordSicura, "Studente");
         } else {
-            nuovoUtente = new Docente(idGenerato, nome, cognome, emailLower, password, "Docente");
+            nuovoUtente = new Docente(matricola, nome, cognome, emailLower, passwordSicura, "Docente");
         }
+
 
         boolean salvatoConSuccesso = gestorePersistenza.salva(nuovoUtente);
 
@@ -61,16 +96,15 @@ public class GestoreUtente {
 
     private int verificaCredenziali(String email, String password) {
 
-        // Usiamo il nome esatto: cercaPrimoPerCampi
+
         Utente utente = gestorePersistenza.cercaPrimoPerCampi(
                 Utente.class,
                 Map.of(
-                        "emailIstituzionale", email,
-                        "password", password
+                        "emailIstituzionale", email
                 )
         );
 
-        if (utente == null) {
+        if (utente == null || !verificaPassword(password, utente.getPassword())) {
             System.out.println("[GestorePersistenza] Login fallito: credenziali non trovate.");
             return GestorePiattaformaSara.LOGIN_FALLITO;
         }
