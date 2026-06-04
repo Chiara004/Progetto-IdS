@@ -46,4 +46,5 @@ public class Studente extends Utente{
     public void setNotifiche(List<Notifica> notifiche) {
         this.notifiche = notifiche;
     }
+
 }

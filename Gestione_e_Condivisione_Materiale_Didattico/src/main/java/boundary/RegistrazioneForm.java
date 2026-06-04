@@ -63,7 +63,7 @@ public class RegistrazioneForm {
      */
     private void $$$setupUI$$$() {
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(16, 6, new Insets(10, 10, 10, 10), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(15, 6, new Insets(10, 10, 10, 10), -1, -1));
         contentPane.setPreferredSize(new Dimension(400, 500));
         logo = new JLabel();
         logo.setText("");
@@ -135,7 +135,7 @@ public class RegistrazioneForm {
         logo.setHorizontalAlignment(SwingConstants.CENTER);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 500);
+        frame.setSize(400, 550);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -182,7 +182,7 @@ public class RegistrazioneForm {
         }
 
 
-        int esito = gestorePiattaforma.inserimentoDatiUtente(email,matricola, nome, cognome, password, isStudente);
+        int esito = gestorePiattaforma.inserimentoDatiUtente(email, matricola, nome, cognome, password, isStudente);
 
         switch (esito) {
 

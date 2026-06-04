@@ -3,6 +3,7 @@ package entity;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -19,7 +20,7 @@ public class Corso {
 
     @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL)
     private Set<Sezione> sezioni;
-    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<MaterialeDidattico> materialeDidattico;
 
     @ManyToOne
@@ -116,5 +117,36 @@ public class Corso {
 
     public void setStudenti(Set<Studente> studenti) {
         this.studenti = studenti;
+    }
+
+    public void rimuoviMateriale(MaterialeDidattico materiale){
+        this.materialeDidattico.remove(materiale);
+    }
+
+    @Override
+    public String toString(){
+        return "Corso{" +
+                "codice=" + codice +
+                ", titolo='" + titolo + '\'' +
+                ", descrizione='" + descrizione + '\'' +
+                ", annoAccademico='" + annoAccademico + '\'' +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof Corso))
+            return false;
+
+        Corso altro = (Corso) o;
+        return Objects.equals(codice, altro.codice);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(codice);
     }
 }

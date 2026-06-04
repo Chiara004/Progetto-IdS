@@ -173,13 +173,8 @@ public class Popolamento {
 
     public void salvataggioMateriali() {
         try {
-            Properties props = new Properties();
-            try (InputStream in = Popolamento.class
-                    .getClassLoader().getResourceAsStream("url.properties")) {
-                props.load(in);
-            }
-
-            String cartellaDestinazione = props.getProperty("upload.dir");
+            GestoreFile gestore = new GestoreFile();
+            String cartellaDestinazione = gestore.getPercorsoBaseMateriali();
             Path destinazione = Paths.get(cartellaDestinazione);
             Files.createDirectories(destinazione); // crea la cartella se non esiste
 

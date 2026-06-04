@@ -170,11 +170,11 @@ public class DocenteDashboardMateriali {
 
 
     //Aggiungere nel costruttore l'email dell'utente e il corso
-    public DocenteDashboardMateriali(String emaiilUtente, String nomeCorso){
+    public DocenteDashboardMateriali(String emailUtente, String nomeCorso){
         inizializzaTabella();
         inizializzaMenu();
-        setAzioni();
-        aggiornaTabellaMateriali(emaiilUtente, nomeCorso);
+        setAzioni(emailUtente, nomeCorso);
+        aggiornaTabellaMateriali(emailUtente, nomeCorso);
 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoPiattaforma.png"));
         Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -279,7 +279,7 @@ public class DocenteDashboardMateriali {
         }
     }
 
-    private void setAzioni() {
+    private void setAzioni(String emailUtente, String nomeCorso) {
         //Azione click Aggiungi FATTA
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
@@ -334,7 +334,26 @@ public class DocenteDashboardMateriali {
         menuRimuovi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
+                int rigaSelezionata = tblMateriali.getSelectedRow();
+                String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 0).toString();
 
+                //Richiesta Scelta
+                int scelta = JOptionPane.showConfirmDialog(
+                        myFrame,
+                        "Sei sicuro di voler eliminare definitivamente il materiale:\n\"" + titoloSelezionato + "\"?",
+                        "Conferma Eliminazione",
+                        JOptionPane.YES_NO_OPTION, // Mostra i pulsanti "Sì" e "No"
+                        JOptionPane.QUESTION_MESSAGE // Mostra l'icona del punto interrogativo
+                );
+
+                if (scelta == JOptionPane.YES_OPTION){
+                    GestorePiattaformaChiara.eliminaMateriale(emailUtente, nomeCorso, titoloSelezionato);
+                    aggiornaTabellaMateriali(emailUtente, nomeCorso);
+                    JOptionPane.showMessageDialog(myFrame, "Materiale eliminato con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
+                }
+                else{
+                    JOptionPane.showMessageDialog(myFrame, "Operazione annullata.", "Attenzione", JOptionPane.WARNING_MESSAGE);
+                }
             }
         });
 

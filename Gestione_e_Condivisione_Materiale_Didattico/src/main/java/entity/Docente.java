@@ -31,4 +31,5 @@ public class Docente extends Utente{
     public void setInsegnamenti(Set<Corso> insegnamenti) {
         this.insegnamenti = insegnamenti;
     }
+
 }

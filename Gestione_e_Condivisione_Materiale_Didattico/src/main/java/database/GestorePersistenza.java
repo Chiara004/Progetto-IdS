@@ -215,7 +215,7 @@ public class GestorePersistenza {
         }
     }
 
-    public <T> boolean elimina(Class<T> classe, Long id) {
+    public <T> boolean elimina(Class<T> classe, Object id) {
 
         EntityManager em = JpaUtil.getInstance().getEntityManager();
 
@@ -252,5 +252,4 @@ public class GestorePersistenza {
             em.close();
         }
     }
-
 }

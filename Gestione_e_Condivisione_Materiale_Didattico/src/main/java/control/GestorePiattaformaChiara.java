@@ -63,4 +63,11 @@ public class GestorePiattaformaChiara {
 
         return righe;
     }
+
+    public static boolean eliminaMateriale(String emailUtente, String corso, String titolo){
+        GestoreCorsoChiara gestoreCorso = new GestoreCorsoChiara();
+        return gestoreCorso.rimuoviMateriale(emailUtente, corso, titolo);
+    }
+
+
 }

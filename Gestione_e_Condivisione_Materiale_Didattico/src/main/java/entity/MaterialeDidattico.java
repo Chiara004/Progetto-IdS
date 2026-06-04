@@ -3,6 +3,7 @@ package entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 public class MaterialeDidattico {
@@ -10,6 +11,7 @@ public class MaterialeDidattico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idMateriale;
 
+    @Column(nullable = false, unique = true)
     private String titolo;
     private String descrizione;
     private String dataPubblicazione;
@@ -113,5 +115,35 @@ public class MaterialeDidattico {
 
     public void setSezione(Sezione sezione) {
         this.sezione = sezione;
+    }
+
+    @Override
+    public String toString(){
+        return "MaterialeDidattico{" +
+                "idMateriale=" + idMateriale +
+                ", titolo='" + titolo + '\'' +
+                ", descrizione='" + descrizione + '\'' +
+                ", dataPubblicazione='" + dataPubblicazione + '\'' +
+                ", percorsoFile='" + percorsoFile + '\'' +
+                ", categoria=" + categoria +
+                ", visibilita=" + visibilita +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof MaterialeDidattico))
+            return false;
+
+        MaterialeDidattico altro = (MaterialeDidattico) o;
+        return Objects.equals(idMateriale, altro.idMateriale);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idMateriale);
     }
 }

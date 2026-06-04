@@ -2,6 +2,8 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 public class Utente {
@@ -75,5 +77,33 @@ public class Utente {
 
     public void setRuolo(String ruolo) {
         this.ruolo = ruolo;
+    }
+
+    @Override
+    public String toString() {
+        return "Utente{" +
+                "id=" + idUtente +
+                ", nome='" + nome + '\'' +
+                ", cognome='" + cognome + '\'' +
+                ", email=" + emailIstituzionale +
+                ", ruolo=" + ruolo +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof Utente))
+            return false;
+
+        Utente altro = (Utente) o;
+        return Objects.equals(idUtente, altro.idUtente);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idUtente);
     }
 }

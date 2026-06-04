@@ -3,6 +3,7 @@ package entity;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -55,6 +56,30 @@ public class Sezione {
 
     public void setMaterialeDidattico(Set<MaterialeDidattico> materialeDidattico) {
         this.materialeDidattico = materialeDidattico;
+    }
+
+    @Override
+    public String toString(){
+        return "Sezione{" +
+                "idSezione=" + idSezione +
+                "titolo: "+titolo;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (!(o instanceof Sezione))
+            return false;
+
+        Sezione altro = (Sezione) o;
+        return Objects.equals(idSezione, altro.idSezione);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(idSezione);
     }
 }
 
