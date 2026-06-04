@@ -2,6 +2,7 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import control.GestorePiattaformaChiara;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -15,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.Locale;
+import java.util.List;
 
 //aggiungere i 3 puntini nell ultima colonna al centro
 
@@ -47,6 +49,8 @@ public class DocenteDashboardMateriali {
 
     //frame per la registrazione dei materiali didattici
     private JFrame frameAggiungi;
+    private JFrame myFrame;
+    private JFrame frameLogin;
 
 
     {
@@ -165,10 +169,12 @@ public class DocenteDashboardMateriali {
     }
 
 
-    public DocenteDashboardMateriali(){
+    //Aggiungere nel costruttore l'email dell'utente e il corso
+    public DocenteDashboardMateriali(String emaiilUtente, String nomeCorso){
         inizializzaTabella();
         inizializzaMenu();
         setAzioni();
+        aggiornaTabellaMateriali(emaiilUtente, nomeCorso);
 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoPiattaforma.png"));
         Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -180,8 +186,10 @@ public class DocenteDashboardMateriali {
     public void apriDocenteDashboard() {
         // 1. Impostazioni base della finestra
         JFrame frame = new JFrame("Studio Paradigm - Dashboard Docente");
+        this.myFrame = frame;
         frame.setContentPane(contentPane); // Collega il pannello principale
         txtRicerca.setForeground(Color.GRAY);
+
 
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
@@ -208,12 +216,14 @@ public class DocenteDashboardMateriali {
             // tasto destro
             @Override
             public void mousePressed(MouseEvent e) {
-                if (e.isPopupTrigger()) mostraMenu(e);
+                if (e.isPopupTrigger())
+                    mouseClicked(e);
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                if (e.isPopupTrigger()) mostraMenu(e);
+                if (e.isPopupTrigger())
+                    mouseClicked(e);
             }
 
             // click sinistro sulla colonna ⋮
@@ -221,25 +231,18 @@ public class DocenteDashboardMateriali {
             public void mouseClicked(MouseEvent e) {
                 int col = tblMateriali.columnAtPoint(e.getPoint());
                 int row = tblMateriali.rowAtPoint(e.getPoint());
-                if (col == 5 && row >= 0) {
+                if (col == 6 && row >= 0 &&row < tblMateriali.getRowCount()) {
                     tblMateriali.setRowSelectionInterval(row, row);
                     contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
 
-            private void mostraMenu(MouseEvent e) {
-                int row = tblMateriali.rowAtPoint(e.getPoint());
-                if (row >= 0 && row < tblMateriali.getRowCount()) {
-                    tblMateriali.setRowSelectionInterval(row, row);
-                    contextMenu.show(e.getComponent(), e.getX(), e.getY());
-                }
-            }
         });
     }
 
     private void inizializzaTabella() {
         // Definisci i nomi delle colonne
-        String[] nomiColonne = {"Titolo", "Categoria", "Data Pubblicazione", "Sezione", "Stato", "Azioni"};
+        String[] nomiColonne = {"Titolo", "Categoria", "Descrizione","Data Pubblicazione", "Sezione", "Stato", "Azioni"};
 
         // Crea il modello personalizzato bloccando la modifica delle celle
         tableModel = new DefaultTableModel(nomiColonne, 0) {
@@ -249,35 +252,35 @@ public class DocenteDashboardMateriali {
             }
         };
 
-        // Assegna il modello alla tabella
-        tableModel.addRow(new Object[]{"Slide Requisiti", "Slide", "28/05/2026", "Modulo 1", "pubblicato","⋮"});
-
-
         // Imposta il modello della tabella come modello della visualizzazione
         tblMateriali.setModel(tableModel);
 
         // Centra il contenuto dell'ultima colonna (indice 5)
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tblMateriali.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-        tblMateriali.getColumnModel().getColumn(5).setPreferredWidth(50);
+        tblMateriali.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
+        tblMateriali.getColumnModel().getColumn(6).setPreferredWidth(50);
     }
 
     //metodo per popolare la tabella
-    /*
-    public void popolaTabella(List<MaterialeDidattico> materiali) {
-        tableModel.setRowCount(0); // pulisce prima
-        for (MaterialeDidattico m : materiali) {
-            tableModel.addRow(new Object[]{
-                    m.getTitolo(), m.getCategoria(), m.getDataPubblicazione(),
-                    m.getSezione(), m.getStato(), "⋮"
-            });
+    public void aggiornaTabellaMateriali(String emailUtente, String nomeCorso) {
+        // Richiama il tuo metodo per ottenere i dati
+        List<String[]> datiMateriali = GestorePiattaformaChiara.VisualizzaMateriali(emailUtente, nomeCorso);
+
+        //Ottieni il modello della tua JTable
+        tableModel = (DefaultTableModel) tblMateriali.getModel();
+
+        // Pulire la tabella dai dati vecchi
+        tableModel.setRowCount(0);
+
+        //Cicla la lista e aggiunge ogni array come riga al modello
+        for (String[] riga : datiMateriali) {
+            tableModel.addRow(riga);
         }
     }
-    */
 
     private void setAzioni() {
-        //Azione click Aggiungi
+        //Azione click Aggiungi FATTA
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -294,12 +297,36 @@ public class DocenteDashboardMateriali {
         });
 
 
-        //Azione click Modifica
+        //Azione click Modifica FATTA
         menuModifica.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
                 int rigaSelezionata = tblMateriali.getSelectedRow();
                 //recupero dati e passaggio al form
+                if (frameAggiungi == null || !frameAggiungi.isDisplayable()) {
+
+                    String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 0).toString();
+                    String categoriaSelezionata = tblMateriali.getValueAt(rigaSelezionata, 1).toString();
+                    String descrizioneSelezionata = tblMateriali.getValueAt(rigaSelezionata, 2).toString();
+                    String sezioneSelezionata = tblMateriali.getValueAt(rigaSelezionata, 4).toString();
+                    String statoSelezionato = tblMateriali.getValueAt(rigaSelezionata, 5).toString();
+
+
+                    DocenteAggiungiModificaMateriali form = new DocenteAggiungiModificaMateriali(
+                            titoloSelezionato,
+                            descrizioneSelezionata,
+                            categoriaSelezionata,
+                            sezioneSelezionata,
+                            statoSelezionato
+                    );
+
+                    frameAggiungi = form.apriDocenteAggiungiModificaMateriali();
+                    frameAggiungi.setLocationRelativeTo(null);
+                    frameAggiungi.setVisible(true);
+                } else {
+                    frameAggiungi.toFront();
+                    frameAggiungi.requestFocus();
+                }
             }
         });
 
@@ -339,7 +366,7 @@ public class DocenteDashboardMateriali {
 
         });
 
-        //Azione click ricerca
+        //Azione click test ricerca FATTA
         txtRicerca.addFocusListener(new java.awt.event.FocusAdapter() {
             @Override
             public void focusGained(java.awt.event.FocusEvent e) {
@@ -358,11 +385,40 @@ public class DocenteDashboardMateriali {
             }
         });
 
+        //Azione click ricerca
+        btnRicerca.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+
+            }
+        });
+
+        //bottone logout FATTO
+        btnLogout.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e){
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Logout effettuato con successo! Arrivederci.",
+                        "Ritorno al login",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+
+                if (myFrame != null) {
+                    myFrame.dispose();
+                    LoginForm form = new LoginForm();
+                    frameLogin = form.apriLoginForm();
+                    frameLogin.setLocationRelativeTo(null);
+                    frameLogin.setVisible(true);
+                }
+            }
+        });
+
     }
 
     //prova per visualizzare
     public static void main(String[] args) {
-        DocenteDashboardMateriali dashboard = new DocenteDashboardMateriali();
+        DocenteDashboardMateriali dashboard = new DocenteDashboardMateriali("domenico.amalfitano@unina.it", "Ingegneria del Software");
         dashboard.apriDocenteDashboard();
     }
 

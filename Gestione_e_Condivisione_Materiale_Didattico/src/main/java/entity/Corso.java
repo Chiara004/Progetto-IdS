@@ -19,7 +19,7 @@ public class Corso {
 
     @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL)
     private Set<Sezione> sezioni;
-    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<MaterialeDidattico> materialeDidattico;
 
     @ManyToOne

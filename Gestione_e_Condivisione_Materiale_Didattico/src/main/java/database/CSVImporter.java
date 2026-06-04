@@ -11,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
+
 
 public class CSVImporter {
     private final EntityManager em;
@@ -51,66 +51,10 @@ public class CSVImporter {
         return righe;
     }
 
-    /**
-     * Metodo generico: importa un CSV solo se la tabella è vuota.
-     */
-    /*
-    public <T> void importaSeTabellaVuota(String nomeFile,
-                                      String nomeEntita,
-                                      Function<String[], T> convertiRiga) {
-        try {
-            Long count = 0L;
-            if(nomeEntita.equals("Corso_studente")){
-                count = ((Number) em.createNativeQuery("SELECT count(*) FROM corso_studente").getSingleResult()).longValue();
 
-            }
-            else {
-                // Controlla se la tabella è vuota
-                count = em.createQuery(
-                                "SELECT COUNT(e) FROM " + nomeEntita + " e", Long.class)
-                        .getSingleResult();
-            }
-
-            if (count > 0) {
-                System.out.println("Tabella " + nomeEntita + " già popolata (" + count + " righe)");
-                return;
-            }
-
-            List<String[]> righe = leggiCsv(nomeFile);
-            if (righe.isEmpty()) {
-                System.out.println("Nessuna riga da importare per: " + nomeFile);
-                return;
-            }
-
-            EntityTransaction tx = em.getTransaction();
-            tx.begin();
-            try {
-                int contatore = 0;
-                for (String[] campi : righe) {
-                    T entita = convertiRiga.apply(campi);
-                    if (entita != null) {
-                        em.merge(entita);
-                        contatore++;
-                    }
-                }
-                tx.commit();
-                System.out.println("Importati " + contatore + " record in " + nomeEntita);
-            } catch (Exception e) {
-                if (tx.isActive()) tx.rollback();
-                System.err.println("Errore durante import di " + nomeFile + ": " + e.getMessage());
-                e.printStackTrace();
-            }
-
-        } catch (Exception e) {
-            System.err.println("Errore generico per " + nomeEntita + ": " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
-     */
     public <T> void importaSeTabellaVuota(String nomeFile,
                                           String nomeEntita,
-                                          BiFunction<String[], EntityManager, T> convertiRiga) {
+                                          ConvertitoreRiga<T> convertitore) {
         try {
             Long count = 0L;
             if(nomeEntita.equals("Corso_studente")){
@@ -135,8 +79,7 @@ public class CSVImporter {
             try {
                 int contatore = 0;
                 for (String[] campi : righe) {
-                    // 2. Passa l'EntityManager 'em' alla lambda
-                    T entita = convertiRiga.apply(campi, em);
+                    T entita = convertitore.converti(campi, em);
 
                     if (entita != null) {
                         em.merge(entita);

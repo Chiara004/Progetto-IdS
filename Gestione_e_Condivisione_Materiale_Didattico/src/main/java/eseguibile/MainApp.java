@@ -2,7 +2,7 @@ package eseguibile;
 import boundary.LoginForm;
 import database.JpaUtil;
 import jakarta.persistence.EntityManager;
-import database.PopolamentoDatabase;
+import database.Popolamento;
 import boundary.LoginForm.*;
 import javax.swing.*;
 
@@ -20,7 +20,7 @@ public class MainApp {
             System.out.println("Connessione al database stabilita.");
 
             // 3. Popolamento da CSV (solo se tabelle vuote)
-            PopolamentoDatabase dataset = new PopolamentoDatabase(em);
+            Popolamento dataset = new Popolamento(em);
             dataset.popolaDatabase();
 
             // 4. Chiudiamo l'EntityManager del seeding
@@ -29,9 +29,14 @@ public class MainApp {
             System.out.println("Database pronto.");
 
             // 5. Avvio GUI sul thread di Swing
-            SwingUtilities.invokeLater(() -> {
-                LoginForm mainFrame = new LoginForm();
-                mainFrame.apriLoginForm();
+
+
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    LoginForm mainFrame = new LoginForm();
+                    mainFrame.apriLoginForm();
+                }
             });
 
             System.out.println("=== DATABASE INIZIALIZZATO E GUI AVVIATA ===");
@@ -43,7 +48,7 @@ public class MainApp {
             }));
 
         } catch (Exception e) {
-            System.err.println("✗ Errore critico durante l'avvio:");
+            System.err.println("Errore critico durante l'avvio:");
             e.printStackTrace();
         }
     }
