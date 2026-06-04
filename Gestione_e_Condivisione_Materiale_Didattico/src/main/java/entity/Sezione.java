@@ -16,7 +16,7 @@ public class Sezione {
     private String titolo;
 
     @ManyToOne
-    @JoinColumn(name = "corso_id", nullable= false)
+    @JoinColumn(name = "corso_id", nullable = false)
     private Corso corso;
 
     @OneToMany(mappedBy = "sezione")
@@ -25,6 +25,7 @@ public class Sezione {
     public Sezione() {
 
     }
+
     public Sezione(String titolo) {
         this.titolo = titolo;
     }
@@ -59,10 +60,10 @@ public class Sezione {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Sezione{" +
                 "idSezione=" + idSezione +
-                "titolo: "+titolo;
+                "titolo: " + titolo;
     }
 
     @Override

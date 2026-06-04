@@ -2,6 +2,7 @@ package entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -18,7 +19,7 @@ public class Corso {
     @Column(nullable = true)
     private String annoAccademico;
 
-    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Set<Sezione> sezioni;
     @OneToMany(mappedBy = "corso", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<MaterialeDidattico> materialeDidattico;
@@ -27,7 +28,7 @@ public class Corso {
     @JoinColumn(name = "docente_id")
     private Docente docente;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "corso_studente",
             joinColumns = @JoinColumn(name = "corso_id"),
@@ -122,6 +123,91 @@ public class Corso {
     public void rimuoviMateriale(MaterialeDidattico materiale){
         this.materialeDidattico.remove(materiale);
     }
+
+    public String getPercorsoFileMateriale(MaterialeDidattico materiale){
+        return materiale.getPercorsoFile();
+    }
+
+    public MaterialeDidattico getMaterialeDidatticoPerTitolo(String titolo){
+        for(MaterialeDidattico materiale : materialeDidattico){
+            if(materiale.getTitolo().equals(titolo))
+                return materiale;
+        }
+        return null;
+    }
+
+    public MaterialeDidattico getMaterialeDidatticoPerId(int id){
+        for(MaterialeDidattico materiale : materialeDidattico){
+            if(materiale.getIdMateriale() == id)
+                return materiale;
+        }
+        return null;
+    }
+
+    public Sezione getSezionePerTitolo(String titolo){
+        for(Sezione sezione : sezioni){
+            if(sezione.getTitolo().equals(titolo))
+                return sezione;
+        }
+        return null;
+    }
+
+    public boolean inserisciMateriale(String titolo, String descrizione, String visibilita, String percorsoFile, String sezione, String categoria){
+        // Controllo omonimia (Regola di business)
+        for (MaterialeDidattico m : this.materialeDidattico) {
+            if (m.getTitolo().equalsIgnoreCase(titolo)) {
+                // Esiste già un materiale con questo titolo!
+                return false;
+            }
+        }
+
+        // Se passa il controllo, si aggiunge alla lista
+        Categoria cat = Categoria.valueOf(categoria);
+        Visibilita vis = Visibilita.valueOf(visibilita);
+        String data = LocalDate.now().toString();
+        MaterialeDidattico nuovoMateriale = new MaterialeDidattico(titolo, descrizione, data, percorsoFile, cat, vis);
+        nuovoMateriale.setCorso(this);
+        this.materialeDidattico.add(nuovoMateriale);
+
+        if(!sezione.equals("null")){
+            Sezione s = getSezionePerTitolo(sezione);
+            nuovoMateriale.setSezione(s);
+        }
+        return true;
+    }
+
+    public boolean modificaMateriale(String idMateriale, String titolo, String descrizione, String visibilita, String percorsoFile, String sezione, String categoria){
+        // Controllo omonimia (Regola di business)
+        for (MaterialeDidattico m : this.materialeDidattico) {
+            if (m.getTitolo().equalsIgnoreCase(titolo) && m.getIdMateriale() != Integer.parseInt(idMateriale)) {
+                // Esiste già un materiale con questo titolo!
+                return false;
+            }
+        }
+
+        // Se passa il controllo, si aggiunge alla lista
+        Categoria cat = Categoria.valueOf(categoria);
+        Visibilita vis = Visibilita.valueOf(visibilita);
+        String data = LocalDate.now().toString();
+        int id = Integer.parseInt(idMateriale);
+        MaterialeDidattico materialeAggiornato = getMaterialeDidatticoPerId(id);
+        materialeAggiornato.setTitolo(titolo);
+        materialeAggiornato.setDescrizione(descrizione);
+        materialeAggiornato.setDataPubblicazione(data);
+        materialeAggiornato.setPercorsoFile(percorsoFile);
+        materialeAggiornato.setCategoria(cat);
+        materialeAggiornato.setVisibilita(vis);
+        materialeAggiornato.setCorso(this);
+
+        this.materialeDidattico.add(materialeAggiornato);
+
+        if(!sezione.equals("null")){
+            Sezione s = getSezionePerTitolo(sezione);
+            materialeAggiornato.setSezione(s);
+        }
+        return true;
+    }
+
 
     @Override
     public String toString(){

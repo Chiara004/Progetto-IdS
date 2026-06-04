@@ -2,6 +2,7 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import control.GestoreCorsoChiara;
 import control.GestorePiattaformaChiara;
 
 import javax.swing.*;
@@ -51,6 +52,10 @@ public class DocenteDashboardMateriali {
     private JFrame frameAggiungi;
     private JFrame myFrame;
     private JFrame frameLogin;
+
+    //dati del docente
+    private String emailUtente;
+    private String nomeCorso;
 
 
     {
@@ -171,10 +176,13 @@ public class DocenteDashboardMateriali {
 
     //Aggiungere nel costruttore l'email dell'utente e il corso
     public DocenteDashboardMateriali(String emailUtente, String nomeCorso){
+        this.emailUtente = emailUtente;
+        this.nomeCorso = nomeCorso;
         inizializzaTabella();
         inizializzaMenu();
-        setAzioni(emailUtente, nomeCorso);
-        aggiornaTabellaMateriali(emailUtente, nomeCorso);
+        setAzioni();
+        aggiornaTabellaMateriali();
+
 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoPiattaforma.png"));
         Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -263,9 +271,9 @@ public class DocenteDashboardMateriali {
     }
 
     //metodo per popolare la tabella
-    public void aggiornaTabellaMateriali(String emailUtente, String nomeCorso) {
+    public void aggiornaTabellaMateriali() {
         // Richiama il tuo metodo per ottenere i dati
-        List<String[]> datiMateriali = GestorePiattaformaChiara.VisualizzaMateriali(emailUtente, nomeCorso);
+        List<String[]> datiMateriali = GestorePiattaformaChiara.VisualizzaMateriali(this.emailUtente, this.nomeCorso);
 
         //Ottieni il modello della tua JTable
         tableModel = (DefaultTableModel) tblMateriali.getModel();
@@ -279,13 +287,21 @@ public class DocenteDashboardMateriali {
         }
     }
 
-    private void setAzioni(String emailUtente, String nomeCorso) {
+    private void setAzioni() {
         //Azione click Aggiungi FATTA
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (frameAggiungi == null || !frameAggiungi.isDisplayable()) {
-                    DocenteAggiungiModificaMateriali form = new DocenteAggiungiModificaMateriali();
+                    DocenteAggiungiModificaMateriali form = new DocenteAggiungiModificaMateriali(emailUtente, nomeCorso);
+
+                    form.setOnSuccesso(new Runnable() {
+                        @Override
+                        public void run() {
+                            aggiornaTabellaMateriali();
+                        }
+                    });
+
                     frameAggiungi = form.apriDocenteAggiungiModificaMateriali();
                     frameAggiungi.setLocationRelativeTo(null);
                     frameAggiungi.setVisible(true);
@@ -313,12 +329,17 @@ public class DocenteDashboardMateriali {
 
 
                     DocenteAggiungiModificaMateriali form = new DocenteAggiungiModificaMateriali(
-                            titoloSelezionato,
-                            descrizioneSelezionata,
-                            categoriaSelezionata,
-                            sezioneSelezionata,
-                            statoSelezionato
+                            titoloSelezionato,descrizioneSelezionata,
+                            categoriaSelezionata, sezioneSelezionata,
+                            statoSelezionato, emailUtente, nomeCorso
                     );
+
+                    form.setOnSuccesso(new Runnable() {
+                        @Override
+                        public void run() {
+                            aggiornaTabellaMateriali();
+                        }
+                    });
 
                     frameAggiungi = form.apriDocenteAggiungiModificaMateriali();
                     frameAggiungi.setLocationRelativeTo(null);
@@ -330,7 +351,7 @@ public class DocenteDashboardMateriali {
             }
         });
 
-        //Azione click Rimuovi
+        //Azione click Rimuovi FATTA
         menuRimuovi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -348,7 +369,7 @@ public class DocenteDashboardMateriali {
 
                 if (scelta == JOptionPane.YES_OPTION){
                     GestorePiattaformaChiara.eliminaMateriale(emailUtente, nomeCorso, titoloSelezionato);
-                    aggiornaTabellaMateriali(emailUtente, nomeCorso);
+                    aggiornaTabellaMateriali();
                     JOptionPane.showMessageDialog(myFrame, "Materiale eliminato con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
                 }
                 else{
@@ -357,29 +378,22 @@ public class DocenteDashboardMateriali {
             }
         });
 
-        //Azione click Apri (aggiungere il percorso del file)
-        //va delegato al controller
+        //Azione click Apri
         menuApri.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int rigaSelezionata = tblMateriali.getSelectedRow();
-
+                String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 0).toString();
                 if (rigaSelezionata != -1) {
-                    // Recupera il percorso del file
-                    //TBD
+                    boolean esito=GestorePiattaformaChiara.apriMateriale(emailUtente, nomeCorso,titoloSelezionato);
 
-                    try {
-                        java.io.File file = new java.io.File("TBD AGGIUNGERE PERCORSO");
-                        if (file.exists() && java.awt.Desktop.isDesktopSupported()) {
-                            java.awt.Desktop.getDesktop().open(file);
-                        } else {
-                            JOptionPane.showMessageDialog(contentPane, "Impossibile aprire il file o file non trovato.", "Errore", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } catch (IOException ex) {
-                        JOptionPane.showMessageDialog(contentPane,
-                                "Errore nell'apertura del file: " + ex.getMessage(),
-                                "Errore", JOptionPane.ERROR_MESSAGE);
+                    if(esito){
+                        JOptionPane.showMessageDialog(contentPane, "File aperto con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
                     }
+                    else{
+                        JOptionPane.showMessageDialog(contentPane, "Errore durante l'apertura del file.", "Errore", JOptionPane.ERROR_MESSAGE);
+                    }
+
                 }
             }
 

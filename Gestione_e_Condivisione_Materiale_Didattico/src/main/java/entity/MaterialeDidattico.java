@@ -11,7 +11,7 @@ public class MaterialeDidattico {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idMateriale;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String titolo;
     private String descrizione;
     private String dataPubblicazione;
@@ -34,9 +34,9 @@ public class MaterialeDidattico {
     public MaterialeDidattico() {
     }
 
-    public MaterialeDidattico(int idMateriale, String titolo, String descrizione, String dataPubblicazione,
+    public MaterialeDidattico(String titolo, String descrizione, String dataPubblicazione,
                               String percorsoFile, Categoria categoria, Visibilita visibilita) {
-        this.idMateriale = idMateriale;
+
         this.titolo = titolo;
         this.descrizione = descrizione;
         this.dataPubblicazione = dataPubblicazione;
@@ -49,9 +49,6 @@ public class MaterialeDidattico {
         return idMateriale;
     }
 
-    public void setIdMateriale(int idMateriale) {
-        this.idMateriale = idMateriale;
-    }
 
     public String getTitolo() {
         return titolo;

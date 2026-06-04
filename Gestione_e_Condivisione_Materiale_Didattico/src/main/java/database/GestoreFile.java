@@ -1,8 +1,13 @@
 package database;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.Properties;
 
 public class GestoreFile {
@@ -43,5 +48,36 @@ public class GestoreFile {
             System.err.println("Errore durante l'eliminazione del file: " + e.getMessage());
             return false;
         }
+    }
+
+    public String salvaFile(File fileScelto) {
+        String percorsoBase = getPercorsoBaseMateriali();
+        File cartella = new File(percorsoBase);
+        if (!cartella.exists()) {
+            cartella.mkdirs(); // crea la cartella se non esiste
+        }
+
+        Path destinazione = Paths.get(percorsoBase, fileScelto.getName());
+        try {
+            Files.copy(fileScelto.toPath(), destinazione,
+                    StandardCopyOption.REPLACE_EXISTING);
+            return fileScelto.getName();
+        } catch (IOException e) {
+            throw new RuntimeException("Errore durante il salvataggio del file", e);
+        }
+    }
+
+    public boolean apriMateriale(String percorsoFile){
+        String percorsoBase = getPercorsoBaseMateriali();
+
+        File file = new File(Paths.get(percorsoBase, percorsoFile).toString());
+        try {
+            Desktop.getDesktop().open(file);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }

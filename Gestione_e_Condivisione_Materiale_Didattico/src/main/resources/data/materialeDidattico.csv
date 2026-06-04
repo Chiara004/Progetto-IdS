@@ -1,10 +1,10 @@
 ﻿idMateriale;categoria;dataPubblicazione;descrizione;percorsoFile;titolo;visibilità;corso_id;sezione_id
-1;SLIDE;02/03/2026;Introduzione al linguaggio Python;ACP01-Python_Introduzione.pdf;ACP01 Introduzione a Python;PUBBLICATO;4;7
-2;SLIDE;05/03/2026;Slide riguardo moduli e package;ACP02-Moduli_e_Package.pdf;ACP02 Moduli e Package;PUBBLICATO;4;7
-3;AVVISI;02/06/2026;Avviso riguardo all'esame di Programmazione;avviso_esame.docx;Avviso Esame Programmazione;PUBBLICATO;2;8
-4;ESERCIZI;20/10/2026;Esercizio riguardo l'Algebra di Boole;FdI-05_Esercizio_Proposizioni_logiche_Algebra_di_Boole.pdf;FdI-05 Esercizio algebra di Boole;PUBBLICATO;1;5
-5;DISPENSE;02/06/2026;Dispense per l'installazione di IntelliJ;IdS_Guida_Installazione_Licenza_IntelliJ.pdf;IdS Guida Installazione IntelliJ;PUBBLICATO;5;4
-6;SOLUZIONI;20/10/2026;Soluzioni Esercizio sull'algebra di Boole;FdI-05_Soluzione_Esercizio.pdf;FdI-05 Soluzione esercizio algebra di Boole;NON_PUBBLICATO;1;6
-7;SLIDE;19/03/2026;Slide riguardo i casi d'uso;IdS6_CasiDUso.pdf;IdS-6 Casi D'Uso;PUBBLICATO;5;2
-8;ESERCIZI;23/03/2026;Esercizi per la realizzazione dei casi d'uso;IdS6_E_CasiDUso.pdf;IdS-6 Esercizi Casi D'Uso;PUBBLICATO;5;3
-9;SLIDE;18/09/2025;Introduzione al corso di Sistemi Operativi;SO1-Introduzione.pdf;SO1 Introduzione;PUBBLICATO;3;1
+1;SLIDE;2026-03-02;Introduzione al linguaggio Python;ACP01-Python_Introduzione.pdf;ACP01 Introduzione a Python;PUBBLICATO;4;7
+2;SLIDE;2026-03-05;Slide riguardo moduli e package;ACP02-Moduli_e_Package.pdf;ACP02 Moduli e Package;PUBBLICATO;4;7
+3;AVVISI;2026-06-02;Avviso riguardo all'esame di Programmazione;avviso_esame.docx;Avviso Esame Programmazione;PUBBLICATO;2;8
+4;ESERCIZI;2026-10-20;Esercizio riguardo l'Algebra di Boole;FdI-05_Esercizio_Proposizioni_logiche_Algebra_di_Boole.pdf;FdI-05 Esercizio algebra di Boole;PUBBLICATO;1;5
+5;DISPENSE;2026-06-02;Dispense per l'installazione di IntelliJ;IdS_Guida_Installazione_Licenza_IntelliJ.pdf;IdS Guida Installazione IntelliJ;PUBBLICATO;5;4
+6;SOLUZIONI;2026-10-20;Soluzioni Esercizio sull'algebra di Boole;FdI-05_Soluzione_Esercizio.pdf;FdI-05 Soluzione esercizio algebra di Boole;NON_PUBBLICATO;1;6
+7;SLIDE;2026-03-19;Slide riguardo i casi d'uso;IdS6_CasiDUso.pdf;IdS-6 Casi D'Uso;PUBBLICATO;5;2
+8;ESERCIZI;2026-03-23;Esercizi per la realizzazione dei casi d'uso;IdS6_E_CasiDUso.pdf;IdS-6 Esercizi Casi D'Uso;PUBBLICATO;5;3
+9;SLIDE;2025-09-18;Introduzione al corso di Sistemi Operativi;SO1-Introduzione.pdf;SO1 Introduzione;PUBBLICATO;3;1
