@@ -164,7 +164,7 @@ public class Corso {
         // Se passa il controllo, si aggiunge alla lista
         Categoria cat = Categoria.valueOf(categoria);
         Visibilita vis = Visibilita.valueOf(visibilita);
-        String data = LocalDate.now().toString();
+        LocalDate data = LocalDate.now();
         MaterialeDidattico nuovoMateriale = new MaterialeDidattico(titolo, descrizione, data, percorsoFile, cat, vis);
         nuovoMateriale.setCorso(this);
         this.materialeDidattico.add(nuovoMateriale);
@@ -188,7 +188,7 @@ public class Corso {
         // Se passa il controllo, si aggiunge alla lista
         Categoria cat = Categoria.valueOf(categoria);
         Visibilita vis = Visibilita.valueOf(visibilita);
-        String data = LocalDate.now().toString();
+        LocalDate data = LocalDate.now();
         int id = Integer.parseInt(idMateriale);
         MaterialeDidattico materialeAggiornato = getMaterialeDidatticoPerId(id);
         materialeAggiornato.setTitolo(titolo);

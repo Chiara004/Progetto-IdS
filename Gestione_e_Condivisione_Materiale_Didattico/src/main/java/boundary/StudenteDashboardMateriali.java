@@ -3,8 +3,8 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import control.GestorePiattaformaChiara;
-import control.GestorePiattaformaFC;
+import control.GestorePiattaforma;
+import control.SessionManager;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -30,7 +30,7 @@ public class StudenteDashboardMateriali {
     private JPanel descrizioneDashboard;
     private JLabel iconaLogo;
     private JLabel lblStudente;
-    private JLabel lbl_informazioniDocenti;
+    private JLabel lbl_informazioniStudenti;
     private JButton btnLogout;
 
     private JFrame frameAggiungi;
@@ -112,9 +112,9 @@ public class StudenteDashboardMateriali {
         lblStudente = new JLabel();
         lblStudente.setText("Studente");
         descrizioneDashboard.add(lblStudente, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        lbl_informazioniDocenti = new JLabel();
-        lbl_informazioniDocenti.setText("\"nome studente\"");
-        descrizioneDashboard.add(lbl_informazioniDocenti, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lbl_informazioniStudenti = new JLabel();
+        lbl_informazioniStudenti.setText("\"nome studente\"");
+        descrizioneDashboard.add(lbl_informazioniStudenti, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         descrizioneDashboard.add(spacer2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         btnLogout = new JButton();
@@ -167,7 +167,7 @@ public class StudenteDashboardMateriali {
         setAzioni();
         aggiornaTabellaMateriali();
         lblCorso.setText(nomeCorso);
-        lbl_informazioniDocenti.setText(emailUtente);
+        lbl_informazioniStudenti.setText(emailUtente);
 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoPiattaforma.png"));
         Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -254,7 +254,7 @@ public class StudenteDashboardMateriali {
     //metodo per popolare la tabella
     public void aggiornaTabellaMateriali() {
         // Richiama il tuo metodo per ottenere i dati
-        List<String[]> datiMateriali = GestorePiattaformaFC.VisualizzaMateriali(this.emailUtente, this.nomeCorso);
+        List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMaterialiPubblicati(this.nomeCorso);
 
         //Ottieni il modello della tua JTable
         tableModel = (DefaultTableModel) tblMateriali.getModel();
@@ -278,7 +278,7 @@ public class StudenteDashboardMateriali {
                 // Prima controlliamo che una riga sia effettivamente selezionata!
                 if (rigaSelezionata != -1) {
                     String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 0).toString();
-                    boolean esito = GestorePiattaformaChiara.apriMateriale(emailUtente, nomeCorso, titoloSelezionato);
+                    boolean esito = GestorePiattaforma.apriMateriale(nomeCorso, titoloSelezionato);
 
                     if (esito) {
                         JOptionPane.showMessageDialog(contentPane, "File aperto con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
@@ -330,6 +330,7 @@ public class StudenteDashboardMateriali {
 
                 if (myFrame != null) {
                     myFrame.dispose();
+                    SessionManager.getInstance().logout();
                     LoginForm form = new LoginForm();
                     frameLogin = form.apriLoginForm();
                     frameLogin.setLocationRelativeTo(null);

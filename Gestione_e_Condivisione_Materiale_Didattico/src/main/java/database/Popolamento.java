@@ -11,6 +11,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.Properties;
 import entity.*;
 
@@ -113,7 +114,7 @@ public class Popolamento {
                     Corso c = em.find(Corso.class, Integer.parseInt(campi[7].trim()));
                     Sezione s = em.find(Sezione.class, Integer.parseInt(campi[8].trim()));
                     m.setCategoria(Categoria.valueOf(campi[1].trim()));
-                    m.setDataPubblicazione(campi[2].trim());
+                    m.setDataPubblicazione(LocalDate.parse(campi[2].trim()));
                     m.setDescrizione(campi[3].trim());
                     m.setPercorsoFile(campi[4].trim());
                     m.setTitolo(campi[5].trim());

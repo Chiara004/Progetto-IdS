@@ -1,12 +1,13 @@
 package entity;
 
-import control.GestorePiattaformaSara;
+import control.GestorePiattaforma;
+import control.SessionManager;
 import database.GestorePersistenza;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+
 
 public class GestoreUtente {
 
@@ -34,18 +35,18 @@ public class GestoreUtente {
         if (isStudente) {
             // Regola Studente: Deve iniziare con N4600 ed essere lunga esattamente 9 caratteri
             if (!mat.startsWith("N4600") || mat.length() != 9) {
-                return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
+                return GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
             }
         } else {
             // Regola Docente: Deve iniziare con DOC ed essere più lunga di 3 caratteri
             if (!mat.startsWith("DOC") || mat.length() <= 3) {
-                return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
+                return GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
             }
         }
 
         String emailLower = email.toLowerCase().trim();
         if (!emailLower.endsWith("@unina.it")) {
-            return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO;
+            return GestorePiattaforma.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO;
         }
 
         List<Utente> utentiEsistenti = gestorePersistenza.cercaPerCampo(
@@ -55,7 +56,7 @@ public class GestoreUtente {
         );
 
         if (!utentiEsistenti.isEmpty()) {
-            return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE;
+            return GestorePiattaforma.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE;
         }
 
         List<Utente> matricoleEsistenti = gestorePersistenza.cercaPerCampo(
@@ -65,7 +66,7 @@ public class GestoreUtente {
         );
 
         if (!matricoleEsistenti.isEmpty()) {
-            return GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;
+            return GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;
         }
 
         Utente nuovoUtente;
@@ -82,7 +83,7 @@ public class GestoreUtente {
 
         if (salvatoConSuccesso) {
             System.out.println("[GestorePersistenza] Nuovo utente registrato nel DB reale!");
-            return GestorePiattaformaSara.REGISTRAZIONE_AVVENUTA;
+            return GestorePiattaforma.REGISTRAZIONE_AVVENUTA;
         } else {
             return -1;
         }
@@ -106,17 +107,18 @@ public class GestoreUtente {
 
         if (utente == null || !verificaPassword(password, utente.getPassword())) {
             System.out.println("[GestorePersistenza] Login fallito: credenziali non trovate.");
-            return GestorePiattaformaSara.LOGIN_FALLITO;
+            return GestorePiattaforma.LOGIN_FALLITO;
         }
 
         System.out.println("[GestorePersistenza] Login accettato per: " + utente.getNome());
+        SessionManager.getInstance().setUtenteLoggato(utente);
 
         if (utente instanceof Studente) {
-            return GestorePiattaformaSara.LOGIN_SUCCESS_STUDENTE;
+            return GestorePiattaforma.LOGIN_SUCCESS_STUDENTE;
         } else if (utente instanceof Docente) {
-            return GestorePiattaformaSara.LOGIN_SUCCESS_DOCENTE;
+            return GestorePiattaforma.LOGIN_SUCCESS_DOCENTE;
         }
 
-        return GestorePiattaformaSara.LOGIN_FALLITO;
+        return GestorePiattaforma.LOGIN_FALLITO;
     }
 }

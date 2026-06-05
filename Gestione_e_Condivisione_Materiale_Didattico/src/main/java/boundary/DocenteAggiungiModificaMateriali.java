@@ -3,7 +3,7 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import control.GestorePiattaformaChiara;
+import control.GestorePiattaforma;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -147,9 +147,9 @@ public class DocenteAggiungiModificaMateriali {
         this.corso = corso;
 
         //recupera i tipi e le sezioni
-        cmbCategoria.setModel(new DefaultComboBoxModel(GestorePiattaformaChiara.getCategorieMateriali()));
-        cmbVisibilita.setModel(new DefaultComboBoxModel(GestorePiattaformaChiara.getVisibilita()));
-        cmbSezione.setModel(new DefaultComboBoxModel(GestorePiattaformaChiara.getSezioni(this.emailUtente, this.corso)));
+        cmbCategoria.setModel(new DefaultComboBoxModel(GestorePiattaforma.getCategorieMateriali()));
+        cmbVisibilita.setModel(new DefaultComboBoxModel(GestorePiattaforma.getVisibilita()));
+        cmbSezione.setModel(new DefaultComboBoxModel(GestorePiattaforma.getSezioni(this.corso)));
 
         setAzioni();
     }
@@ -161,17 +161,17 @@ public class DocenteAggiungiModificaMateriali {
         this.corso = corso;
 
         //recupera i tipi e le sezioni
-        cmbCategoria.setModel(new DefaultComboBoxModel(GestorePiattaformaChiara.getCategorieMateriali()));
-        cmbVisibilita.setModel(new DefaultComboBoxModel(GestorePiattaformaChiara.getVisibilita()));
-        cmbSezione.setModel(new DefaultComboBoxModel(GestorePiattaformaChiara.getSezioni(this.emailUtente, this.corso)));
-
+        cmbCategoria.setModel(new DefaultComboBoxModel(GestorePiattaforma.getCategorieMateriali()));
+        cmbVisibilita.setModel(new DefaultComboBoxModel(GestorePiattaforma.getVisibilita()));
+        cmbSezione.setModel(new DefaultComboBoxModel(GestorePiattaforma.getSezioni(this.corso)));
+        lbl_Aggiungi.setText("Modifica Materiale");
         txtTitolo.setText(titolo);
         txtDescrizione.setText(descrizione);
         cmbCategoria.setSelectedItem(categoria);
         cmbSezione.setSelectedItem(sezione);
         cmbVisibilita.setSelectedItem(visibilita);
-        lblPercorsoFile.setText(GestorePiattaformaChiara.getPercorsoFile(this.emailUtente, this.corso, titolo));
-        this.idMateriale = GestorePiattaformaChiara.getIdMateriale(this.emailUtente, this.corso, titolo);
+        lblPercorsoFile.setText(GestorePiattaforma.getPercorsoFile(this.corso, titolo));
+        this.idMateriale = GestorePiattaforma.getIdMateriale(this.corso, titolo);
         setAzioni();
 
     }
@@ -179,7 +179,7 @@ public class DocenteAggiungiModificaMateriali {
     public JFrame apriDocenteAggiungiModificaMateriali() {
         // Impostazioni base della finestra
         String titolo = "Aggiungi Materiale";
-        if (!isModifica) {
+        if (isModifica) {
             titolo = "Modifica Materiale";
         }
 
@@ -228,11 +228,11 @@ public class DocenteAggiungiModificaMateriali {
 
                 boolean esito;
                 if(isModifica){
-                    esito = GestorePiattaformaChiara.modificaMateriale(emailUtente, corso, idMateriale, titolo,descrizione,
+                    esito = GestorePiattaforma.modificaMateriale(corso, idMateriale, titolo,descrizione,
                             categoria,visibilita,fileScelto,sezione);
                 }
                 else{
-                    esito = GestorePiattaformaChiara.inserisciMateriale(emailUtente, corso, titolo, descrizione,
+                    esito = GestorePiattaforma.inserisciMateriale(corso, titolo, descrizione,
                             categoria, visibilita,fileScelto,sezione);
                 }
 

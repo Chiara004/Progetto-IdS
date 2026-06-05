@@ -14,7 +14,7 @@ public class MaterialeDidattico {
     @Column(nullable = false)
     private String titolo;
     private String descrizione;
-    private String dataPubblicazione;
+    private LocalDate dataPubblicazione;
     private String percorsoFile;
 
     @Enumerated(EnumType.STRING)
@@ -34,7 +34,7 @@ public class MaterialeDidattico {
     public MaterialeDidattico() {
     }
 
-    public MaterialeDidattico(String titolo, String descrizione, String dataPubblicazione,
+    public MaterialeDidattico(String titolo, String descrizione, LocalDate dataPubblicazione,
                               String percorsoFile, Categoria categoria, Visibilita visibilita) {
 
         this.titolo = titolo;
@@ -66,11 +66,11 @@ public class MaterialeDidattico {
         this.descrizione = descrizione;
     }
 
-    public String getDataPubblicazione() {
+    public LocalDate getDataPubblicazione() {
         return dataPubblicazione;
     }
 
-    public void setDataPubblicazione(String dataPubblicazione) {
+    public void setDataPubblicazione(LocalDate dataPubblicazione) {
         this.dataPubblicazione = dataPubblicazione;
     }
 

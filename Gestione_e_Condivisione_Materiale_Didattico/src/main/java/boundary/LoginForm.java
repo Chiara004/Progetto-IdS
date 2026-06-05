@@ -2,7 +2,7 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import control.GestorePiattaformaSara;
+import control.GestorePiattaforma;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -25,11 +25,8 @@ public class LoginForm {
     private JFrame frameRegistrazione;
     private JFrame myFrame;
 
-    private GestorePiattaformaSara gestorePiattaforma;
 
     public LoginForm() {
-
-        this.gestorePiattaforma = new GestorePiattaformaSara();
 
         accediButton.addActionListener(new ActionListener() {
             @Override
@@ -161,11 +158,11 @@ public class LoginForm {
         }
 
 
-        int esito = gestorePiattaforma.inserimentoCredenziali(email, password);
+        int esito = GestorePiattaforma.inserimentoCredenziali(email, password);
 
         switch (esito) {
 
-            case GestorePiattaformaSara.LOGIN_SUCCESS_STUDENTE:
+            case GestorePiattaforma.LOGIN_SUCCESS_STUDENTE:
                 JOptionPane.showMessageDialog(
                     null,
                     "Accesso effettuato con successo! Benvenuto Studente.",
@@ -178,7 +175,7 @@ public class LoginForm {
                 }
                 break;
 
-            case GestorePiattaformaSara.LOGIN_SUCCESS_DOCENTE:
+            case GestorePiattaforma.LOGIN_SUCCESS_DOCENTE:
                 JOptionPane.showMessageDialog(
                     null,
                     "Accesso effettuato con successo! Benvenuto Docente.",
@@ -191,7 +188,7 @@ public class LoginForm {
                 }
                 break;
 
-            case GestorePiattaformaSara.LOGIN_FALLITO:
+            case GestorePiattaforma.LOGIN_FALLITO:
             default:
                 JOptionPane.showMessageDialog(
                         null,

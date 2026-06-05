@@ -2,8 +2,9 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import control.GestoreCorsoChiara;
-import control.GestorePiattaformaChiara;
+
+import control.GestorePiattaforma;
+import control.SessionManager;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -15,11 +16,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 import java.util.Locale;
 import java.util.List;
-
-//aggiungere i 3 puntini nell ultima colonna al centro
 
 
 public class DocenteDashboardMateriali {
@@ -174,7 +172,6 @@ public class DocenteDashboardMateriali {
     }
 
 
-    //Aggiungere nel costruttore l'email dell'utente e il corso
     public DocenteDashboardMateriali(String emailUtente, String nomeCorso){
         this.emailUtente = emailUtente;
         this.nomeCorso = nomeCorso;
@@ -273,7 +270,7 @@ public class DocenteDashboardMateriali {
     //metodo per popolare la tabella
     public void aggiornaTabellaMateriali() {
         // Richiama il tuo metodo per ottenere i dati
-        List<String[]> datiMateriali = GestorePiattaformaChiara.VisualizzaMateriali(this.emailUtente, this.nomeCorso);
+        List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMateriali(this.nomeCorso);
 
         //Ottieni il modello della tua JTable
         tableModel = (DefaultTableModel) tblMateriali.getModel();
@@ -288,7 +285,7 @@ public class DocenteDashboardMateriali {
     }
 
     private void setAzioni() {
-        //Azione click Aggiungi FATTA
+        //Azione click Aggiungi
         btnAggiungi.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -313,7 +310,7 @@ public class DocenteDashboardMateriali {
         });
 
 
-        //Azione click Modifica FATTA
+        //Azione click Modifica
         menuModifica.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -368,7 +365,7 @@ public class DocenteDashboardMateriali {
                 );
 
                 if (scelta == JOptionPane.YES_OPTION){
-                    GestorePiattaformaChiara.eliminaMateriale(emailUtente, nomeCorso, titoloSelezionato);
+                    GestorePiattaforma.eliminaMateriale(nomeCorso, titoloSelezionato);
                     aggiornaTabellaMateriali();
                     JOptionPane.showMessageDialog(myFrame, "Materiale eliminato con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -385,7 +382,7 @@ public class DocenteDashboardMateriali {
                 int rigaSelezionata = tblMateriali.getSelectedRow();
                 String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 0).toString();
                 if (rigaSelezionata != -1) {
-                    boolean esito=GestorePiattaformaChiara.apriMateriale(emailUtente, nomeCorso,titoloSelezionato);
+                    boolean esito=GestorePiattaforma.apriMateriale(nomeCorso,titoloSelezionato);
 
                     if(esito){
                         JOptionPane.showMessageDialog(contentPane, "File aperto con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
@@ -426,7 +423,7 @@ public class DocenteDashboardMateriali {
             }
         });
 
-        //bottone logout FATTO
+        //bottone logout
         btnLogout.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
@@ -439,6 +436,7 @@ public class DocenteDashboardMateriali {
 
                 if (myFrame != null) {
                     myFrame.dispose();
+                    SessionManager.getInstance().logout();
                     LoginForm form = new LoginForm();
                     frameLogin = form.apriLoginForm();
                     frameLogin.setLocationRelativeTo(null);

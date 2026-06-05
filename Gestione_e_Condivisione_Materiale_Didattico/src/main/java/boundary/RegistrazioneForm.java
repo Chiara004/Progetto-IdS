@@ -3,7 +3,7 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import control.GestorePiattaformaSara;
+import control.GestorePiattaforma;
 
 
 import javax.swing.*;
@@ -31,11 +31,8 @@ public class RegistrazioneForm {
 
     private JFrame frameRegistrazione;
 
-    private GestorePiattaformaSara gestorePiattaforma;
 
     public RegistrazioneForm() {
-
-        this.gestorePiattaforma = new GestorePiattaformaSara();
 
         btnRegistra.addActionListener(new ActionListener() {
             @Override
@@ -144,13 +141,6 @@ public class RegistrazioneForm {
 
     }
 
-    public static void main(String[] args) {
-
-        RegistrazioneForm frameRegistrazione = new RegistrazioneForm();
-
-        frameRegistrazione.apriRegistrazioneForm();
-    }
-
     private void eseguiRegistrazione() {
         String email = txtEmail.getText();
         String matricola = txtMatricola.getText();
@@ -182,11 +172,11 @@ public class RegistrazioneForm {
         }
 
 
-        int esito = gestorePiattaforma.inserimentoDatiUtente(email, matricola, nome, cognome, password, isStudente);
+        int esito = GestorePiattaforma.inserimentoDatiUtente(email, matricola, nome, cognome, password, isStudente);
 
         switch (esito) {
 
-            case GestorePiattaformaSara.REGISTRAZIONE_AVVENUTA:
+            case GestorePiattaforma.REGISTRAZIONE_AVVENUTA:
                 JOptionPane.showMessageDialog(
                         null,
                         "Registrazione salvata correttamente! Ora puoi effettuare l'accesso.",
@@ -202,7 +192,7 @@ public class RegistrazioneForm {
                 }
                 break;
 
-            case GestorePiattaformaSara.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO:
+            case GestorePiattaforma.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO:
                 JOptionPane.showMessageDialog(
                         null,
                         "Devi utilizzare l'email istituzionale dell'Ateneo (@unina.it).",
@@ -211,7 +201,7 @@ public class RegistrazioneForm {
                 );
                 break;
 
-            case GestorePiattaformaSara.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE:
+            case GestorePiattaforma.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE:
                 // [ESTENSIONE 1.1.a] - Email già utilizzata
                 JOptionPane.showMessageDialog(
                         null,
@@ -228,7 +218,7 @@ public class RegistrazioneForm {
                 }
                 break;
 
-            case GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE:
+            case GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE:
                 JOptionPane.showMessageDialog(
                         null,
                         "Attenzione: questa matricola risulta già registrata nel sistema.",
@@ -237,7 +227,7 @@ public class RegistrazioneForm {
                 );
                 break;
 
-            case GestorePiattaformaSara.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA:
+            case GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA:
                 String messaggioErrore;
                 if (isStudente) {
                     messaggioErrore = "Formato matricola studente non valido!\nDeve iniziare con 'N4600' e contenere 9 caratteri in totale.";
