@@ -28,6 +28,15 @@ public class CorsoTest {
     // Dati fissi della sezione pre-esistente
     private static final String TITOLO_SEZIONE = "Modulo 1";
 
+    private static String stringa(int n) {
+        return "a".repeat(n);
+    }
+
+    // Stringa di esattamente 255 caratteri (limite valido)
+    private static final String STRINGA_255  = stringa(255);
+    // Stringa di 256 caratteri (un carattere oltre il limite)
+    private static final String STRINGA_256  = stringa(256);
+
     @BeforeEach
     void setUp() {
         gestorePersistenza = new GestorePersistenza();
@@ -369,5 +378,111 @@ public class CorsoTest {
         assertEquals(c1, c2, "Due corsi con lo stesso codice devono essere uguali");
         assertNotEquals(c1, c3, "Due corsi con codice diverso non devono essere uguali");
         assertEquals(c1.hashCode(), c2.hashCode(), "L'hashcode deve essere uguale se i codici sono uguali");
+    }
+
+    //TEST INSERIMENTO TITOLO CON 255 CARATTERI
+    @Test
+    void testInserisciMateriale_Titolo255Caratteri_Accettato() {
+        boolean esito = corso.inserisciMateriale(
+                STRINGA_255, "desc", "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+
+        assertTrue(esito, "Un titolo di esattamente 255 caratteri deve essere accettato");
+    }
+
+    //TEST INSERIMENTO TITOLO CON 256 CARATTERI
+    @Test
+    void testInserisciMateriale_Titolo256Caratteri_Rifiutato() {
+        boolean esito = corso.inserisciMateriale(
+                STRINGA_256, "desc", "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+
+        assertFalse(esito, "Un titolo di 256 caratteri deve essere rifiutato");
+    }
+
+    //TEST INSERIMENTO DESCRIZIONE CON 255 CARATTERI
+    @Test
+    void testInserisciMateriale_Descrizione255Caratteri_Accettata() {
+        boolean esito = corso.inserisciMateriale(
+                "Titolo Valido", STRINGA_255, "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+
+        assertTrue(esito, "Una descrizione di esattamente 255 caratteri deve essere accettata");
+    }
+
+    //TEST INSERIMENTO DESCRIZIONE CON 256 CARATTERI
+    @Test
+    void testInserisciMateriale_Descrizione256Caratteri_Rifiutata() {
+        boolean esito = corso.inserisciMateriale(
+                "Titolo Valido", STRINGA_256, "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+
+        assertFalse(esito, "Una descrizione di 256 caratteri deve essere rifiutata");
+    }
+
+    //TEST INSERIMENTO PERCORSO FILE CON 255 CARATTERI
+    @Test
+    void testInserisciMateriale_PercorsoFile255Caratteri_Accettato() {
+        boolean esito = corso.inserisciMateriale(
+                "Titolo Valido", "desc", "PUBBLICATO", STRINGA_255, "null", "SLIDE");
+
+        assertTrue(esito, "Un percorsoFile di esattamente 255 caratteri deve essere accettato");
+    }
+
+    //TEST INSERIMENTO PERCORSO FILE CON 256 CARATTERI
+    @Test
+    void testInserisciMateriale_PercorsoFile256Caratteri_Rifiutato() {
+        boolean esito = corso.inserisciMateriale(
+                "Titolo Valido", "desc", "PUBBLICATO", STRINGA_256, "null", "SLIDE");
+
+        assertFalse(esito, "Un percorsoFile di 256 caratteri deve essere rifiutato");
+    }
+
+
+    //TEST MODIFICA TITOLO CON 256 CARATTERI
+    @Test
+    void testModificaMateriale_Titolo256Caratteri_Rifiutato() {
+        MaterialeDidattico m = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        assertNotNull(m);
+
+        boolean esito = corso.modificaMateriale(
+                String.valueOf(m.getIdMateriale()),
+                STRINGA_256, "desc", "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+
+        assertFalse(esito, "La modifica con titolo di 256 caratteri deve essere rifiutata");
+    }
+
+    //TEST MODIFICA DESCRIZIONE CON 256 CARATTERI
+    @Test
+    void testModificaMateriale_Descrizione256Caratteri_Rifiutata() {
+        MaterialeDidattico m = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        assertNotNull(m);
+        boolean esito = corso.modificaMateriale(
+                String.valueOf(m.getIdMateriale()),
+                TITOLO_MAT_ESISTENTE, STRINGA_256, "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+
+        assertFalse(esito, "La modifica con descrizione di 256 caratteri deve essere rifiutata");
+    }
+
+    //TEST MODIFICA PERCORSO FILE CON 256 CARATTERI
+    @Test
+    void testModificaMateriale_PercorsoFile256Caratteri_Rifiutato() {
+        MaterialeDidattico m = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        assertNotNull(m);
+
+        boolean esito = corso.modificaMateriale(
+                String.valueOf(m.getIdMateriale()),
+                TITOLO_MAT_ESISTENTE, "desc", "PUBBLICATO", STRINGA_256, "null", "SLIDE");
+
+        assertFalse(esito, "La modifica con percorsoFile di 256 caratteri deve essere rifiutata");
+    }
+
+    //TEST MODIFICA TITOLO CON 255 CARATTERI
+    @Test
+    void testModificaMateriale_Titolo255Caratteri_Accettato() {
+        MaterialeDidattico m = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        assertNotNull(m);
+
+        boolean esito = corso.modificaMateriale(
+                String.valueOf(m.getIdMateriale()),
+                STRINGA_255, "desc", "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+
+        assertTrue(esito, "La modifica con titolo di esattamente 255 caratteri deve essere accettata");
     }
 }

@@ -32,6 +32,12 @@ public class GestoreUtente {
 
         String mat = matricola.trim();
 
+        // Validazione lunghezza campi (varchar 255)
+        if ((nome.length()>255) || (cognome.length()>255)
+        || (email.length()>255) || (password.length()>255))
+            return GestorePiattaforma.REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO;
+
+
         if (isStudente) {
             // Regola Studente: Deve iniziare con N4600 ed essere lunga esattamente 9 caratteri
             if (!mat.startsWith("N4600") || mat.length() != 9) {

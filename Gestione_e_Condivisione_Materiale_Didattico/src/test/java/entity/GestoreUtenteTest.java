@@ -23,6 +23,15 @@ public class GestoreUtenteTest {
     private final String EMAIL_STUDENTE_NUOVA     = "nuovo.studente@unina.it";
     private final String EMAIL_DOCENTE_NUOVA      = "nuovo.docente@unina.it";
 
+    private static String stringa(int n) {
+        return "a".repeat(n);
+    }
+
+    // Stringa di esattamente 255 caratteri (limite valido)
+    private static final String STRINGA_255  = stringa(255);
+    // Stringa di 256 caratteri (un carattere oltre il limite)
+    private static final String STRINGA_256  = stringa(256);
+
     @BeforeEach
     void setUp() {
         // Inizializza il gestore prima di ogni test per avere uno stato pulito
@@ -187,5 +196,96 @@ public class GestoreUtenteTest {
         int esito = gestoreUtente.inserimentoCredenziali(EMAIL_ESISTENTE, "");
         assertEquals(GestorePiattaforma.LOGIN_FALLITO, esito,
                 "Il login con password vuota deve fallire");
+    }
+
+    //TEST REGISTRAZIONE NOME 255 CARATTERI
+    @Test
+    void testRegistrazione_Nome255Caratteri_Accettato() {
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                EMAIL_STUDENTE_NUOVA, MATRICOLA_STUDENTE_NUOVA, STRINGA_255, "Rossi", "pwd", true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_AVVENUTA, esito,
+                "Un nome di esattamente 255 caratteri deve essere accettato");
+    }
+
+    //TEST REGISTRAZIONE NOME 256 CARATTERI
+    @Test
+    void testRegistrazione_Nome256Caratteri_Rifiutato() {
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                EMAIL_STUDENTE_NUOVA, MATRICOLA_STUDENTE_NUOVA, STRINGA_256, "Rossi", "pwd", true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO, esito,
+                "Un nome di 256 caratteri deve essere rifiutato");
+    }
+
+    //TEST REGISTRAZIONE COGNOME 255 CARATTERI
+    @Test
+    void testRegistrazione_Cognome255Caratteri_Accettato() {
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                EMAIL_STUDENTE_NUOVA, MATRICOLA_STUDENTE_NUOVA, "Mario", STRINGA_255, "pwd", true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_AVVENUTA, esito,
+                "Un cognome di esattamente 255 caratteri deve essere accettato");
+    }
+
+    //TEST REGISTRAZIONE COGNOME 256 CARATTERI
+    @Test
+    void testRegistrazione_Cognome256Caratteri_Rifiutato() {
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                EMAIL_STUDENTE_NUOVA, MATRICOLA_STUDENTE_NUOVA, "Mario", STRINGA_256, "pwd", true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO, esito,
+                "Un cognome di 256 caratteri deve essere rifiutato");
+    }
+
+    //TEST REGISTRAZIONE EMAIL 255 CARATTERI
+    @Test
+    void testRegistrazione_Email255Caratteri_Accettata() {
+        // Costruisce un'email lunga esattamente 255 caratteri con dominio @unina.it valido
+        String prefisso = stringa(255 - "@unina.it".length()); // 246 'a'
+        String email255 = prefisso + "@unina.it";
+        assertEquals(255, email255.length());
+
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                email255, MATRICOLA_STUDENTE_NUOVA, "Mario", "Rossi", "pwd", true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_AVVENUTA, esito,
+                "Un'email di esattamente 255 caratteri deve essere accettata");
+    }
+
+    //TEST REGISTRAZIONE EMAIL 256 CARATTERI
+    @Test
+    void testRegistrazione_Email256Caratteri_Rifiutata() {
+        // 256 caratteri totali — supera il limite prima ancora del controllo dominio
+        String prefisso = stringa(256 - "@unina.it".length()); // 247 'a'
+        String email256 = prefisso + "@unina.it";
+        assertEquals(256, email256.length());
+
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                email256, MATRICOLA_STUDENTE_NUOVA, "Mario", "Rossi", "pwd", true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO, esito,
+                "Un'email di 256 caratteri deve essere rifiutata");
+    }
+
+
+    //TEST REGISTRAZIONE PASSWORD 255 CARATTERI
+    @Test
+    void testRegistrazione_Password255Caratteri_Accettata() {
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                EMAIL_STUDENTE_NUOVA, MATRICOLA_STUDENTE_NUOVA, "Mario", "Rossi", STRINGA_255, true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_AVVENUTA, esito,
+                "Una password di esattamente 255 caratteri deve essere accettata");
+    }
+
+    //TEST REGISTRAZIONE PASSWORD 256 CARATTERI
+    @Test
+    void testRegistrazione_Password256Caratteri_Rifiutata() {
+        int esito = gestoreUtente.inserimentoDatiUtente(
+                EMAIL_STUDENTE_NUOVA, MATRICOLA_STUDENTE_NUOVA, "Mario", "Rossi", STRINGA_256, true);
+
+        assertEquals(GestorePiattaforma.REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO, esito,
+                "Una password di 256 caratteri deve essere rifiutata");
     }
 }

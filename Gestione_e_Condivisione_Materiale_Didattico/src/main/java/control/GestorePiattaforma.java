@@ -17,6 +17,7 @@ public class GestorePiattaforma {
     public static final int LOGIN_FALLITO = 0;
     public static final int LOGIN_SUCCESS_STUDENTE = 1;
     public static final int LOGIN_SUCCESS_DOCENTE = 2;
+    public static final int REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO = 5;
 
 
     public static List<String[]> VisualizzaMaterialiPubblicati(String corso){

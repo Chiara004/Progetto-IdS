@@ -153,6 +153,12 @@ public class Corso {
     }
 
     public boolean inserisciMateriale(String titolo, String descrizione, String visibilita, String percorsoFile, String sezione, String categoria){
+        // Validazione lunghezza campi (boundary varchar 255)
+        if (descrizione.length() > 255 ||
+                (titolo.length()>255) ||
+                (percorsoFile.length() > 255) )
+            return false;
+
         // Controllo omonimia (Regola di business)
         for (MaterialeDidattico m : this.materialeDidattico) {
             if (m.getTitolo().equalsIgnoreCase(titolo)) {
@@ -177,6 +183,11 @@ public class Corso {
     }
 
     public boolean modificaMateriale(String idMateriale, String titolo, String descrizione, String visibilita, String percorsoFile, String sezione, String categoria){
+        if (descrizione.length() > 255 ||
+                (titolo.length()>255) ||
+                (percorsoFile.length() > 255) )
+            return false;
+
         // Controllo omonimia (Regola di business)
         for (MaterialeDidattico m : this.materialeDidattico) {
             if (m.getTitolo().equalsIgnoreCase(titolo) && m.getIdMateriale() != Integer.parseInt(idMateriale)) {
