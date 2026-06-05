@@ -7,6 +7,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -17,8 +23,8 @@ public class GestoreCorsoTest {
     private GestoreCorso       gestoreCorso;
 
     // Docente loggato
-    private static final String MATRICOLA_DOCENTE = "DOC_COR01";
-    private static final String EMAIL_DOCENTE     = "docente.corso@unina.it";
+    private static final String MATRICOLA_DOCENTE  = "DOC_COR01";
+    private static final String EMAIL_DOCENTE      = "docente.corso@unina.it";
 
     // Secondo docente (per test isolamento)
     private static final String MATRICOLA_DOCENTE2 = "DOC_COR02";
@@ -35,17 +41,31 @@ public class GestoreCorsoTest {
     private static final String TITOLO_SEZIONE = "Sezione Alpha";
 
     // Materiale pre-esistente
-    private static final String TITOLO_MAT_ESISTENTE  = "Slide Introduttive";
-    private static final String PERCORSO_MAT_ESISTENTE = "/files/slide_intro.pdf";
+    private static final String TITOLO_MAT_ESISTENTE   = "Slide Introduttive";
+    private static final String NOME_FILE_MAT_ESISTENTE = "slide_intro_esistente.pdf";
+
+    // Cartella temporanea usata da GestoreFile
+    private static final String UPLOAD_DIR_TEST = "target/test-uploads";
 
     private Docente docente;
     private Docente docente2;
     private Corso corso;
     private Corso corso2;
 
+    // File temporaneo su disco
+    private File fileDiTest;
+
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         gestorePersistenza = new GestorePersistenza();
+
+        // Crea la cartella di upload per i test se non esiste
+        Files.createDirectories(Paths.get(UPLOAD_DIR_TEST));
+
+        // Crea un file temporaneo reale nel tmp di sistema (usato come "file scelto" nei test)
+        fileDiTest = File.createTempFile("materiale_test_", ".pdf",
+                new File(System.getProperty("java.io.tmpdir")));
+        Files.writeString(fileDiTest.toPath(), "contenuto di test");
 
         // Crea e salva i docenti
         String passwordCriptata = BCrypt.hashpw("password123", BCrypt.gensalt());
@@ -58,36 +78,61 @@ public class GestoreCorsoTest {
         // Crea il corso principale con una sezione e un materiale pre-esistente
         corso = new Corso(CODICE_CORSO, TITOLO_CORSO, "Descrizione test", "2024/2025");
         corso.setDocente(docente);
+        gestorePersistenza.salva(corso);
 
         Sezione sezione = new Sezione(TITOLO_SEZIONE);
+        sezione.setCorso(corso);
+        gestorePersistenza.salva(sezione);
         corso.getSezioni().add(sezione);
+
+        // Copia il file del materiale pre-esistente direttamente nella upload dir
+        Path destinazioneEsistente = Paths.get(UPLOAD_DIR_TEST, NOME_FILE_MAT_ESISTENTE);
+        Files.copy(fileDiTest.toPath(), destinazioneEsistente,
+                java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
         corso.inserisciMateriale(
                 TITOLO_MAT_ESISTENTE,
                 "Descrizione iniziale",
                 "PUBBLICATO",
-                PERCORSO_MAT_ESISTENTE,
+                NOME_FILE_MAT_ESISTENTE,
                 "null",
                 "SLIDE"
         );
-        gestorePersistenza.salva(corso);
+        MaterialeDidattico materialeCreato = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        gestorePersistenza.salva(materialeCreato);
+        gestorePersistenza.aggiorna(corso);
 
-        // Crea un corso omonimo intestato al secondo docente
+        // Crea un corso omonimo intestato al secondo docente (per test isolamento)
         corso2 = new Corso(CODICE_CORSO2, TITOLO_CORSO, "Corso del secondo docente", "2024/2025");
         corso2.setDocente(docente2);
         gestorePersistenza.salva(corso2);
 
-        // Imposta il docente principale come utente loggato,
+        // Imposta il docente loggato PRIMA di istanziare GestoreCorso
         SessionManager.getInstance().setUtenteLoggato(docente);
         gestoreCorso = new GestoreCorso();
     }
 
     @AfterEach
-    void tearDown() {
+    void tearDown() throws IOException {
+        // Elimina tutti i file rimasti nella upload dir di test
+        File uploadDir = new File(UPLOAD_DIR_TEST);
+        if (uploadDir.exists()) {
+            for (File f : uploadDir.listFiles()) {
+                f.delete();
+            }
+        }
+
+        // Elimina il file temporaneo di sistema
+        if (fileDiTest != null && fileDiTest.exists()) {
+            fileDiTest.delete();
+        }
+
+        // Pulizia DB
         gestorePersistenza.elimina(Corso.class,  CODICE_CORSO2);
         gestorePersistenza.elimina(Corso.class,  CODICE_CORSO);
         gestorePersistenza.elimina(Utente.class, MATRICOLA_DOCENTE);
         gestorePersistenza.elimina(Utente.class, MATRICOLA_DOCENTE2);
+
         SessionManager.getInstance().logout();
     }
 
@@ -104,8 +149,13 @@ public class GestoreCorsoTest {
     void testRecuperaMateriali_ContieneIlMaterialePreesistente() {
         Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
 
-        boolean trovato = materiali.stream()
-                .anyMatch(m -> m.getTitolo().equals(TITOLO_MAT_ESISTENTE));
+        boolean trovato = false;
+        for (MaterialeDidattico m : materiali) {
+            if (TITOLO_MAT_ESISTENTE.equals(m.getTitolo())) {
+                trovato = true;
+                break;
+            }
+        }
         assertTrue(trovato, "Il set deve contenere il materiale pre-esistente");
     }
 
@@ -132,8 +182,13 @@ public class GestoreCorsoTest {
     @Test
     void testGetSezioni_ContieneSezionePreesistente() {
         Set<Sezione> sezioni = gestoreCorso.getSezioni(TITOLO_CORSO);
-        boolean trovata = sezioni.stream()
-                .anyMatch(s -> s.getTitolo().equals(TITOLO_SEZIONE));
+        boolean trovata = false;
+        for (Sezione s : sezioni) {
+            if (TITOLO_SEZIONE.equals(s.getTitolo())) {
+                trovata = true;
+                break;
+            }
+        }
         assertTrue(trovata, "Il set deve contenere la sezione pre-esistente");
     }
 
@@ -149,10 +204,11 @@ public class GestoreCorsoTest {
 
     //TEST GET PERCORSO FILE
     @Test
-    void testGetPercorsoFile_RestituisceIlPercorsoCorretto() {
+    void testGetPercorsoFile_RestituisceIlNomeFileCorretto() {
         String percorso = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-        assertEquals(PERCORSO_MAT_ESISTENTE, percorso,
-                "Il percorso restituito deve corrispondere a quello salvato nel materiale");
+
+        assertEquals(NOME_FILE_MAT_ESISTENTE, percorso,
+                "Il percorso restituito deve corrispondere al nome del file salvato");
     }
 
     //TEST GET ID MATERIALE
@@ -174,218 +230,338 @@ public class GestoreCorsoTest {
                 "L'id restituito deve coincidere con quello del materiale nel corso");
     }
 
-    // =========================================================
-    // TEST — inserisciMateriale (senza GestoreFile: percorso passato direttamente)
-    // =========================================================
-
+    //TEST INSERIMENTO NUOVO MATERIALE
     @Test
     void testInserisciMateriale_TitoloNuovo_ReturnTrue() {
-        // Arrange: passiamo null come File — il metodo chiamerà gestoreFile.salvaFile(null)
-        // Nota: questo test è valido solo se GestoreFile.salvaFile(null) restituisce
-        // un percorso placeholder (es. null o stringa vuota) senza lanciare eccezioni.
-        // Se lancia eccezione, questo test va annotato con @Disabled fino all'introduzione del mock.
-
-        // Act
         boolean esito = gestoreCorso.inserisciMateriale(
                 TITOLO_CORSO,
                 "Nuovo Materiale",
                 "Descrizione nuova",
                 "DISPENSE",
                 "PUBBLICATO",
-                null,   // file fisico non testato
+                fileDiTest,
                 "null"
         );
 
-        // Assert
         assertTrue(esito, "L'inserimento con titolo nuovo deve restituire true");
     }
 
+    //TEST INSERIMENTO MATERIALE CON FILE DI TEST
+    @Test
+    void testInserisciMateriale_FileFisicoCopiato() {
+        gestoreCorso.inserisciMateriale(
+                TITOLO_CORSO, "Materiale Con File", "desc",
+                "DISPENSE", "PUBBLICATO", fileDiTest, "null"
+        );
+
+        Path fileCopiato = Paths.get(UPLOAD_DIR_TEST, fileDiTest.getName());
+        assertTrue(Files.exists(fileCopiato),
+                "Il file fisico deve essere presente nella upload dir dopo l'inserimento");
+    }
+
+    //TEST INSERIMENTO MATERIALE CON FILE DI TEST
+    @Test
+    void testInserisciMateriale_PercorsoSalvatoCorrispondeAlNomeFile() {
+        gestoreCorso.inserisciMateriale(
+                TITOLO_CORSO, "Materiale Percorso", "desc",
+                "DISPENSE", "PUBBLICATO", fileDiTest, "null"
+        );
+        String percorso = gestoreCorso.getPercorsoFile(TITOLO_CORSO, "Materiale Percorso");
+        assertEquals(fileDiTest.getName(), percorso,
+                "Il percorso salvato deve corrispondere al nome del file fisico copiato");
+    }
+
+    //TEST INSERIMENTO MATERIALE NON VALIDO TITOLO OMONIMO
     @Test
     void testInserisciMateriale_TitoloOmonimo_ReturnFalse() {
-        // Act: titolo già presente nel corso
         boolean esito = gestoreCorso.inserisciMateriale(
                 TITOLO_CORSO,
                 TITOLO_MAT_ESISTENTE,   // omonimo
                 "Altra descrizione",
-                "SLIDE",
-                "PUBBLICO",
-                null,
-                "null"
+                "SLIDE", "PUBBLICATO",
+                fileDiTest, "null"
         );
 
-        // Assert
         assertFalse(esito, "L'inserimento con titolo già esistente deve restituire false");
     }
 
+    //TEST INSERIMENTO MATERIALE NON VALIDO TITOLO OMONIMO CASE DIVERSO
     @Test
     void testInserisciMateriale_TitoloOmonimoCaseDiverso_ReturnFalse() {
-        // La regola di omonimia usa equalsIgnoreCase
         boolean esito = gestoreCorso.inserisciMateriale(
                 TITOLO_CORSO,
                 TITOLO_MAT_ESISTENTE.toLowerCase(),
                 "Altra descrizione",
-                "SLIDE",
-                "PUBBLICO",
-                null,
-                "null"
+                "SLIDE", "PUBBLICATO",
+                fileDiTest, "null"
         );
 
         assertFalse(esito, "L'inserimento con titolo omonimo (case diverso) deve restituire false");
     }
 
+    //TEST INSERIMENTO MATERIALE (DEVE RISULTARE PRESENTE NEL CORSO)
     @Test
     void testInserisciMateriale_MaterialeVisibileDopoInserimento() {
-        // Act
         gestoreCorso.inserisciMateriale(
                 TITOLO_CORSO, "Materiale Verificato", "desc",
-                "DISPENSA", "PUBBLICO", null, "null"
+                "DISPENSE", "PUBBLICATO", fileDiTest, "null"
         );
 
-        // Assert: il materiale deve essere recuperabile tramite recuperaMateriali
         Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
-        boolean trovato = materiali.stream()
-                .anyMatch(m -> m.getTitolo().equals("Materiale Verificato"));
+        boolean trovato = false;
+        for (MaterialeDidattico m : materiali) {
+            if ("Materiale Verificato".equals(m.getTitolo())) {
+                trovato = true;
+                break; // Interrompe il ciclo appena trova il materiale
+            }
+        }
         assertTrue(trovato, "Il materiale inserito deve essere presente nel corso dopo l'inserimento");
     }
 
-    // =========================================================
-    // TEST — rimuoviMateriale (senza GestoreFile: eliminaFileFisico non testato)
-    // =========================================================
-
+    //TEST RIMOZIONE MATERIALE VALIDA
     @Test
     void testRimuoviMateriale_TitoloEsistente_ReturnTrue() {
-        // Act
         boolean esito = gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-
-        // Assert
         assertTrue(esito, "La rimozione di un materiale esistente deve restituire true");
     }
 
+    //TEST RIMOZIONE MATERIALE TITOLO NON PRESENTE
     @Test
     void testRimuoviMateriale_TitoloInesistente_ReturnFalse() {
-        // Act
         boolean esito = gestoreCorso.rimuoviMateriale(TITOLO_CORSO, "Titolo Inesistente");
-
-        // Assert
         assertFalse(esito, "La rimozione di un materiale inesistente deve restituire false");
     }
 
+    //TEST RIMOZIONE FILE FISICO
+    @Test
+    void testRimuoviMateriale_FileFisicoEliminato() {
+        Path fileEsistente = Paths.get(UPLOAD_DIR_TEST, NOME_FILE_MAT_ESISTENTE);
+        assertTrue(Files.exists(fileEsistente),
+                "Il file fisico deve esistere prima della rimozione");
+        gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        assertFalse(Files.exists(fileEsistente),
+                "Il file fisico deve essere eliminato dalla upload dir dopo la rimozione");
+    }
+    //TEST RIMOZIONE FILE IN UNA SEZIONE
+    @Test
+    void testRimuoviMateriale_MaterialeInSezione_SezioneScollegate() throws IOException {
+        File fileConSezione = File.createTempFile("materiale_sezione_", ".pdf",
+                new File(System.getProperty("java.io.tmpdir")));
+        Files.writeString(fileConSezione.toPath(), "contenuto con sezione");
+
+        gestoreCorso.inserisciMateriale(
+                TITOLO_CORSO,
+                "Materiale In Sezione",
+                "desc",
+                "DISPENSE",
+                "PUBBLICATO",
+                fileConSezione,
+                TITOLO_SEZIONE
+        );
+
+        // Verifica che la sezione sia stata assegnata correttamente prima della rimozione
+        Corso corsoDalDB = gestorePersistenza.cercaPrimoPerCampi(
+                Corso.class, Map.of("titolo", TITOLO_CORSO, "docente", docente));
+        MaterialeDidattico materialeConSezione = corsoDalDB.getMaterialeDidatticoPerTitolo("Materiale In Sezione");
+        assertNotNull(materialeConSezione.getSezione(),
+                "Il materiale deve avere la sezione assegnata prima della rimozione");
+
+        boolean esito = gestoreCorso.rimuoviMateriale(TITOLO_CORSO, "Materiale In Sezione");
+
+        //la rimozione deve avere successo
+        assertTrue(esito, "La rimozione di un materiale con sezione deve restituire true");
+
+        //il materiale non deve più essere presente nel corso
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        boolean ancoraPresente = false;
+        for (MaterialeDidattico m : materiali) {
+            if ("Materiale In Sezione".equals(m.getTitolo())) {
+                ancoraPresente = true;
+                break;
+            }
+        }
+        assertFalse(ancoraPresente, "Il materiale rimosso non deve essere più presente nel corso");
+
+        //il file fisico deve essere stato eliminato
+        Path fileCopiato = Paths.get(UPLOAD_DIR_TEST, fileConSezione.getName());
+        assertFalse(Files.exists(fileCopiato),
+                "Il file fisico deve essere eliminato dalla upload dir");
+
+        // Assert 4: la sezione deve ancora esistere nel corso (non deve essere stata eliminata)
+        Set<Sezione> sezioni = gestoreCorso.getSezioni(TITOLO_CORSO);
+        boolean sezioneAncoraPresente = false;
+        for (Sezione s : sezioni) {
+            if (TITOLO_SEZIONE.equals(s.getTitolo())) {
+                sezioneAncoraPresente = true;
+                break;
+            }
+        }
+        assertTrue(sezioneAncoraPresente,
+                "La sezione deve sopravvivere alla rimozione del materiale che conteneva");
+
+        // Cleanup extra
+        fileConSezione.delete();
+    }
+
+    //TEST MATERIALE NON DEVE ESSERE PIU' PRESENTE
     @Test
     void testRimuoviMateriale_MaterialeNonPiuRecuperabile() {
-        // Act
         gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
-        // Assert: dopo la rimozione il materiale non deve più apparire nel corso
         Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
-        boolean ancoraPresente = materiali.stream()
-                .anyMatch(m -> m.getTitolo().equals(TITOLO_MAT_ESISTENTE));
+        boolean ancoraPresente = false;
+        for (MaterialeDidattico m : materiali) {
+            if (TITOLO_MAT_ESISTENTE.equals(m.getTitolo())) {
+                ancoraPresente = true;
+                break;
+            }
+        }
         assertFalse(ancoraPresente, "Il materiale rimosso non deve essere più presente nel corso");
     }
 
+    //TEST NON INFLUENZA SU ALTRI MATERIALI
     @Test
-    void testRimuoviMateriale_AltriMaterialiNonInfluenzati() {
-        // Arrange: inserisco un secondo materiale, poi rimuovo solo il primo
+    void testRimuoviMateriale_AltriMaterialiNonInfluenzati() throws IOException {
+        //crea un secondo file fisico per il secondo materiale
+        File secondoFile = File.createTempFile("secondo_materiale_", ".pdf",
+                new File(System.getProperty("java.io.tmpdir")));
+        Files.writeString(secondoFile.toPath(), "secondo contenuto");
         gestoreCorso.inserisciMateriale(
                 TITOLO_CORSO, "Materiale Da Tenere", "desc",
-                "DISPENSA", "PUBBLICO", null, "null"
+                "DISPENSE", "PUBBLICATO", secondoFile, "null"
         );
-
-        // Act
         gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-
-        // Assert: il secondo materiale deve sopravvivere
         Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
-        boolean tenutoPresente = materiali.stream()
-                .anyMatch(m -> m.getTitolo().equals("Materiale Da Tenere"));
+        boolean tenutoPresente = false;
+        for (MaterialeDidattico m : materiali) {
+            if ("Materiale Da Tenere".equals(m.getTitolo())) {
+                tenutoPresente = true;
+                break;
+            }
+        }
         assertTrue(tenutoPresente, "Gli altri materiali non devono essere rimossi");
+
+        // Cleanup extra
+        secondoFile.delete();
     }
 
-    // =========================================================
-    // TEST — modificaMateriale (senza GestoreFile: file=null → mantiene percorso attuale)
-    // =========================================================
-
+    //TEST MODIFICA MATERIALE SENZA AGGIUNGERE NUOVO FILE
     @Test
-    void testModificaMateriale_DatiValidi_ReturnTrue() {
-        // Arrange
+    void testModificaMateriale_SenzaNuovoFile_ReturnTrue() {
         int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
-        // Act: file null → usa il percorso già presente
+        // file=null → mantiene il percorso corrente, non chiama salvaFile
         boolean esito = gestoreCorso.modificaMateriale(
-                TITOLO_CORSO,
-                String.valueOf(id),
-                "Slide Aggiornate",
-                "Nuova descrizione",
-                "SLIDE",
-                "PRIVATO",
-                null,   // nessun file nuovo
-                "null"
-        );
-
-        // Assert
-        assertTrue(esito, "La modifica con dati validi deve restituire true");
-    }
-
-    @Test
-    void testModificaMateriale_TitoloOmonimoAltroMateriale_ReturnFalse() {
-        // Arrange: inserisco un secondo materiale, poi provo a rinominarlo con il titolo del primo
-        gestoreCorso.inserisciMateriale(
-                TITOLO_CORSO, "Secondo Materiale", "desc",
-                "SLIDE", "PUBBLICO", null, "null"
-        );
-        int idSecondo = gestoreCorso.getIdMateriale(TITOLO_CORSO, "Secondo Materiale");
-
-        // Act
-        boolean esito = gestoreCorso.modificaMateriale(
-                TITOLO_CORSO,
-                String.valueOf(idSecondo),
-                TITOLO_MAT_ESISTENTE,   // omonimo del primo
-                "desc",
-                "SLIDE",
-                "PUBBLICO",
+                TITOLO_CORSO, String.valueOf(id),
+                TITOLO_MAT_ESISTENTE, "Descrizione aggiornata",
+                "SLIDE", "NON_PUBBLICATO",
                 null,
                 "null"
         );
 
-        // Assert
-        assertFalse(esito, "Non si può rinominare un materiale con il titolo già usato da un altro");
+        assertTrue(esito, "La modifica senza nuovo file deve restituire true");
     }
 
+    //TEST MODIFICA MATERIALE SENZA CAMBIARE IL FILE
     @Test
-    void testModificaMateriale_StessoTitoloStessoMateriale_ReturnTrue() {
-        // Arrange: modifico mantenendo lo stesso titolo — non è omonimia
+    void testModificaMateriale_SenzaNuovoFile_PercorsoInvariato() {
+        String percorsoOriginale = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
         int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
-        // Act
-        boolean esito = gestoreCorso.modificaMateriale(
-                TITOLO_CORSO,
-                String.valueOf(id),
-                TITOLO_MAT_ESISTENTE,   // stesso titolo, stesso materiale
-                "Descrizione aggiornata",
-                "SLIDE",
-                "PUBBLICO",
-                null,
-                "null"
-        );
-
-        // Assert
-        assertTrue(esito, "Mantenere il proprio titolo non è omonimia e deve passare");
-    }
-
-    @Test
-    void testModificaMateriale_PercorsoInvariatoSenzaNuovoFile() {
-        // Arrange
-        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-
-        // Act: modifica senza nuovo file
         gestoreCorso.modificaMateriale(
                 TITOLO_CORSO, String.valueOf(id),
                 TITOLO_MAT_ESISTENTE, "desc aggiornata",
-                "SLIDE", "PUBBLICO", null, "null"
+                "SLIDE", "PUBBLICATO", null, "null"
         );
 
-        // Assert: il percorso non deve essere cambiato
-        String percorso = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-        assertEquals(PERCORSO_MAT_ESISTENTE, percorso,
-                "Senza un nuovo file il percorso deve rimanere invariato");
+        String percorsoDopo = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        assertEquals(percorsoOriginale, percorsoDopo,
+                "Senza nuovo file il percorso deve rimanere invariato");
     }
+
+    //TEST MODIFICA MATERIALE CON NUOVO FILE
+    @Test
+    void testModificaMateriale_ConNuovoFile_FileFisicoCopiato() throws IOException {
+        // Arrange: crea un file diverso da usare come aggiornamento
+        File nuovoFile = File.createTempFile("materiale_nuovo_", ".pdf",
+                new File(System.getProperty("java.io.tmpdir")));
+        Files.writeString(nuovoFile.toPath(), "contenuto aggiornato");
+
+        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        gestoreCorso.modificaMateriale(
+                TITOLO_CORSO, String.valueOf(id),
+                TITOLO_MAT_ESISTENTE, "desc",
+                "SLIDE", "PUBBLICATO", nuovoFile, "null"
+        );
+
+        Path nuovoFileCopiato = Paths.get(UPLOAD_DIR_TEST, nuovoFile.getName());
+        assertTrue(Files.exists(nuovoFileCopiato),
+                "Il nuovo file fisico deve essere copiato nella upload dir dopo la modifica");
+
+        // Cleanup extra
+        nuovoFile.delete();
+    }
+
+    //TEST MODIFICA MATERIALE PERCORSO AGGIORNATO
+    @Test
+    void testModificaMateriale_ConNuovoFile_PercorsoAggiornato() throws IOException {
+        File nuovoFile = File.createTempFile("materiale_nuovo_", ".pdf",
+                new File(System.getProperty("java.io.tmpdir")));
+        Files.writeString(nuovoFile.toPath(), "contenuto aggiornato");
+        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        gestoreCorso.modificaMateriale(
+                TITOLO_CORSO, String.valueOf(id),
+                TITOLO_MAT_ESISTENTE, "desc",
+                "SLIDE", "PUBBLICATO", nuovoFile, "null"
+        );
+        String percorsoAggiornato = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        assertEquals(nuovoFile.getName(), percorsoAggiornato,
+                "Il percorso deve essere aggiornato con il nome del nuovo file");
+
+        // Cleanup extra
+        nuovoFile.delete();
+    }
+
+    //TEST MODIFICA INVALIDA
+    @Test
+    void testModificaMateriale_TitoloOmonimoAltroMateriale_ReturnFalse() throws IOException {
+        File secondoFile = File.createTempFile("secondo_", ".pdf",
+                new File(System.getProperty("java.io.tmpdir")));
+        Files.writeString(secondoFile.toPath(), "secondo contenuto");
+
+        gestoreCorso.inserisciMateriale(
+                TITOLO_CORSO, "Secondo Materiale", "desc",
+                "SLIDE", "PUBBLICATO", secondoFile, "null"
+        );
+        int idSecondo = gestoreCorso.getIdMateriale(TITOLO_CORSO, "Secondo Materiale");
+
+        // Act: provo a rinominarlo con il titolo già usato dal primo
+        boolean esito = gestoreCorso.modificaMateriale(
+                TITOLO_CORSO, String.valueOf(idSecondo),
+                TITOLO_MAT_ESISTENTE,   // omonimo
+                "desc", "SLIDE", "PUBBLICATO", null, "null"
+        );
+
+        assertFalse(esito, "Non si può rinominare con un titolo già usato da un altro materiale");
+
+        // Cleanup extra
+        secondoFile.delete();
+    }
+
+    //TEST MODIFICA MATERIALE STESSO TITOLO E STESSO FILE
+    @Test
+    void testModificaMateriale_StessoTitoloStessoMateriale_ReturnTrue() {
+        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+
+        boolean esito = gestoreCorso.modificaMateriale(
+                TITOLO_CORSO, String.valueOf(id),
+                TITOLO_MAT_ESISTENTE,
+                "Descrizione aggiornata",
+                "SLIDE", "PUBBLICATO", null, "null"
+        );
+
+        assertTrue(esito, "Mantenere il proprio titolo non è omonimia e deve passare");
+    }
+
+
 }
