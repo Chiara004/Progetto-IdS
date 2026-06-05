@@ -136,11 +136,11 @@ public class MaterialeDidattico {
             return false;
 
         MaterialeDidattico altro = (MaterialeDidattico) o;
-        return Objects.equals(idMateriale, altro.idMateriale);
+        return Objects.equals(titolo, altro.titolo);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idMateriale);
+        return Objects.hash(titolo);
     }
 }
