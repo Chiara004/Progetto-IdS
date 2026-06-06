@@ -563,5 +563,80 @@ public class GestoreCorsoTest {
         assertTrue(esito, "Mantenere il proprio titolo non è omonimia e deve passare");
     }
 
+    // TEST RECUPERA CORSO DOCENTE
+    @Test
+    void testRecuperaCorso_DocenteLoggato_CorsoTrovato() {
+        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+        assertNotNull(recuperato, "Il corso deve essere recuperato correttamente dal DB per il docente");
+        assertEquals(TITOLO_CORSO, recuperato.getTitolo(), "Il titolo del corso recuperato deve coincidere");
+    }
 
+    //TEST RECUPERA CORSO NON VALIDO
+    @Test
+    void testRecuperaCorso_DocenteLoggato_CorsoInesistente() {
+        Corso recuperato = gestoreCorso.recuperaCorso("Titolo Assolutamente Inesistente");
+
+        assertNull(recuperato, "Se il corso non esiste, la funzione deve restituire null");
+    }
+
+    //TEST RECUPERA CORSO CASO DI OMONIMIA
+    @Test
+    void testRecuperaCorso_DocenteLoggato_CorsoDiAltroDocente() {
+        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+        // verifichiamo che restituisca il corso con CODICE_CORSO e non CODICE_CORSO2.
+        assertEquals(CODICE_CORSO, recuperato.getCodice(), "Deve recuperare il corso del docente loggato, non l'omonimo di altri");
+    }
+
+    // TEST RECUPERA CORSO STUDENTE
+    @Test
+    void testRecuperaCorso_StudenteLoggato_IscrittoAlCorso() {
+        String password= BCrypt.hashpw("password123", BCrypt.gensalt());
+        String matricolaStudente = "N46007555";
+        Studente studente = new Studente(matricolaStudente, "Luca", "Verdi", "luca.verdi@studenti.unina.it", password, "Studente");
+        gestorePersistenza.salva(studente);
+        studente.getCorsi().add(corso);
+        gestorePersistenza.aggiorna(studente);
+        corso.getStudenti().add(studente);
+        gestorePersistenza.aggiorna(corso);
+        // Cambia la sessione per simulare il login dello studente
+        SessionManager.getInstance().logout();
+        SessionManager.getInstance().setUtenteLoggato(studente);
+        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+        assertNotNull(recuperato, "Il corso deve essere trovato se lo studente è regolarmente iscritto");
+        assertEquals(TITOLO_CORSO, recuperato.getTitolo());
+        SessionManager.getInstance().logout();
+        SessionManager.getInstance().setUtenteLoggato(docente); // Ripristina docente
+        gestorePersistenza.elimina(Utente.class, matricolaStudente);
+    }
+
+    //TEST RECUPERA CORSO STUDENTE NON ISCRITTO
+    @Test
+    void testRecuperaCorso_StudenteLoggato_NonIscrittoAlCorso() {
+        String matricolaStudente = "N46008887";
+        String password= BCrypt.hashpw("password123", BCrypt.gensalt());
+        Studente studente = new Studente(matricolaStudente, "Marco", "Gialli", "marco.gialli@studenti.unina.it", password, "Studente");
+        gestorePersistenza.salva(studente);
+
+        SessionManager.getInstance().logout();
+        SessionManager.getInstance().setUtenteLoggato(studente);
+        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+        assertNull(recuperato, "Se lo studente non ha il corso nella sua lista, deve restituire null");
+        SessionManager.getInstance().logout();
+        SessionManager.getInstance().setUtenteLoggato(docente);
+        gestorePersistenza.elimina(Studente.class, matricolaStudente);
+    }
+
+    // TEST APRI MATERIALE ESISTENTE
+    @Test
+    void testApriMateriale_MaterialeEsistente_ReturnTrue() {
+        boolean esito = gestoreCorso.apriMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        assertTrue(esito, "L'apertura di un file fisico pre-esistente deve restituire true");
+    }
+
+    //TEST APRI MATERIALE NON TROVATO
+    @Test
+    void testApriMateriale_MaterialeNonTrovato_ReturnFalse() {
+        boolean esito = gestoreCorso.apriMateriale(TITOLO_CORSO, "Titolo Materiale Falso");
+        assertFalse(esito, "Se il materiale non esiste, apriMateriale deve restituire false");
+    }
 }
