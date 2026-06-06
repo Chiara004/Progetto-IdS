@@ -174,9 +174,16 @@ public class StudenteDashboardMateriali {
         iconaLogo.setIcon(new ImageIcon(img));
         iconaLogo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         iconaLogo.setHorizontalAlignment(SwingConstants.CENTER);
+        btnRicerca.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                List<String[]> materiali= GestorePiattaforma.VisualizzaMaterialiPubblicati(nomeCorso);
+
+            }
+        });
     }
 
-    public void apriStudenteDashboard() {
+    public JFrame apriStudenteDashboard() {
         // 1. Impostazioni base della finestra
         JFrame frame = new JFrame("Studio Paradigm - Dashboard Studente");
         this.myFrame = frame;
@@ -190,7 +197,7 @@ public class StudenteDashboardMateriali {
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-
+        return frame;
     }
 
     private void inizializzaMenu() {

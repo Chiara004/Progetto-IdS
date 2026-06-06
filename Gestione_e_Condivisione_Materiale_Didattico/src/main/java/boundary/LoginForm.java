@@ -172,7 +172,14 @@ public class LoginForm {
                 //qua andrà aperta la dashboard studente
                 if (myFrame != null) {
                     myFrame.dispose();
+
                 }
+                StudenteDashboardMateriali form = new StudenteDashboardMateriali(email,"Ingegneria del Software");
+
+                JFrame dashboard = form.apriStudenteDashboard();
+                dashboard.setLocationRelativeTo(null);
+                dashboard.setVisible(true);
+
                 break;
 
             case GestorePiattaforma.LOGIN_SUCCESS_DOCENTE:

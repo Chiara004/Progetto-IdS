@@ -11,7 +11,7 @@ import java.util.Set;
 @PrimaryKeyJoinColumn(name = "id_utente")
 public class Studente extends Utente{
 
-    @ManyToMany(mappedBy = "studenti")
+    @ManyToMany(mappedBy = "studenti", fetch = FetchType.EAGER)
     private Set<Corso> corsi= new HashSet<>();
 
     @OneToMany(mappedBy = "studente", cascade = CascadeType.ALL)

@@ -22,7 +22,7 @@ public class GestorePiattaforma {
 
     public static List<String[]> VisualizzaMaterialiPubblicati(String corso){
         GestoreCorso gestoreCorso = new GestoreCorso();
-
+        Filtro filtro=new Filtro();
         //Recupera i materiali didattici dal corso
         Set<MaterialeDidattico> materialiDidattici =gestoreCorso.recuperaMateriali(corso);
 
@@ -30,10 +30,12 @@ public class GestorePiattaforma {
         //Ogni elemento della lista rappresenta una riga della JTable.
         List<String[]> righe = new ArrayList<>();
 
+
+        filtro.setStato(new FiltroPubblicato());
+        materialiDidattici=filtro.filtra(materialiDidattici,null);
+
         //Converte ogni oggetto Materiale didattico in un array di String.
         for (MaterialeDidattico materialeDidattico : materialiDidattici) {
-
-            if(materialeDidattico.getVisibilita()== Visibilita.PUBBLICATO) {
                 String[] riga = new String[]{
                         materialeDidattico.getTitolo(),
                         materialeDidattico.getCategoria().toString(),
@@ -44,7 +46,6 @@ public class GestorePiattaforma {
                         "⋮"
                 };
                 righe.add(riga);
-            }
 
         }
 
