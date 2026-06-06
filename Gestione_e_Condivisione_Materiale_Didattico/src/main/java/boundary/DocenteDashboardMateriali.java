@@ -419,7 +419,20 @@ public class DocenteDashboardMateriali {
         btnRicerca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
+                List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMateriali(nomeCorso,
+                        (Object) txtRicerca.getText(),
+                        (String)cmbFiltro.getSelectedItem());
 
+                //Ottieni il modello della tua JTable
+                tableModel = (DefaultTableModel) tblMateriali.getModel();
+
+                // Pulire la tabella dai dati vecchi
+                tableModel.setRowCount(0);
+
+                //Cicla la lista e aggiunge ogni array come riga al modello
+                for (String[] riga : datiMateriali) {
+                    tableModel.addRow(riga);
+                }
             }
         });
 
