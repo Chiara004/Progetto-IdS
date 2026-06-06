@@ -4,6 +4,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import control.*;
+import control.filtro.*;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -313,22 +314,9 @@ public class StudenteDashboardMateriali {
         btnRicerca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                StatoFiltro filtro;
-                switch((String) cmbFiltro.getSelectedItem())
-                {
-                    case "titolo":
-                        filtro=new FiltroTitolo();
-                        break;
-                    case "descrizione":
-                        filtro=new FiltroDescrizione();
-                        break;
-                    case "categoria":
-                        filtro=new FiltroCategoria();
-                        break;
-                    default:
-                        filtro=new FiltroNullo();
-                };
-                List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMaterialiPubblicati(nomeCorso,(Object) txtRicerca.getText(),filtro);
+                List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMaterialiPubblicati(nomeCorso,
+                        (Object) txtRicerca.getText(),
+                        (String)cmbFiltro.getSelectedItem());
 
                 //Ottieni il modello della tua JTable
                 tableModel = (DefaultTableModel) tblMateriali.getModel();

@@ -1,5 +1,6 @@
 package control;
 
+import control.filtro.*;
 import entity.*;
 
 import java.io.File;
@@ -19,25 +20,31 @@ public class GestorePiattaforma {
     public static final int LOGIN_SUCCESS_DOCENTE = 2;
     public static final int REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO = 5;
 
-    public static List<String[]> VisualizzaMaterialiPubblicati(String corso){
-        return VisualizzaMaterialiPubblicati(corso,null,new FiltroNullo());
+    public static StatoFiltro StringToStatoFiltro(String tipologia){
+        // Protezione contro i valori nulli o vuoti
+        if (tipologia == null || tipologia.trim().isEmpty()) {
+            return new FiltroNullo();
+        }
+
+        StatoFiltro filtro;
+        switch(tipologia.trim().toLowerCase()) // toLowerCase ci mette al sicuro da distrazioni
+        {
+            case "categoria":
+                filtro = new FiltroCategoria(); break;
+            case "descrizione":
+                filtro = new FiltroDescrizione(); break;
+            case "pubblicato":
+                filtro = new FiltroPubblicato(); break;
+            case "titolo":
+                filtro = new FiltroTitolo(); break;
+            default:
+                filtro = new FiltroNullo();
+        }
+        return filtro;
     }
 
-    public static List<String[]> VisualizzaMaterialiPubblicati(String corso, Object campo, StatoFiltro tipologia){
-        GestoreCorso gestoreCorso = new GestoreCorso();
-        Filtro filtro = new Filtro();
-
-        // RECUPERA E COPIA IL SET per evitare danni al DB
-        Set<MaterialeDidattico> materialiOriginali = gestoreCorso.recuperaMateriali(corso);
-        Set<MaterialeDidattico> materialiDidattici = new java.util.HashSet<>(materialiOriginali);
-
+    public static List<String[]> MaterialeInRighe(Set<MaterialeDidattico> materialiDidattici){
         List<String[]> righe = new ArrayList<>();
-
-        filtro.setStato(tipologia);
-        filtro.filtra(materialiDidattici, campo);
-        filtro.setStato(new FiltroPubblicato());
-        materialiDidattici = filtro.filtra(materialiDidattici, null);
-
         for (MaterialeDidattico materialeDidattico : materialiDidattici) {
             String[] riga = new String[]{
                     materialeDidattico.getTitolo(),
@@ -51,6 +58,43 @@ public class GestorePiattaforma {
             righe.add(riga);
         }
         return righe;
+
+    }
+
+    public static List<String[]> VisualizzaMateriali(String corso){
+        return  VisualizzaMateriali(corso,null,null);
+    }
+    public static List<String[]> VisualizzaMateriali(String corso, Object campo, String tipologia){
+        GestoreCorso gestoreCorso = new GestoreCorso();
+        Filtro filtro = new Filtro();
+
+        Set<MaterialeDidattico> materialiOriginali = gestoreCorso.recuperaMateriali(corso);
+        Set<MaterialeDidattico> materialiDidattici = new java.util.HashSet<>(materialiOriginali);
+
+        filtro.setStato(StringToStatoFiltro(tipologia));
+        filtro.filtra(materialiDidattici, campo);
+        return MaterialeInRighe(materialiDidattici);
+    }
+
+    public static List<String[]> VisualizzaMaterialiPubblicati(String corso){
+        return VisualizzaMaterialiPubblicati(corso,null,null);
+    }
+
+    public static List<String[]> VisualizzaMaterialiPubblicati(String corso, Object campo, String tipologia){
+        GestoreCorso gestoreCorso = new GestoreCorso();
+        Filtro filtro = new Filtro();
+
+        // RECUPERA E COPIA IL SET per evitare danni al DB
+        Set<MaterialeDidattico> materialiOriginali = gestoreCorso.recuperaMateriali(corso);
+        Set<MaterialeDidattico> materialiDidattici = new java.util.HashSet<>(materialiOriginali);
+
+        List<String[]> righe = new ArrayList<>();
+
+        filtro.setStato(StringToStatoFiltro(tipologia));
+        filtro.filtra(materialiDidattici, campo);
+        filtro.setStato(new FiltroPubblicato());
+        filtro.filtra(materialiDidattici, null);
+        return MaterialeInRighe(materialiDidattici);
     }
 
     public static String getIdMateriale(String corso, String titolo){
@@ -102,35 +146,6 @@ public class GestorePiattaforma {
     public static String getPercorsoFile(String corso, String titolo){
         GestoreCorso gestoreCorso = new GestoreCorso();
         return gestoreCorso.getPercorsoFile(corso, titolo);
-    }
-
-    public static List<String[]> VisualizzaMateriali(String corso){
-        GestoreCorso gestoreCorso = new GestoreCorso();
-
-        //Recupera i materiali didattici dal corso
-        Set<MaterialeDidattico> materialiDidattici =gestoreCorso.recuperaMateriali(corso);
-
-        //la lista da restituire alla GUI.
-        //Ogni elemento della lista rappresenta una riga della JTable.
-        List<String[]> righe = new ArrayList<>();
-
-        //Converte ogni oggetto Materiale didattico in un array di String.
-        for (MaterialeDidattico materialeDidattico : materialiDidattici) {
-
-            String[] riga = new String[]{
-                    materialeDidattico.getTitolo(),
-                    materialeDidattico.getCategoria().toString(),
-                    materialeDidattico.getDescrizione(),
-                    materialeDidattico.getDataPubblicazione().toString(),
-                    materialeDidattico.getSezione().getTitolo(),
-                    materialeDidattico.getVisibilita().toString(),
-                    "⋮"
-            };
-
-            righe.add(riga);
-        }
-
-        return righe;
     }
 
     public static boolean eliminaMateriale(String corso, String titolo){

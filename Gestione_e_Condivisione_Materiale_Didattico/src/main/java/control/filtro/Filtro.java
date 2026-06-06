@@ -1,4 +1,4 @@
-package control;
+package control.filtro;
 
 import entity.MaterialeDidattico;
 
@@ -17,7 +17,7 @@ public class Filtro {
         this.stato=stato;
     }
 
-    public Set<MaterialeDidattico> filtra(Set<MaterialeDidattico> materiale, Object campo){
-        return stato.filtra(materiale,campo);
+    public void filtra(Set<MaterialeDidattico> materiale, Object campo){
+        stato.filtra(materiale,campo);
     }
 }
