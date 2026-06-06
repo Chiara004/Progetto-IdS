@@ -11,12 +11,12 @@ import java.util.Set;
 public class GestoreCorso {
     GestorePersistenza gestorePersistenza;
     GestoreFile gestoreFile;
-    Docente utenteLoggato;
+    Utente utenteLoggato;
 
     public GestoreCorso(){
         gestorePersistenza = new GestorePersistenza();
         gestoreFile = new GestoreFile();
-        utenteLoggato = (Docente) SessionManager.getInstance().getUtenteLoggato();
+        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
     }
 
     public Set<MaterialeDidattico> recuperaMateriali(String corso){
