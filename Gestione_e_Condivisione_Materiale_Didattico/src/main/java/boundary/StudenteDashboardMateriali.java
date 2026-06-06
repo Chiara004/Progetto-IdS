@@ -3,8 +3,7 @@ package boundary;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import control.GestorePiattaforma;
-import control.SessionManager;
+import control.*;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -174,13 +173,7 @@ public class StudenteDashboardMateriali {
         iconaLogo.setIcon(new ImageIcon(img));
         iconaLogo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         iconaLogo.setHorizontalAlignment(SwingConstants.CENTER);
-        btnRicerca.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                List<String[]> materiali= GestorePiattaforma.VisualizzaMaterialiPubblicati(nomeCorso);
 
-            }
-        });
     }
 
     public JFrame apriStudenteDashboard() {
@@ -320,7 +313,33 @@ public class StudenteDashboardMateriali {
         btnRicerca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                StatoFiltro filtro;
+                switch((String) cmbFiltro.getSelectedItem())
+                {
+                    case "titolo":
+                        filtro=new FiltroTitolo();
+                        break;
+                    case "descrizione":
+                        filtro=new FiltroDescrizione();
+                        break;
+                    case "categoria":
+                        filtro=new FiltroCategoria();
+                        break;
+                    default:
+                        filtro=new FiltroNullo();
+                };
+                List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMaterialiPubblicati(nomeCorso,(Object) txtRicerca.getText(),filtro);
 
+                //Ottieni il modello della tua JTable
+                tableModel = (DefaultTableModel) tblMateriali.getModel();
+
+                // Pulire la tabella dai dati vecchi
+                tableModel.setRowCount(0);
+
+                //Cicla la lista e aggiunge ogni array come riga al modello
+                for (String[] riga : datiMateriali) {
+                    tableModel.addRow(riga);
+                }
             }
         });
 

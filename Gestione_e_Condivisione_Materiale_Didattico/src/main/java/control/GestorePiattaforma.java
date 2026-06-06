@@ -19,36 +19,37 @@ public class GestorePiattaforma {
     public static final int LOGIN_SUCCESS_DOCENTE = 2;
     public static final int REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO = 5;
 
-
     public static List<String[]> VisualizzaMaterialiPubblicati(String corso){
-        GestoreCorso gestoreCorso = new GestoreCorso();
-        Filtro filtro=new Filtro();
-        //Recupera i materiali didattici dal corso
-        Set<MaterialeDidattico> materialiDidattici =gestoreCorso.recuperaMateriali(corso);
+        return VisualizzaMaterialiPubblicati(corso,null,new FiltroNullo());
+    }
 
-        //la lista da restituire alla GUI.
-        //Ogni elemento della lista rappresenta una riga della JTable.
+    public static List<String[]> VisualizzaMaterialiPubblicati(String corso, Object campo, StatoFiltro tipologia){
+        GestoreCorso gestoreCorso = new GestoreCorso();
+        Filtro filtro = new Filtro();
+
+        // RECUPERA E COPIA IL SET per evitare danni al DB
+        Set<MaterialeDidattico> materialiOriginali = gestoreCorso.recuperaMateriali(corso);
+        Set<MaterialeDidattico> materialiDidattici = new java.util.HashSet<>(materialiOriginali);
+
         List<String[]> righe = new ArrayList<>();
 
-
+        filtro.setStato(tipologia);
+        filtro.filtra(materialiDidattici, campo);
         filtro.setStato(new FiltroPubblicato());
-        materialiDidattici=filtro.filtra(materialiDidattici,null);
+        materialiDidattici = filtro.filtra(materialiDidattici, null);
 
-        //Converte ogni oggetto Materiale didattico in un array di String.
         for (MaterialeDidattico materialeDidattico : materialiDidattici) {
-                String[] riga = new String[]{
-                        materialeDidattico.getTitolo(),
-                        materialeDidattico.getCategoria().toString(),
-                        materialeDidattico.getDescrizione(),
-                        materialeDidattico.getDataPubblicazione().toString(),
-                        materialeDidattico.getSezione().getTitolo(),
-                        materialeDidattico.getVisibilita().toString(),
-                        "⋮"
-                };
-                righe.add(riga);
-
+            String[] riga = new String[]{
+                    materialeDidattico.getTitolo(),
+                    materialeDidattico.getCategoria().toString(),
+                    materialeDidattico.getDescrizione(),
+                    materialeDidattico.getDataPubblicazione().toString(),
+                    materialeDidattico.getSezione().getTitolo(),
+                    materialeDidattico.getVisibilita().toString(),
+                    "⋮"
+            };
+            righe.add(riga);
         }
-
         return righe;
     }
 
