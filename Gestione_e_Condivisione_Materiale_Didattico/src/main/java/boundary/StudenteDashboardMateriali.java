@@ -16,7 +16,17 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.Locale;
 
+//è stato usato il desing pattern: singleton
 public class StudenteDashboardMateriali {
+    private static StudenteDashboardMateriali istance;
+
+    private static StudenteDashboardMateriali getInstance(String emailUtente, String nomeCorso){
+        if (istance==null)
+        {
+            istance=new StudenteDashboardMateriali(emailUtente, nomeCorso);
+        }
+        return istance;
+    }
     private JPanel contentPane;
     private JPanel contentRicerca;
     private JComboBox cmbFiltro;
@@ -190,7 +200,12 @@ public class StudenteDashboardMateriali {
         frame.setVisible(true);
         frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        frame.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosed(java.awt.event.WindowEvent e) {
+                frame.dispose(); // Libera l'istanza statica
+            }
+        });
         return frame;
     }
 
@@ -255,7 +270,7 @@ public class StudenteDashboardMateriali {
     //metodo per popolare la tabella
     public void aggiornaTabellaMateriali() {
         // Richiama il tuo metodo per ottenere i dati
-        List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMaterialiPubblicati(this.nomeCorso);
+        List<String[]> datiMateriali = GestorePiattaforma.visualizzaMaterialiPubblicati(this.nomeCorso);
 
         //Ottieni il modello della tua JTable
         tableModel = (DefaultTableModel) tblMateriali.getModel();
@@ -314,7 +329,7 @@ public class StudenteDashboardMateriali {
         btnRicerca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMaterialiPubblicati(nomeCorso,
+                List<String[]> datiMateriali = GestorePiattaforma.visualizzaMaterialiPubblicati(nomeCorso,
                         (Object) txtRicerca.getText(),
                         (String)cmbFiltro.getSelectedItem());
 

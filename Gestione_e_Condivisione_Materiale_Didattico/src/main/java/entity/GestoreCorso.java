@@ -145,4 +145,10 @@ public class GestoreCorso {
 
         return c;
     }
+
+    public Set<Corso> getElencoCorsiStudente(Studente studente){
+        return studente.getCorsi();
+    }
+
+
 }

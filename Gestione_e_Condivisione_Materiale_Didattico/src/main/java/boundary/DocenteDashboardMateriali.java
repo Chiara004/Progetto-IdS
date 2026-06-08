@@ -270,7 +270,7 @@ public class DocenteDashboardMateriali {
     //metodo per popolare la tabella
     public void aggiornaTabellaMateriali() {
         // Richiama il tuo metodo per ottenere i dati
-        List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMateriali(this.nomeCorso);
+        List<String[]> datiMateriali = GestorePiattaforma.visualizzaMateriali(this.nomeCorso);
 
         //Ottieni il modello della tua JTable
         tableModel = (DefaultTableModel) tblMateriali.getModel();
@@ -419,7 +419,7 @@ public class DocenteDashboardMateriali {
         btnRicerca.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e){
-                List<String[]> datiMateriali = GestorePiattaforma.VisualizzaMateriali(nomeCorso,
+                List<String[]> datiMateriali = GestorePiattaforma.visualizzaMateriali(nomeCorso,
                         (Object) txtRicerca.getText(),
                         (String)cmbFiltro.getSelectedItem());
 

@@ -174,9 +174,9 @@ public class LoginForm {
                     myFrame.dispose();
 
                 }
-                StudenteDashboardMateriali form = new StudenteDashboardMateriali(email,"Ingegneria del Software");
+                AreaRiservataStudente form = new AreaRiservataStudente(email);
 
-                JFrame dashboard = form.apriStudenteDashboard();
+                JFrame dashboard = form.apriAreaRiservataStudente();
                 dashboard.setLocationRelativeTo(null);
                 dashboard.setVisible(true);
 

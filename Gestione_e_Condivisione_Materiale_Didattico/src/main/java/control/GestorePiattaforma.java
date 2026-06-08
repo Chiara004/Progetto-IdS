@@ -43,7 +43,7 @@ public class GestorePiattaforma {
         return filtro;
     }
 
-    public static List<String[]> MaterialeInRighe(Set<MaterialeDidattico> materialiDidattici){
+    public static List<String[]> materialeInRighe(Set<MaterialeDidattico> materialiDidattici){
         List<String[]> righe = new ArrayList<>();
         for (MaterialeDidattico materialeDidattico : materialiDidattici) {
             String[] riga = new String[]{
@@ -61,10 +61,10 @@ public class GestorePiattaforma {
 
     }
 
-    public static List<String[]> VisualizzaMateriali(String corso){
-        return  VisualizzaMateriali(corso,null,null);
+    public static List<String[]> visualizzaMateriali(String corso){
+        return  visualizzaMateriali(corso,null,null);
     }
-    public static List<String[]> VisualizzaMateriali(String corso, Object campo, String tipologia){
+    public static List<String[]> visualizzaMateriali(String corso, Object campo, String tipologia){
         GestoreCorso gestoreCorso = new GestoreCorso();
         Filtro filtro = new Filtro();
 
@@ -73,14 +73,14 @@ public class GestorePiattaforma {
 
         filtro.setStato(StringToStatoFiltro(tipologia));
         filtro.filtra(materialiDidattici, campo);
-        return MaterialeInRighe(materialiDidattici);
+        return materialeInRighe(materialiDidattici);
     }
 
-    public static List<String[]> VisualizzaMaterialiPubblicati(String corso){
-        return VisualizzaMaterialiPubblicati(corso,null,null);
+    public static List<String[]> visualizzaMaterialiPubblicati(String corso){
+        return visualizzaMaterialiPubblicati(corso,null,null);
     }
 
-    public static List<String[]> VisualizzaMaterialiPubblicati(String corso, Object campo, String tipologia){
+    public static List<String[]> visualizzaMaterialiPubblicati(String corso, Object campo, String tipologia){
         GestoreCorso gestoreCorso = new GestoreCorso();
         Filtro filtro = new Filtro();
 
@@ -94,7 +94,7 @@ public class GestorePiattaforma {
         filtro.filtra(materialiDidattici, campo);
         filtro.setStato(new FiltroPubblicato());
         filtro.filtra(materialiDidattici, null);
-        return MaterialeInRighe(materialiDidattici);
+        return materialeInRighe(materialiDidattici);
     }
 
     public static String getIdMateriale(String corso, String titolo){
@@ -198,5 +198,34 @@ public class GestorePiattaforma {
         return gestoreUtente.inserimentoCredenziali(email, password);
     }
 
-
+    public static List<String[]> visualizzaElencoCorsi(String emailUtente){
+        GestoreIscrizione gestoreIscrizione=new GestoreIscrizione();
+        Set<Corso> elencoCorsi=gestoreIscrizione.visualizzaElencoCorsi(emailUtente);
+        List<String[]> righe = new ArrayList<>();
+        if(elencoCorsi.isEmpty()){
+            String[] riga = new String[]{
+                    "Non ci sono corsi",
+                    "",
+                    "",
+                    "",
+                    "",
+                    ""
+            };
+            righe.add(riga);
+        }
+        else{
+            for (Corso corso : elencoCorsi) {
+                String[] riga = new String[]{
+                        String.valueOf(corso.getCodice()),
+                        corso.getTitolo(),
+                        corso.getDescrizione(),
+                        corso.getAnnoAccademico(),
+                        corso.getSezioni().toString(),
+                        "⋮"
+                };
+                righe.add(riga);
+            }
+        }
+        return righe;
+    }
 }
