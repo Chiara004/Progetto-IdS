@@ -27,12 +27,15 @@ public class AreaRiservataStudente {
     private JLabel iconaLogo;
     private JLabel lbl_informazioniStudenti;
     private JButton btnLogout;
+    private JList lstNotifiche;
+    private JLabel lblNotifiche;
 
     private JFrame myFrame;
     private JFrame frameLogin;
 
     //componenti per le operazioni sui materiali didattici
     private DefaultTableModel tableModel;
+    private DefaultListModel<String> listModelNotifiche;
     private JPopupMenu contextMenu;
     private JMenuItem menuApri;
 
@@ -57,20 +60,19 @@ public class AreaRiservataStudente {
         JPanel = new JPanel();
         JPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         contentPane = new JPanel();
-        contentPane.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
+        contentPane.setLayout(new GridLayoutManager(8, 3, new Insets(10, 10, 10, 10), -1, -1));
         JPanel.add(contentPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(2, 2, new Insets(10, 10, 10, 10), -1, 15));
-        contentPane.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        contentPane.add(spacer1, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         contentMateriali = new JScrollPane();
-        panel1.add(contentMateriali, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        contentPane.add(contentMateriali, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tblMateriali = new JTable();
         tblMateriali.setRowHeight(25);
         contentMateriali.setViewportView(tblMateriali);
         contentAggiungi = new JPanel();
         contentAggiungi.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentAggiungi.setEnabled(true);
-        panel1.add(contentAggiungi, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        contentPane.add(contentAggiungi, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         lblMateriali = new JLabel();
         Font lblMaterialiFont = this.$$$getFont$$$(null, Font.BOLD, 16, lblMateriali.getFont());
         if (lblMaterialiFont != null) lblMateriali.setFont(lblMaterialiFont);
@@ -83,22 +85,29 @@ public class AreaRiservataStudente {
         contentAggiungi.add(lbl_informazioniStudenti, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         descrizioneDashboard = new JPanel();
         descrizioneDashboard.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(descrizioneDashboard, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        contentPane.add(descrizioneDashboard, new GridConstraints(0, 0, 8, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         iconaLogo = new JLabel();
         iconaLogo.setText("");
         descrizioneDashboard.add(iconaLogo, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        descrizioneDashboard.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        descrizioneDashboard.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         btnLogout = new JButton();
         Font btnLogoutFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnLogout.getFont());
         if (btnLogoutFont != null) btnLogout.setFont(btnLogoutFont);
         btnLogout.setMargin(new Insets(10, 10, 10, 10));
         btnLogout.setText("Logout");
         descrizioneDashboard.add(btnLogout, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer2 = new Spacer();
-        contentPane.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
-        contentPane.add(spacer3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        contentPane.add(spacer3, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        contentPane.add(scrollPane1, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        lstNotifiche = new JList();
+        scrollPane1.setViewportView(lstNotifiche);
+        lblNotifiche = new JLabel();
+        lblNotifiche.setText("Lista Notifiche");
+        contentPane.add(lblNotifiche, new GridConstraints(5, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer4 = new Spacer();
+        contentPane.add(spacer4, new GridConstraints(4, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -134,6 +143,7 @@ public class AreaRiservataStudente {
         this.emailUtente = emailUtente;
         inizializzaTabella();
         inizializzaMenu();
+        inizializzaListaNotifiche();
         setAzioni();
         aggiornaTabellaMateriali();
         lbl_informazioniStudenti.setText(emailUtente);
@@ -173,7 +183,7 @@ public class AreaRiservataStudente {
             public void mouseClicked(MouseEvent e) {
                 int col = tblMateriali.columnAtPoint(e.getPoint());
                 int row = tblMateriali.rowAtPoint(e.getPoint());
-                if (col == 5 && row >= 0 &&row < tblMateriali.getRowCount()) {
+                if (col == 4 && row >= 0 && row < tblMateriali.getRowCount()) {
                     tblMateriali.setRowSelectionInterval(row, row);
                     contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
@@ -211,7 +221,7 @@ public class AreaRiservataStudente {
                     JFrame frameMateriale;
                     frameMateriale = new JFrame("Studio Paradigm - Dashboard Materiale Studente");
 
-                    StudenteDashboardMateriali form=new StudenteDashboardMateriali(emailUtente,String.valueOf(tblMateriali.getValueAt(rigaSelezionata,1)));
+                    StudenteDashboardMateriali form = new StudenteDashboardMateriali(emailUtente, String.valueOf(tblMateriali.getValueAt(rigaSelezionata, 1)));
 
                     JFrame dashboard = form.apriStudenteDashboard();
                     dashboard.setLocationRelativeTo(null);
@@ -245,7 +255,7 @@ public class AreaRiservataStudente {
 
     private void inizializzaTabella() {
         // Definisci i nomi delle colonne
-        String[] nomiColonne = {"Codice", "Titolo", "Descrizione", "Anno Accademico", "Sezione", "Materiale"};
+        String[] nomiColonne = {"Codice", "Titolo", "Descrizione", "Anno Accademico", "Materiale"};
 
         // Crea il modello personalizzato bloccando la modifica delle celle
         tableModel = new DefaultTableModel(nomiColonne, 0) {
@@ -258,11 +268,11 @@ public class AreaRiservataStudente {
         // Imposta il modello della tabella come modello della visualizzazione
         tblMateriali.setModel(tableModel);
 
-        // Centra il contenuto dell'ultima colonna (indice 5)
+        // Centra il contenuto dell'ultima colonna
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tblMateriali.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
-        tblMateriali.getColumnModel().getColumn(5).setPreferredWidth(50);
+        tblMateriali.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        tblMateriali.getColumnModel().getColumn(4).setPreferredWidth(50);
     }
 
     //metodo per popolare la tabella
@@ -280,6 +290,30 @@ public class AreaRiservataStudente {
         for (String[] riga : datiCorsi) {
             tableModel.addRow(riga);
         }
+
+    }
+
+    private void inizializzaListaNotifiche() {
+
+        String[] notifiche = GestorePiattaforma.visualizzaNotificheStudente();
+        listModelNotifiche = new DefaultListModel<>();
+        lstNotifiche.setModel(listModelNotifiche);
+
+
+        // Pulisce la lista (utile se viene ricaricata la vista)
+        listModelNotifiche.clear();
+
+
+        if (notifiche != null && notifiche.length > 0) {
+            for (String notifica : notifiche) {
+                listModelNotifiche.addElement("• " + notifica);
+            }
+        } else {
+
+            listModelNotifiche.addElement("Non ci sono nuove notifiche.");
+
+        }
+
     }
 
 }

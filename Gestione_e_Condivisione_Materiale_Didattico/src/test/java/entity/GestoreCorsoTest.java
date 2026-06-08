@@ -454,7 +454,7 @@ public class GestoreCorsoTest {
         boolean esito = gestoreCorso.modificaMateriale(
                 TITOLO_CORSO, String.valueOf(id),
                 TITOLO_MAT_ESISTENTE, "Descrizione aggiornata",
-                "SLIDE", "NON_PUBBLICATO",
+                "SLIDE", "PUBBLICATO",
                 null,
                 "null"
         );

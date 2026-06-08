@@ -254,6 +254,8 @@ public class GestoreUtenteTest {
 
         assertEquals(GestorePiattaforma.REGISTRAZIONE_AVVENUTA, esito,
                 "I dati di esattamente 255 caratteri devono essere accettata");
+
+        gestorePersistenza.elimina(Utente.class, matrciola255);
     }
 
     //TEST REGISTRAZIONE EMAIL 256 CARATTERI
