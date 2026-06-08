@@ -45,7 +45,7 @@ public class GestoreUtente {
             }
         } else {
             // Regola Docente: Deve iniziare con DOC ed essere più lunga di 3 caratteri
-            if (!mat.startsWith("DOC") || mat.length() <= 3) {
+            if (!mat.startsWith("DOC") || mat.length() <= 3 || mat.length() > 255) {
                 return GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
             }
         }

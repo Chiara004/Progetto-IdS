@@ -110,7 +110,7 @@ public class GestorePiattaformaTest {
 
     @Test
     void testMaterialeInRighe_SetVuoto_ListaVuota() {
-        List<String[]> righe = GestorePiattaforma.MaterialeInRighe(new HashSet<>());
+        List<String[]> righe = GestorePiattaforma.materialeInRighe(new HashSet<>());
 
         assertNotNull(righe, "Il risultato non deve essere null");
         assertTrue(righe.isEmpty(), "Un set vuoto deve produrre una lista vuota");
@@ -121,7 +121,7 @@ public class GestorePiattaformaTest {
         Set<MaterialeDidattico> set = new HashSet<>();
         set.add(creaMateriale("Slide 1", "desc", Categoria.SLIDE, Visibilita.PUBBLICATO, "Modulo 1"));
 
-        List<String[]> righe = GestorePiattaforma.MaterialeInRighe(set);
+        List<String[]> righe = GestorePiattaforma.materialeInRighe(set);
 
         assertEquals(1, righe.size(), "Un set con un elemento deve produrre una lista con una riga");
     }
@@ -132,7 +132,7 @@ public class GestorePiattaformaTest {
         set.add(creaMateriale("Slide 1", "desc1", Categoria.SLIDE,    Visibilita.PUBBLICATO, "Modulo 1"));
         set.add(creaMateriale("Slide 2", "desc2", Categoria.DISPENSE, Visibilita.NON_PUBBLICATO,      "Modulo 2"));
 
-        List<String[]> righe = GestorePiattaforma.MaterialeInRighe(set);
+        List<String[]> righe = GestorePiattaforma.materialeInRighe(set);
 
         assertEquals(2, righe.size(), "Un set con due elementi deve produrre due righe");
     }
@@ -142,40 +142,36 @@ public class GestorePiattaformaTest {
         Set<MaterialeDidattico> set = new HashSet<>();
         set.add(creaMateriale("Slide 1", "desc", Categoria.SLIDE, Visibilita.PUBBLICATO, "Modulo 1"));
 
-        String[] riga = GestorePiattaforma.MaterialeInRighe(set).get(0);
+        String[] riga = GestorePiattaforma.materialeInRighe(set).get(0);
 
         assertEquals(7, riga.length, "Ogni riga deve avere esattamente 7 colonne");
     }
 
     @Test
     void testMaterialeInRighe_ContenutoRigaCorretto() {
-        // Arrange
         Set<MaterialeDidattico> set = new HashSet<>();
         set.add(creaMateriale("Slide Intro", "Prima slide", Categoria.SLIDE,
                 Visibilita.PUBBLICATO, "Modulo 1"));
+        String[] riga = GestorePiattaforma.materialeInRighe(set).get(0);
 
-        // Act
-        String[] riga = GestorePiattaforma.MaterialeInRighe(set).get(0);
-
-        // Assert: verifica ogni colonna nella posizione attesa
-        assertEquals("Slide Intro",          riga[0], "Colonna 0: titolo");
+        assertEquals("Slide Intro",riga[0], "Colonna 0: titolo");
         assertEquals(Categoria.SLIDE.toString(), riga[1], "Colonna 1: categoria");
-        assertEquals("Prima slide",          riga[2], "Colonna 2: descrizione");
-        assertEquals("2024-01-01",           riga[3], "Colonna 3: dataPubblicazione");
-        assertEquals("Modulo 1",             riga[4], "Colonna 4: sezione");
+        assertEquals("Prima slide",riga[2], "Colonna 2: descrizione");
+        assertEquals("2024-01-01", riga[3], "Colonna 3: dataPubblicazione");
+        assertEquals("Modulo 1", riga[4], "Colonna 4: sezione");
         assertEquals(Visibilita.PUBBLICATO.toString(), riga[5], "Colonna 5: visibilita");
-        assertEquals("⋮",                   riga[6], "Colonna 6: azioni");
+        assertEquals("⋮", riga[6], "Colonna 6: azioni");
     }
 
     private GestorePersistenza gestorePersistenza;
-    private Docente            docente;
-    private Corso              corso;
+    private Docente docente;
+    private Corso corso;
 
     private static final String MATRICOLA_DOCENTE = "DOC_PIATT1";
-    private static final String EMAIL_DOCENTE     = "docente.piattaforma@unina.it";
-    private static final int    CODICE_CORSO      = 9400;
-    private static final String TITOLO_CORSO      = "Corso Piattaforma Test";
-    private static final String TITOLO_SEZIONE    = "Sezione Test";
+    private static final String EMAIL_DOCENTE = "docente.piattaforma@unina.it";
+    private static final int    CODICE_CORSO= 9400;
+    private static final String TITOLO_CORSO= "Corso Piattaforma Test";
+    private static final String TITOLO_SEZIONE = "Sezione Test";
 
     @BeforeEach
     void setUpDB() {
@@ -220,7 +216,7 @@ public class GestorePiattaformaTest {
     //VisualizzaMateriali senza filtro
     @Test
     void testVisualizzaMateriali_SenzaFiltro_RestituisceTutti() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMateriali(TITOLO_CORSO);
+        List<String[]> righe = GestorePiattaforma.visualizzaMateriali(TITOLO_CORSO);
 
         assertEquals(3, righe.size(),
                 "Senza filtro devono essere restituiti tutti e 3 i materiali");
@@ -229,7 +225,7 @@ public class GestorePiattaformaTest {
     //VisualizzaMateriali con filtro titolo
     @Test
     void testVisualizzaMateriali_FiltroTitolo_TrovaCorrispondente() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMateriali(
+        List<String[]> righe = GestorePiattaforma.visualizzaMateriali(
                 TITOLO_CORSO, "Slide Pubblicate", "titolo");
 
         assertEquals(1, righe.size(),
@@ -240,7 +236,7 @@ public class GestorePiattaformaTest {
     //VISUALIZZAZIONE MATERIALI CON FILTRO TITOLO SENZA CORRISPONDENZE
     @Test
     void testVisualizzaMateriali_FiltroTitolo_NessunCorrispondente() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMateriali(
+        List<String[]> righe = GestorePiattaforma.visualizzaMateriali(
                 TITOLO_CORSO, "Titolo Inesistente", "titolo");
 
         assertTrue(righe.isEmpty(),
@@ -250,7 +246,7 @@ public class GestorePiattaformaTest {
     //VisualizzaMateriali con filtro categoria
     @Test
     void testVisualizzaMateriali_FiltroCategoria_SoloDispense() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMateriali(
+        List<String[]> righe = GestorePiattaforma.visualizzaMateriali(
                 TITOLO_CORSO, Categoria.DISPENSE, "categoria");
 
         assertEquals(1, righe.size(),
@@ -261,7 +257,7 @@ public class GestorePiattaformaTest {
     // VisualizzaMateriali con filtro nullo/null
     @Test
     void testVisualizzaMateriali_FiltroNull_RestituisceTutti() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMateriali(
+        List<String[]> righe = GestorePiattaforma.visualizzaMateriali(
                 TITOLO_CORSO, null, null);
 
         assertEquals(3, righe.size(),
@@ -271,7 +267,7 @@ public class GestorePiattaformaTest {
     // VisualizzaMaterialiPubblicati senza filtro
     @Test
     void testVisualizzaMaterialiPubblicati_SenzaFiltro_SoloPublicati() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMaterialiPubblicati(TITOLO_CORSO);
+        List<String[]> righe = GestorePiattaforma.visualizzaMaterialiPubblicati(TITOLO_CORSO);
 
         assertEquals(2, righe.size(),
                 "Senza filtro devono essere restituiti solo i 2 materiali PUBBLICATO");
@@ -290,7 +286,7 @@ public class GestorePiattaformaTest {
 
     @Test
     void testVisualizzaMaterialiPubblicati_BozzaNonRestituita() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMaterialiPubblicati(TITOLO_CORSO);
+        List<String[]> righe = GestorePiattaforma.visualizzaMaterialiPubblicati(TITOLO_CORSO);
 
         boolean bozzaPresente = false;
 
@@ -307,7 +303,7 @@ public class GestorePiattaformaTest {
     // VisualizzaMaterialiPubblicati con filtro categoria
     @Test
     void testVisualizzaMaterialiPubblicati_FiltroCategoria_SoloDispensPubblicate() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMaterialiPubblicati(
+        List<String[]> righe = GestorePiattaforma.visualizzaMaterialiPubblicati(
                 TITOLO_CORSO, Categoria.DISPENSE, "categoria");
 
         assertEquals(1, righe.size(),
@@ -317,7 +313,7 @@ public class GestorePiattaformaTest {
 
     @Test
     void testVisualizzaMaterialiPubblicati_FiltroCategoria_NessunaBozzaPassaIlDoppioFiltro() {
-        List<String[]> righe = GestorePiattaforma.VisualizzaMaterialiPubblicati(
+        List<String[]> righe = GestorePiattaforma.visualizzaMaterialiPubblicati(
                 TITOLO_CORSO, Categoria.SLIDE, "categoria");
 
         boolean bozzaPresente = false;

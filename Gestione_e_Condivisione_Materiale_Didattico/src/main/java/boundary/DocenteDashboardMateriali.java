@@ -460,11 +460,4 @@ public class DocenteDashboardMateriali {
 
     }
 
-    //prova per visualizzare
-    public static void main(String[] args) {
-        DocenteDashboardMateriali dashboard = new DocenteDashboardMateriali("domenico.amalfitano@unina.it", "Ingegneria del Software");
-        dashboard.apriDocenteDashboard();
-    }
-
-
 }

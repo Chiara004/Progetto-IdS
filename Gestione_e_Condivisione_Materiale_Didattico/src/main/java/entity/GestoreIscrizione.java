@@ -19,7 +19,6 @@ public class GestoreIscrizione {
                 )
         );
 
-        GestoreCorso gestoreCorso=new GestoreCorso();
-        return gestoreCorso.getElencoCorsiStudente(studente);
+        return studente.getCorsi();
     }
 }

@@ -136,12 +136,6 @@ public class LoginForm {
 
     }
 
-    public static void main(String[] args) {
-
-        LoginForm loginForm = new LoginForm();
-
-        loginForm.apriLoginForm();
-    }
 
     private void eseguiLogin(){
         String email = txtEmail.getText();
@@ -169,7 +163,6 @@ public class LoginForm {
                     "Login completato",
                     JOptionPane.INFORMATION_MESSAGE
                 );
-                //qua andrà aperta la dashboard studente
                 if (myFrame != null) {
                     myFrame.dispose();
 
@@ -189,10 +182,15 @@ public class LoginForm {
                     "Login completato",
                     JOptionPane.INFORMATION_MESSAGE
                 );
-                //qua andrà aperta la dashboard docente e andrà passata l'email
+
                 if (myFrame != null) {
                     myFrame.dispose();
                 }
+                //AreaRiservataDocente formDoc = new AreaRiservataDocente(email);
+
+                //JFrame dashboardDoc = formDoc.apriAreaRiservataDocente();
+                //dashboardDoc.setLocationRelativeTo(null);
+                //dashboardDoc.setVisible(true);
                 break;
 
             case GestorePiattaforma.LOGIN_FALLITO:

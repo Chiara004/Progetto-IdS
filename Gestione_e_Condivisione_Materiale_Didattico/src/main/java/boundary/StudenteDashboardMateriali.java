@@ -370,12 +370,5 @@ public class StudenteDashboardMateriali {
 
     }
 
-    //prova per visualizzare
-    public static void main(String[] args) {
-        StudenteDashboardMateriali dashboard = new StudenteDashboardMateriali("domenico.amalfitano@unina.it", "Ingegneria del Software");
-        dashboard.apriStudenteDashboard();
-    }
-
-
 }
 

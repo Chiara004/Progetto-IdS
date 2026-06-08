@@ -196,12 +196,16 @@ public class Corso {
             }
         }
 
+
         // Se passa il controllo, si aggiunge alla lista
         Categoria cat = Categoria.valueOf(categoria);
         Visibilita vis = Visibilita.valueOf(visibilita);
         LocalDate data = LocalDate.now();
         int id = Integer.parseInt(idMateriale);
         MaterialeDidattico materialeAggiornato = getMaterialeDidatticoPerId(id);
+        if(materialeAggiornato.getVisibilita().toString().equals("PUBBLICATO") && visibilita.equals("NON_PUBBLICATO"))
+            return false;
+
         materialeAggiornato.setTitolo(titolo);
         materialeAggiornato.setDescrizione(descrizione);
         materialeAggiornato.setDataPubblicazione(data);
