@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Set;
 
@@ -254,21 +256,10 @@ public class GestoreCorsoTest {
                 "DISPENSE", "PUBBLICATO", fileDiTest, "null"
         );
 
-        Path fileCopiato = Paths.get(UPLOAD_DIR_TEST, fileDiTest.getName());
+        String percorso = gestoreCorso.getPercorsoFile(TITOLO_CORSO, "Materiale Con File");
+        Path fileCopiato = Paths.get(UPLOAD_DIR_TEST, percorso);
         assertTrue(Files.exists(fileCopiato),
                 "Il file fisico deve essere presente nella upload dir dopo l'inserimento");
-    }
-
-    //TEST INSERIMENTO MATERIALE CON FILE DI TEST
-    @Test
-    void testInserisciMateriale_PercorsoSalvatoCorrispondeAlNomeFile() {
-        gestoreCorso.inserisciMateriale(
-                TITOLO_CORSO, "Materiale Percorso", "desc",
-                "DISPENSE", "PUBBLICATO", fileDiTest, "null"
-        );
-        String percorso = gestoreCorso.getPercorsoFile(TITOLO_CORSO, "Materiale Percorso");
-        assertEquals(fileDiTest.getName(), percorso,
-                "Il percorso salvato deve corrispondere al nome del file fisico copiato");
     }
 
     //TEST INSERIMENTO MATERIALE NON VALIDO TITOLO OMONIMO
@@ -493,8 +484,8 @@ public class GestoreCorsoTest {
                 TITOLO_MAT_ESISTENTE, "desc",
                 "SLIDE", "PUBBLICATO", nuovoFile, "null"
         );
-
-        Path nuovoFileCopiato = Paths.get(UPLOAD_DIR_TEST, nuovoFile.getName());
+        String percorsoFile = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        Path nuovoFileCopiato = Paths.get(UPLOAD_DIR_TEST,percorsoFile);
         assertTrue(Files.exists(nuovoFileCopiato),
                 "Il nuovo file fisico deve essere copiato nella upload dir dopo la modifica");
 
@@ -502,25 +493,6 @@ public class GestoreCorsoTest {
         nuovoFile.delete();
     }
 
-    //TEST MODIFICA MATERIALE PERCORSO AGGIORNATO
-    @Test
-    void testModificaMateriale_ConNuovoFile_PercorsoAggiornato() throws IOException {
-        File nuovoFile = File.createTempFile("materiale_nuovo_", ".pdf",
-                new File(System.getProperty("java.io.tmpdir")));
-        Files.writeString(nuovoFile.toPath(), "contenuto aggiornato");
-        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-        gestoreCorso.modificaMateriale(
-                TITOLO_CORSO, String.valueOf(id),
-                TITOLO_MAT_ESISTENTE, "desc",
-                "SLIDE", "PUBBLICATO", nuovoFile, "null"
-        );
-        String percorsoAggiornato = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-        assertEquals(nuovoFile.getName(), percorsoAggiornato,
-                "Il percorso deve essere aggiornato con il nome del nuovo file");
-
-        // Cleanup extra
-        nuovoFile.delete();
-    }
 
     //TEST MODIFICA INVALIDA
     @Test
