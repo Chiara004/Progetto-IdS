@@ -226,4 +226,18 @@ public class GestorePiattaforma {
         }
         return righe;
     }
+
+    public static String[] visualizzaNotificheStudente(){
+        List<Notifica> notifiche =  GestoreNotifica.getNotifiche();
+        String[] righe = new String[notifiche.size()];
+
+        int i = 0;
+
+        for (Notifica notifica : notifiche) {
+            righe[i] = notifica.getMessaggio();
+            i++;
+        }
+
+        return righe;
+        }
 }

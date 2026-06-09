@@ -166,7 +166,7 @@ public class CorsoTest {
                 idStr,
                 "Slide Aggiornate",
                 "Nuova descrizione",
-                "NON_PUBBLICATO",
+                "PUBBLICATO",
                 "/files/slide_v2.pdf",
                 "null",
                 "SLIDE"

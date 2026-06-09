@@ -14,7 +14,7 @@ public class Studente extends Utente{
     @ManyToMany(mappedBy = "studenti", fetch = FetchType.EAGER)
     private Set<Corso> corsi= new HashSet<>();
 
-    @OneToMany(mappedBy = "studente", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "studente", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Notifica> notifiche = new ArrayList<>();
 
 

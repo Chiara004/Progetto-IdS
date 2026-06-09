@@ -146,10 +146,6 @@ public class GestoreCorso {
         return c;
     }
 
-    public Set<Corso> getElencoCorsiStudente(Studente studente){
-        return studente.getCorsi();
-    }
-
 
     public Set<Corso> getElencoCorsiDocente(Docente docente) {
         return docente.getInsegnamenti();

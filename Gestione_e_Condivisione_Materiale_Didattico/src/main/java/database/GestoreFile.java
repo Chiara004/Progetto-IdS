@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.Properties;
 
 public class GestoreFile {
@@ -57,11 +58,12 @@ public class GestoreFile {
             cartella.mkdirs(); // crea la cartella se non esiste
         }
 
-        Path destinazione = Paths.get(percorsoBase, fileScelto.getName());
+        String percorsoFile = LocalDateTime.now().toString().replace(":", "_")+fileScelto.getName();
+        Path destinazione = Paths.get(percorsoBase, percorsoFile);
         try {
             Files.copy(fileScelto.toPath(), destinazione,
                     StandardCopyOption.REPLACE_EXISTING);
-            return fileScelto.getName();
+            return percorsoFile;
         } catch (IOException e) {
             throw new RuntimeException("Errore durante il salvataggio del file", e);
         }

@@ -264,7 +264,7 @@ public class StudenteDashboardMateriali {
 
     private void inizializzaTabella() {
         // Definisci i nomi delle colonne
-        String[] nomiColonne = {"Titolo", "Categoria", "Descrizione", "Data Pubblicazione", "Sezione", "Stato", "Azioni"};
+        String[] nomiColonne = {"Titolo", "Categoria", "Descrizione", "Data Pubblicazione", "Stato", "Azioni"};
 
         // Crea il modello personalizzato bloccando la modifica delle celle
         tableModel = new DefaultTableModel(nomiColonne, 0) {
@@ -280,8 +280,8 @@ public class StudenteDashboardMateriali {
         // Centra il contenuto dell'ultima colonna (indice 5)
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tblMateriali.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
-        tblMateriali.getColumnModel().getColumn(6).setPreferredWidth(50);
+        tblMateriali.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+        tblMateriali.getColumnModel().getColumn(5).setPreferredWidth(50);
     }
 
     //metodo per popolare la tabella
@@ -386,13 +386,6 @@ public class StudenteDashboardMateriali {
         });
 
     }
-
-    //prova per visualizzare
-    public static void main(String[] args) {
-        StudenteDashboardMateriali dashboard = new StudenteDashboardMateriali("domenico.amalfitano@unina.it", "Ingegneria del Software");
-        dashboard.apriStudenteDashboard();
-    }
-
 
 }
 
