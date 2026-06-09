@@ -208,7 +208,6 @@ public class GestorePiattaforma {
                     "",
                     "",
                     "",
-                    "",
                     ""
             };
             righe.add(riga);
@@ -220,7 +219,6 @@ public class GestorePiattaforma {
                         corso.getTitolo(),
                         corso.getDescrizione(),
                         corso.getAnnoAccademico(),
-                        corso.getSezioni().toString(),
                         "⋮"
                 };
                 righe.add(riga);

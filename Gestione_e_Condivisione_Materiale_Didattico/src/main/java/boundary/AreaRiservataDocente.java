@@ -12,20 +12,23 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import java.util.Locale;
 
-public class AreaRiservataStudente {
+public class AreaRiservataDocente {
     private JPanel JPanel;
     private JPanel contentPane;
     private JScrollPane contentMateriali;
     private JTable tblMateriali;
     private JPanel contentAggiungi;
     private JLabel lblMateriali;
+    private JLabel lbl_informazioniDocente;
     private JPanel descrizioneDashboard;
     private JLabel iconaLogo;
-    private JLabel lbl_informazioniStudenti;
     private JButton btnLogout;
 
     private JFrame myFrame;
@@ -36,7 +39,6 @@ public class AreaRiservataStudente {
     private JPopupMenu contextMenu;
     private JMenuItem menuApri;
 
-    //dati dello studente
     private String emailUtente;
 
     {
@@ -54,51 +56,52 @@ public class AreaRiservataStudente {
      * @noinspection ALL
      */
     private void $$$setupUI$$$() {
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         JPanel = new JPanel();
         JPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel1.add(JPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         contentPane = new JPanel();
         contentPane.setLayout(new GridLayoutManager(2, 2, new Insets(0, 0, 0, 0), -1, -1));
         JPanel.add(contentPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(2, 2, new Insets(10, 10, 10, 10), -1, 15));
-        contentPane.add(panel1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(2, 2, new Insets(10, 10, 10, 10), -1, 15));
+        contentPane.add(panel2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         contentMateriali = new JScrollPane();
-        panel1.add(contentMateriali, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel2.add(contentMateriali, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         tblMateriali = new JTable();
         tblMateriali.setRowHeight(25);
         contentMateriali.setViewportView(tblMateriali);
         contentAggiungi = new JPanel();
         contentAggiungi.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
         contentAggiungi.setEnabled(true);
-        panel1.add(contentAggiungi, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel2.add(contentAggiungi, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         lblMateriali = new JLabel();
         Font lblMaterialiFont = this.$$$getFont$$$(null, Font.BOLD, 16, lblMateriali.getFont());
         if (lblMaterialiFont != null) lblMateriali.setFont(lblMaterialiFont);
         lblMateriali.setText("Elenco Corsi di");
         contentAggiungi.add(lblMateriali, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        lbl_informazioniStudenti = new JLabel();
-        Font lbl_informazioniStudentiFont = this.$$$getFont$$$(null, Font.BOLD, 16, lbl_informazioniStudenti.getFont());
-        if (lbl_informazioniStudentiFont != null) lbl_informazioniStudenti.setFont(lbl_informazioniStudentiFont);
-        lbl_informazioniStudenti.setText("\"nome studente\"");
-        contentAggiungi.add(lbl_informazioniStudenti, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        lbl_informazioniDocente = new JLabel();
+        Font lbl_informazioniDocenteFont = this.$$$getFont$$$(null, Font.BOLD, 16, lbl_informazioniDocente.getFont());
+        if (lbl_informazioniDocenteFont != null) lbl_informazioniDocente.setFont(lbl_informazioniDocenteFont);
+        lbl_informazioniDocente.setText("\"nome docente\"");
+        contentAggiungi.add(lbl_informazioniDocente, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         descrizioneDashboard = new JPanel();
-        descrizioneDashboard.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));
-        panel1.add(descrizioneDashboard, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        descrizioneDashboard.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.add(descrizioneDashboard, new GridConstraints(0, 0, 2, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         iconaLogo = new JLabel();
         iconaLogo.setText("");
         descrizioneDashboard.add(iconaLogo, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        descrizioneDashboard.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         btnLogout = new JButton();
         Font btnLogoutFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnLogout.getFont());
         if (btnLogoutFont != null) btnLogout.setFont(btnLogoutFont);
         btnLogout.setMargin(new Insets(10, 10, 10, 10));
         btnLogout.setText("Logout");
-        descrizioneDashboard.add(btnLogout, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        descrizioneDashboard.add(btnLogout, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        contentPane.add(spacer1, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        contentPane.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final Spacer spacer3 = new Spacer();
-        contentPane.add(spacer3, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        contentPane.add(spacer2, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -123,20 +126,13 @@ public class AreaRiservataStudente {
         return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);
     }
 
-    /**
-     * @noinspection ALL
-     */
-    public JComponent $$$getRootComponent$$$() {
-        return JPanel;
-    }
-
-    public AreaRiservataStudente(String emailUtente) {
+    public AreaRiservataDocente(String emailUtente) {
         this.emailUtente = emailUtente;
         inizializzaTabella();
         inizializzaMenu();
         setAzioni();
         aggiornaTabellaMateriali();
-        lbl_informazioniStudenti.setText(emailUtente);
+        lbl_informazioniDocente.setText(emailUtente);
 
         ImageIcon logoIcon = new ImageIcon(getClass().getResource("/logoPiattaforma.png"));
         Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);
@@ -182,9 +178,9 @@ public class AreaRiservataStudente {
         });
     }
 
-    public JFrame apriAreaRiservataStudente() {
+    public JFrame apriAreaRiservataDocente() {
         // 1. Impostazioni base della finestra
-        JFrame frame = new JFrame("Studio Paradigm - Area Riservata Studente");
+        JFrame frame = new JFrame("Studio Paradigm - Area Riservata Docente");
         this.myFrame = frame;
         frame.setContentPane(contentPane); // Collega il pannello principale
 
@@ -211,11 +207,9 @@ public class AreaRiservataStudente {
                     if (myFrame != null) {
                         myFrame.dispose();
 
-                        StudenteDashboardMateriali form=new StudenteDashboardMateriali(emailUtente,String.valueOf(tblMateriali.getValueAt(rigaSelezionata,1)));
+                        DocenteDashboardMateriali form=new DocenteDashboardMateriali(emailUtente,String.valueOf(tblMateriali.getValueAt(rigaSelezionata,1)));
 
-                        JFrame dashboard = form.apriStudenteDashboard();
-                        dashboard.setLocationRelativeTo(null);
-                        dashboard.setVisible(true);
+                        form.apriDocenteDashboard();
                     }
 
 
@@ -285,3 +279,5 @@ public class AreaRiservataStudente {
     }
 
 }
+
+

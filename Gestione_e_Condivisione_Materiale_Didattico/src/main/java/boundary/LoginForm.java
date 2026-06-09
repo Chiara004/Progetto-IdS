@@ -159,7 +159,7 @@ public class LoginForm {
 
 
         int esito = GestorePiattaforma.inserimentoCredenziali(email, password);
-
+        JFrame dashboard;
         switch (esito) {
 
             case GestorePiattaforma.LOGIN_SUCCESS_STUDENTE:
@@ -174,9 +174,9 @@ public class LoginForm {
                     myFrame.dispose();
 
                 }
-                AreaRiservataStudente form = new AreaRiservataStudente(email);
+                AreaRiservataStudente formStudente = new AreaRiservataStudente(email);
 
-                JFrame dashboard = form.apriAreaRiservataStudente();
+                dashboard = formStudente.apriAreaRiservataStudente();
                 dashboard.setLocationRelativeTo(null);
                 dashboard.setVisible(true);
 
@@ -189,10 +189,17 @@ public class LoginForm {
                     "Login completato",
                     JOptionPane.INFORMATION_MESSAGE
                 );
-                //qua andrà aperta la dashboard docente e andrà passata l'email
+                //qua andrà aperta la dashboard Docente
                 if (myFrame != null) {
                     myFrame.dispose();
+
                 }
+                AreaRiservataDocente formDocente = new AreaRiservataDocente(email);
+
+                dashboard = formDocente.apriAreaRiservataDocente();
+                dashboard.setLocationRelativeTo(null);
+                dashboard.setVisible(true);
+
                 break;
 
             case GestorePiattaforma.LOGIN_FALLITO:

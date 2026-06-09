@@ -129,19 +129,6 @@
                   <text value="Studente"/>
                 </properties>
               </component>
-              <component id="f94fd" class="javax.swing.JLabel" binding="lbl_informazioniStudenti">
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="&quot;nome studente&quot;"/>
-                </properties>
-              </component>
-              <vspacer id="2795a">
-                <constraints>
-                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </vspacer>
               <component id="80513" class="javax.swing.JButton" binding="btnLogout">
                 <constraints>
                   <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
@@ -150,6 +137,24 @@
                   <font size="14" style="1"/>
                   <margin top="10" left="10" bottom="10" right="10"/>
                   <text value="Logout"/>
+                </properties>
+              </component>
+              <component id="dfec2" class="javax.swing.JButton" binding="btnIndietro">
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font size="14" style="1"/>
+                  <margin top="10" left="10" bottom="10" right="10"/>
+                  <text value="Indietro"/>
+                </properties>
+              </component>
+              <component id="f94fd" class="javax.swing.JLabel" binding="lbl_informazioniStudenti">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="&quot;nome studente&quot;"/>
                 </properties>
               </component>
             </children>

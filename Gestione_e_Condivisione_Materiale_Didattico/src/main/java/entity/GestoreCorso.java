@@ -151,4 +151,7 @@ public class GestoreCorso {
     }
 
 
+    public Set<Corso> getElencoCorsiDocente(Docente docente) {
+        return docente.getInsegnamenti();
+    }
 }
