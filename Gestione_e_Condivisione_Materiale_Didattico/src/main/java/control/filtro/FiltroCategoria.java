@@ -3,7 +3,7 @@ package control.filtro;
 import entity.MaterialeDidattico;
 import java.util.Set;
 
-public class FiltroCategoria implements StatoFiltro {
+public class FiltroCategoria implements StrategyFiltro {
     @Override
     public void filtra(Set<MaterialeDidattico> materiale, Object campo) {
         if (campo == null || String.valueOf(campo).trim().isEmpty() || String.valueOf(campo).equals("Inserisci parola chiave ...")) {

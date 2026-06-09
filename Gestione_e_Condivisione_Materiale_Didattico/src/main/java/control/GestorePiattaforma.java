@@ -19,13 +19,19 @@ public class GestorePiattaforma {
     public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA = GestoreUtente.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
     public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE = GestoreUtente.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;
 
-    public static StatoFiltro StringToStatoFiltro(String tipologia){
+    private static GestoreCorso gestoreCorso = new GestoreCorso();
+    private static GestoreIscrizione gestoreIscrizione = new GestoreIscrizione();
+    private static GestoreUtente gestoreUtente = new GestoreUtente();
+    private static GestoreNotifica gestoreNotifica = new GestoreNotifica();
+
+
+    public static StrategyFiltro StringToStatoFiltro(String tipologia){
         // Protezione contro i valori nulli o vuoti
         if (tipologia == null || tipologia.trim().isEmpty()) {
             return new FiltroNullo();
         }
 
-        StatoFiltro filtro;
+        StrategyFiltro filtro;
         switch(tipologia.trim().toLowerCase()) // toLowerCase ci mette al sicuro da distrazioni
         {
             case "categoria":
@@ -44,17 +50,33 @@ public class GestorePiattaforma {
 
     public static List<String[]> materialeInRighe(Set<MaterialeDidattico> materialiDidattici){
         List<String[]> righe = new ArrayList<>();
-        for (MaterialeDidattico materialeDidattico : materialiDidattici) {
-            String[] riga = new String[]{
-                    materialeDidattico.getTitolo(),
-                    materialeDidattico.getCategoria().toString(),
-                    materialeDidattico.getDescrizione(),
-                    materialeDidattico.getDataPubblicazione().toString(),
-                    materialeDidattico.getSezione().getTitolo(),
-                    materialeDidattico.getVisibilita().toString(),
-                    "⋮"
-            };
-            righe.add(riga);
+        Utente utente = SessionManager.getInstance().getUtenteLoggato();
+        if(utente instanceof Docente){
+            for (MaterialeDidattico materialeDidattico : materialiDidattici) {
+                String[] riga = new String[]{
+                        materialeDidattico.getTitolo(),
+                        materialeDidattico.getCategoria().toString(),
+                        materialeDidattico.getDescrizione(),
+                        materialeDidattico.getDataPubblicazione().toString(),
+                        materialeDidattico.getSezione().getTitolo(),
+                        materialeDidattico.getVisibilita().toString(),
+                        "⋮"
+                };
+                righe.add(riga);
+            }
+        }
+        else{
+            for (MaterialeDidattico materialeDidattico : materialiDidattici) {
+                String[] riga = new String[]{
+                        materialeDidattico.getTitolo(),
+                        materialeDidattico.getCategoria().toString(),
+                        materialeDidattico.getDescrizione(),
+                        materialeDidattico.getDataPubblicazione().toString(),
+                        materialeDidattico.getSezione().getTitolo(),
+                        "⋮"
+                };
+                righe.add(riga);
+            }
         }
         return righe;
 
@@ -64,7 +86,7 @@ public class GestorePiattaforma {
         return  visualizzaMateriali(corso,null,null);
     }
     public static List<String[]> visualizzaMateriali(String corso, Object campo, String tipologia){
-        GestoreCorso gestoreCorso = new GestoreCorso();
+
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         Filtro filtro = new Filtro();
 
@@ -81,7 +103,6 @@ public class GestorePiattaforma {
     }
 
     public static List<String[]> visualizzaMaterialiPubblicati(String corso, Object campo, String tipologia){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         Filtro filtro = new Filtro();
 
@@ -99,7 +120,6 @@ public class GestorePiattaforma {
     }
 
     public static String getIdMateriale(String corso, String titolo){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         int idMateriale = gestoreCorso.getIdMateriale(utenteLoggato, corso,titolo);
         return String.valueOf(idMateriale);
@@ -130,7 +150,6 @@ public class GestorePiattaforma {
     }
 
     public static String[] getSezioni(String corso){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         Set<Sezione> valoriSezione = gestoreCorso.getSezioni(utenteLoggato, corso);
 
@@ -147,25 +166,21 @@ public class GestorePiattaforma {
     }
 
     public static String getPercorsoFile(String corso, String titolo){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         return gestoreCorso.getPercorsoFile(utenteLoggato, corso, titolo);
     }
 
     public static boolean eliminaMateriale(String corso, String titolo){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         return gestoreCorso.rimuoviMateriale(utenteLoggato, corso, titolo);
     }
 
     public static boolean inserisciMateriale(String corso, String titolo, String descrizione,
                                              String categoria, String visibilita, File fileScelto, String sezione){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         boolean esito = gestoreCorso.inserisciMateriale(utenteLoggato, corso, titolo, descrizione,
                 categoria, visibilita,fileScelto,sezione);
         if(esito && visibilita.equals("PUBBLICATO")){
-            GestoreNotifica gestoreNotifica = new GestoreNotifica();
             gestoreNotifica.inviaNotifica((Docente) utenteLoggato, corso);
         }
 
@@ -176,13 +191,11 @@ public class GestorePiattaforma {
 
     public static boolean modificaMateriale(String corso, String idMateriale, String titolo, String descrizione,
                                             String categoria, String visibilita, File fileScelto, String sezione){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         boolean esito =gestoreCorso.modificaMateriale(utenteLoggato, corso, idMateriale, titolo, descrizione,
                 categoria, visibilita,fileScelto,sezione);
 
         if(esito && visibilita.equals("PUBBLICATO")){
-            GestoreNotifica gestoreNotifica = new GestoreNotifica();
             gestoreNotifica.inviaNotifica((Docente) utenteLoggato, corso);
         }
 
@@ -191,18 +204,15 @@ public class GestorePiattaforma {
     }
 
     public static boolean apriMateriale(String corso, String titolo){
-        GestoreCorso gestoreCorso = new GestoreCorso();
         Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         return gestoreCorso.apriMateriale(utenteLoggato, corso, titolo);
     }
 
     public static int inserimentoDatiUtente(String email, String matricola, String nome, String cognome, String password, boolean isStudente) {
-        GestoreUtente gestoreUtente = new GestoreUtente();
         return gestoreUtente.inserimentoDatiUtente(email, matricola, nome, cognome, password, isStudente);
     }
 
     public static int inserimentoCredenziali(String email, String password) {
-        GestoreUtente gestoreUtente = new GestoreUtente();
         Utente utente = gestoreUtente.inserimentoCredenziali(email, password);
         if (utente == null) {
             return GestorePiattaforma.LOGIN_FALLITO;
@@ -221,8 +231,6 @@ public class GestorePiattaforma {
     }
 
     public static List<String[]> visualizzaElencoCorsi(String emailUtente){
-        GestoreIscrizione gestoreIscrizione=new GestoreIscrizione();
-        GestoreCorso gestoreCorso=new GestoreCorso();
         Collection<Corso> elencoCorsi;
 
         if(SessionManager.getInstance().getUtenteLoggato()instanceof Studente){
@@ -260,7 +268,6 @@ public class GestorePiattaforma {
     }
 
     public static String[] visualizzaNotificheStudente(){
-        GestoreNotifica gestoreNotifica = new GestoreNotifica();
         Studente studente = (Studente) SessionManager.getInstance().getUtenteLoggato();
         List<Notifica> notifiche =  gestoreNotifica.getNotifiche(studente);
         String[] righe = new String[notifiche.size()];

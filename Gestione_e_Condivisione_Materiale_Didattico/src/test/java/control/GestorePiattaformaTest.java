@@ -16,153 +16,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GestorePiattaformaTest {
-
-    //TEST MECCANISMI DI FILTRAGGIO
-    @Test
-    void testStringToStatoFiltro_Categoria() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("categoria");
-        assertInstanceOf(FiltroCategoria.class, filtro,
-                "'categoria' deve restituire un FiltroCategoria");
-    }
-
-    @Test
-    void testStringToStatoFiltro_Descrizione() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("descrizione");
-        assertInstanceOf(FiltroDescrizione.class, filtro,
-                "'descrizione' deve restituire un FiltroDescrizione");
-    }
-
-    @Test
-    void testStringToStatoFiltro_Pubblicato() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("pubblicato");
-        assertInstanceOf(FiltroPubblicato.class, filtro,
-                "'pubblicato' deve restituire un FiltroPubblicato");
-    }
-
-    @Test
-    void testStringToStatoFiltro_Titolo() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("titolo");
-        assertInstanceOf(FiltroTitolo.class, filtro,
-                "'titolo' deve restituire un FiltroTitolo");
-    }
-
-    @Test
-    void testStringToStatoFiltro_ValoreNonRiconosciuto_FiltroNullo() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("valore_sconosciuto");
-        assertInstanceOf(FiltroNullo.class, filtro,
-                "Un valore non riconosciuto deve restituire un FiltroNullo");
-    }
-
-    @Test
-    void testStringToStatoFiltro_Null_FiltroNullo() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro(null);
-        assertInstanceOf(FiltroNullo.class, filtro,
-                "null deve restituire un FiltroNullo senza lanciare eccezioni");
-    }
-
-    @Test
-    void testStringToStatoFiltro_StringaVuota_FiltroNullo() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("");
-        assertInstanceOf(FiltroNullo.class, filtro,
-                "Una stringa vuota deve restituire un FiltroNullo");
-    }
-
-    @Test
-    void testStringToStatoFiltro_StringaConSoliSpazi_FiltroNullo() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("   ");
-        assertInstanceOf(FiltroNullo.class, filtro,
-                "Una stringa di soli spazi deve restituire un FiltroNullo");
-    }
-
-    @Test
-    void testStringToStatoFiltro_CaseMaiuscole_Accettato() {
-        // toLowerCase nella switch garantisce che il case non conti
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("CATEGORIA");
-        assertInstanceOf(FiltroCategoria.class, filtro,
-                "Il confronto deve essere case-insensitive: 'CATEGORIA' deve dare FiltroCategoria");
-    }
-
-    @Test
-    void testStringToStatoFiltro_CaseMisto_Accettato() {
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("Titolo");
-        assertInstanceOf(FiltroTitolo.class, filtro,
-                "Il confronto deve essere case-insensitive: 'Titolo' deve dare FiltroTitolo");
-    }
-
-    @Test
-    void testStringToStatoFiltro_ConSpaziBordo_Accettato() {
-        // trim() nella switch garantisce che gli spazi laterali non contino
-        StatoFiltro filtro = GestorePiattaforma.StringToStatoFiltro("  titolo  ");
-        assertInstanceOf(FiltroTitolo.class, filtro,
-                "Gli spazi iniziali/finali devono essere ignorati grazie al trim()");
-    }
-
-    private MaterialeDidattico creaMateriale(String titolo, String descrizione,
-                                             Categoria categoria, Visibilita visibilita,
-                                             String titoloSezione) {
-        Sezione sezione = new Sezione(titoloSezione);
-        MaterialeDidattico m = new MaterialeDidattico(
-                titolo, descrizione, LocalDate.of(2024, 1, 1),
-                "/files/test.pdf", categoria, visibilita);
-        m.setSezione(sezione);
-        return m;
-    }
-
-    @Test
-    void testMaterialeInRighe_SetVuoto_ListaVuota() {
-        List<String[]> righe = GestorePiattaforma.materialeInRighe(new HashSet<>());
-
-        assertNotNull(righe, "Il risultato non deve essere null");
-        assertTrue(righe.isEmpty(), "Un set vuoto deve produrre una lista vuota");
-    }
-
-    @Test
-    void testMaterialeInRighe_UnMateriale_UnaRiga() {
-        Set<MaterialeDidattico> set = new HashSet<>();
-        set.add(creaMateriale("Slide 1", "desc", Categoria.SLIDE, Visibilita.PUBBLICATO, "Modulo 1"));
-
-        List<String[]> righe = GestorePiattaforma.materialeInRighe(set);
-
-        assertEquals(1, righe.size(), "Un set con un elemento deve produrre una lista con una riga");
-    }
-
-    @Test
-    void testMaterialeInRighe_PiuMateriali_RigheCorrispondenti() {
-        Set<MaterialeDidattico> set = new HashSet<>();
-        set.add(creaMateriale("Slide 1", "desc1", Categoria.SLIDE,    Visibilita.PUBBLICATO, "Modulo 1"));
-        set.add(creaMateriale("Slide 2", "desc2", Categoria.DISPENSE, Visibilita.NON_PUBBLICATO,      "Modulo 2"));
-
-        List<String[]> righe = GestorePiattaforma.materialeInRighe(set);
-
-        assertEquals(2, righe.size(), "Un set con due elementi deve produrre due righe");
-    }
-
-    @Test
-    void testMaterialeInRighe_RigaHa7Colonne() {
-        Set<MaterialeDidattico> set = new HashSet<>();
-        set.add(creaMateriale("Slide 1", "desc", Categoria.SLIDE, Visibilita.PUBBLICATO, "Modulo 1"));
-
-        String[] riga = GestorePiattaforma.materialeInRighe(set).get(0);
-
-        assertEquals(7, riga.length, "Ogni riga deve avere esattamente 7 colonne");
-    }
-
-    @Test
-    void testMaterialeInRighe_ContenutoRigaCorretto() {
-        Set<MaterialeDidattico> set = new HashSet<>();
-        set.add(creaMateriale("Slide Intro", "Prima slide", Categoria.SLIDE,
-                Visibilita.PUBBLICATO, "Modulo 1"));
-        String[] riga = GestorePiattaforma.materialeInRighe(set).get(0);
-
-        assertEquals("Slide Intro",riga[0], "Colonna 0: titolo");
-        assertEquals(Categoria.SLIDE.toString(), riga[1], "Colonna 1: categoria");
-        assertEquals("Prima slide",riga[2], "Colonna 2: descrizione");
-        assertEquals("2024-01-01", riga[3], "Colonna 3: dataPubblicazione");
-        assertEquals("Modulo 1", riga[4], "Colonna 4: sezione");
-        assertEquals(Visibilita.PUBBLICATO.toString(), riga[5], "Colonna 5: visibilita");
-        assertEquals("⋮", riga[6], "Colonna 6: azioni");
-    }
-
     private GestorePersistenza gestorePersistenza;
     private Docente docente;
     private Corso corso;
@@ -211,6 +64,165 @@ public class GestorePiattaformaTest {
         gestorePersistenza.elimina(Corso.class,  CODICE_CORSO);
         gestorePersistenza.elimina(Utente.class, MATRICOLA_DOCENTE);
         SessionManager.getInstance().logout();
+    }
+
+    //TEST MECCANISMI DI FILTRAGGIO
+    @Test
+    void testStringToStatoFiltro_Categoria() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("categoria");
+        assertInstanceOf(FiltroCategoria.class, filtro,
+                "'categoria' deve restituire un FiltroCategoria");
+    }
+
+    @Test
+    void testStringToStatoFiltro_Descrizione() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("descrizione");
+        assertInstanceOf(FiltroDescrizione.class, filtro,
+                "'descrizione' deve restituire un FiltroDescrizione");
+    }
+
+    @Test
+    void testStringToStatoFiltro_Pubblicato() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("pubblicato");
+        assertInstanceOf(FiltroPubblicato.class, filtro,
+                "'pubblicato' deve restituire un FiltroPubblicato");
+    }
+
+    @Test
+    void testStringToStatoFiltro_Titolo() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("titolo");
+        assertInstanceOf(FiltroTitolo.class, filtro,
+                "'titolo' deve restituire un FiltroTitolo");
+    }
+
+    @Test
+    void testStringToStatoFiltro_ValoreNonRiconosciuto_FiltroNullo() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("valore_sconosciuto");
+        assertInstanceOf(FiltroNullo.class, filtro,
+                "Un valore non riconosciuto deve restituire un FiltroNullo");
+    }
+
+    @Test
+    void testStringToStatoFiltro_Null_FiltroNullo() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro(null);
+        assertInstanceOf(FiltroNullo.class, filtro,
+                "null deve restituire un FiltroNullo senza lanciare eccezioni");
+    }
+
+    @Test
+    void testStringToStatoFiltro_StringaVuota_FiltroNullo() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("");
+        assertInstanceOf(FiltroNullo.class, filtro,
+                "Una stringa vuota deve restituire un FiltroNullo");
+    }
+
+    @Test
+    void testStringToStatoFiltro_StringaConSoliSpazi_FiltroNullo() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("   ");
+        assertInstanceOf(FiltroNullo.class, filtro,
+                "Una stringa di soli spazi deve restituire un FiltroNullo");
+    }
+
+    @Test
+    void testStringToStatoFiltro_CaseMaiuscole_Accettato() {
+        // toLowerCase nella switch garantisce che il case non conti
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("CATEGORIA");
+        assertInstanceOf(FiltroCategoria.class, filtro,
+                "Il confronto deve essere case-insensitive: 'CATEGORIA' deve dare FiltroCategoria");
+    }
+
+    @Test
+    void testStringToStatoFiltro_CaseMisto_Accettato() {
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("Titolo");
+        assertInstanceOf(FiltroTitolo.class, filtro,
+                "Il confronto deve essere case-insensitive: 'Titolo' deve dare FiltroTitolo");
+    }
+
+    @Test
+    void testStringToStatoFiltro_ConSpaziBordo_Accettato() {
+        // trim() nella switch garantisce che gli spazi laterali non contino
+        StrategyFiltro filtro = GestorePiattaforma.StringToStatoFiltro("  titolo  ");
+        assertInstanceOf(FiltroTitolo.class, filtro,
+                "Gli spazi iniziali/finali devono essere ignorati grazie al trim()");
+    }
+
+    private MaterialeDidattico creaMateriale(String titolo, String descrizione,
+                                             Categoria categoria, Visibilita visibilita,
+                                             String titoloSezione) {
+        Sezione sezione = new Sezione(titoloSezione);
+        MaterialeDidattico m = new MaterialeDidattico(
+                titolo, descrizione, LocalDate.of(2024, 1, 1),
+                "/files/test.pdf", categoria, visibilita);
+        m.setSezione(sezione);
+        return m;
+    }
+
+    @Test
+    void testMaterialeInRighe_SetVuoto_ListaVuota() {
+        List<String[]> righe = GestorePiattaforma.materialeInRighe(new HashSet<>());
+
+        assertNotNull(righe, "Il risultato non deve essere null");
+        assertTrue(righe.isEmpty(), "Un set vuoto deve produrre una lista vuota");
+    }
+
+    @Test
+    void testMaterialeInRighe_UnMateriale_UnaRiga() {
+        Set<MaterialeDidattico> set = new HashSet<>();
+        set.add(creaMateriale("Slide 1", "desc", Categoria.SLIDE, Visibilita.PUBBLICATO, "Modulo 1"));
+
+        List<String[]> righe = GestorePiattaforma.materialeInRighe(set);
+
+        assertEquals(1, righe.size(), "Un set con un elemento deve produrre una lista con una riga");
+    }
+
+    @Test
+    void testMaterialeInRighe_PiuMateriali_RigheCorrispondenti() {
+        Set<MaterialeDidattico> set = new HashSet<>();
+        set.add(creaMateriale("Slide 1", "desc1", Categoria.SLIDE,    Visibilita.PUBBLICATO, "Modulo 1"));
+        set.add(creaMateriale("Slide 2", "desc2", Categoria.DISPENSE, Visibilita.NON_PUBBLICATO,      "Modulo 2"));
+
+        List<String[]> righe = GestorePiattaforma.materialeInRighe(set);
+
+        assertEquals(2, righe.size(), "Un set con due elementi deve produrre due righe");
+    }
+
+    @Test
+    void testMaterialeInRighe_Docente_SetteColonneEContenutoCorretto() {
+        Set<MaterialeDidattico> set = new HashSet<>();
+        set.add(creaMateriale("Slide Intro", "Prima slide", Categoria.SLIDE, Visibilita.PUBBLICATO, "Modulo 1"));
+        String[] riga = GestorePiattaforma.materialeInRighe(set).get(0);
+        assertEquals(7, riga.length, "Per il docente la riga deve avere esattamente 7 colonne");
+        assertEquals("Slide Intro", riga[0], "Colonna 0: titolo");
+        assertEquals(Categoria.SLIDE.toString(), riga[1], "Colonna 1: categoria");
+        assertEquals("Prima slide", riga[2], "Colonna 2: descrizione");
+        assertEquals("2024-01-01", riga[3], "Colonna 3: dataPubblicazione");
+        assertEquals("Modulo 1", riga[4], "Colonna 4: sezione");
+        assertEquals(Visibilita.PUBBLICATO.toString(), riga[5], "Colonna 5: visibilità (SOLO DOCENTE)");
+        assertEquals("⋮", riga[6], "Colonna 6: azioni");
+    }
+
+    @Test
+    void testMaterialeInRighe_Studente_SeiColonneEContenutoCorretto() {
+        Studente studente = new Studente("N46001234", "Mario", "Rossi", "mario@studenti.unina.it", "pwd", "Studente");
+        SessionManager.getInstance().logout();
+        SessionManager.getInstance().setUtenteLoggato(studente);
+
+        Set<MaterialeDidattico> set = new HashSet<>();
+        set.add(creaMateriale("Dispensa 1", "Descrizione studio", Categoria.DISPENSE, Visibilita.PUBBLICATO, "Modulo 2"));
+
+        String[] riga = GestorePiattaforma.materialeInRighe(set).get(0);
+
+        assertEquals(6, riga.length, "Per lo studente la riga deve avere esattamente 6 colonne (senza visibilità)");
+        assertEquals("Dispensa 1", riga[0], "Colonna 0: titolo");
+        assertEquals(Categoria.DISPENSE.toString(), riga[1], "Colonna 1: categoria");
+        assertEquals("Descrizione studio", riga[2], "Colonna 2: descrizione");
+        assertEquals("2024-01-01", riga[3], "Colonna 3: dataPubblicazione");
+        assertEquals("Modulo 2", riga[4], "Colonna 4: sezione");
+        assertEquals("⋮", riga[5], "Colonna 5: azioni");
+
+        // Ripristiniamo la sessione con il docente per non sporcare eventuali test successivi
+        SessionManager.getInstance().logout();
+        SessionManager.getInstance().setUtenteLoggato(docente);
     }
 
     //VisualizzaMateriali senza filtro
@@ -264,25 +276,6 @@ public class GestorePiattaformaTest {
                 "Un filtro null deve restituire tutti i materiali");
     }
 
-    // VisualizzaMaterialiPubblicati senza filtro
-    @Test
-    void testVisualizzaMaterialiPubblicati_SenzaFiltro_SoloPublicati() {
-        List<String[]> righe = GestorePiattaforma.visualizzaMaterialiPubblicati(TITOLO_CORSO);
-
-        assertEquals(2, righe.size(),
-                "Senza filtro devono essere restituiti solo i 2 materiali PUBBLICATO");
-
-        boolean tuttoPubblicato = true;
-
-        for (String[] r : righe) {
-            if (!r[5].equals(Visibilita.PUBBLICATO.toString())) {
-                tuttoPubblicato = false;
-                break; // Interrompe il ciclo al primo elemento che non rispetta la condizione
-            }
-        }
-        assertTrue(tuttoPubblicato,
-                "Tutti i materiali restituiti devono avere visibilità PUBBLICATO");
-    }
 
     @Test
     void testVisualizzaMaterialiPubblicati_BozzaNonRestituita() {

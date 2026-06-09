@@ -140,8 +140,6 @@ public class GestoreCorso {
     }
 
     public List<Corso> getCorsiPerDocente(Docente d) {
-        GestorePersistenza gestorePersistenza = new GestorePersistenza();
-
         return gestorePersistenza.cercaPerCampo(
                 Corso.class,
                 "docente",

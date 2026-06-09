@@ -54,36 +54,6 @@ public class GestorePersistenza {
     }
 
 
-     //Salva più oggetti nella stessa transazione
-    public boolean salvaTutti(Object... oggetti) {
-        EntityManager em = JpaUtil.getInstance().getEntityManager();
-
-        try {
-            em.getTransaction().begin();
-
-            for (Object oggetto : oggetti) {
-                em.persist(oggetto);
-            }
-
-            em.getTransaction().commit();
-            return true;
-
-        } catch (RuntimeException e) {
-
-            if (em.getTransaction().isActive()) {
-                em.getTransaction().rollback();
-            }
-
-            //throw e;
-            e.printStackTrace();
-            return false;
-
-        } finally {
-            em.close();
-        }
-    }
-
-
     //Cerca un oggetto persistente a partire dalla sua classe e dal suo id
      //Il metodo è generico: può essere usato con qualunque Entity.
     public <T> T trovaPerId(Class<T> classe, Object id) {

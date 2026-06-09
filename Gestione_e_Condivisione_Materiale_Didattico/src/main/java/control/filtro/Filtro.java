@@ -5,14 +5,14 @@ import entity.MaterialeDidattico;
 import java.util.Set;
 
 public class Filtro {
-    private StatoFiltro stato;
+    private StrategyFiltro stato;
 
     public Filtro()
     {
         stato=new FiltroNullo();
     }
 
-    public void setStato(StatoFiltro stato)
+    public void setStato(StrategyFiltro stato)
     {
         this.stato=stato;
     }

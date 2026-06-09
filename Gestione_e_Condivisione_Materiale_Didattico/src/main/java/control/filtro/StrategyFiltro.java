@@ -5,8 +5,8 @@ import entity.MaterialeDidattico;
 import java.util.Set;
 
 /*Implementazione dei diversi metodi di Filtraggio dei campi di ricerca usando il
-design patern: "pattern state"
+design patern: "pattern stategy"
  */
-public interface StatoFiltro {
+public interface StrategyFiltro {
     void filtra(Set<MaterialeDidattico> materiale,Object campo);
 }
