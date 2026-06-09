@@ -1,6 +1,5 @@
 package boundary;
 
-<<<<<<< HEAD
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
@@ -282,7 +281,3 @@ public class AreaRiservataDocente {
 }
 
 
-=======
-public class AreaRiservataDocente {
-}
->>>>>>> d146afae55cee462df63f146644591177c69d270

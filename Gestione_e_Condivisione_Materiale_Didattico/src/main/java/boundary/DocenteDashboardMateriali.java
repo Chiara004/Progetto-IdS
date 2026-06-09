@@ -4,7 +4,6 @@ import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 
 import control.GestorePiattaforma;
-import control.SessionManager;
 
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
@@ -12,10 +11,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.Locale;
 import java.util.List;
 
@@ -37,7 +33,7 @@ public class DocenteDashboardMateriali {
     private JLabel iconaLogo;
     private JLabel lblDocente;
     private JLabel lbl_informazioniDocenti;
-    private JButton btnLogout;
+    private JButton btnIndietro;
 
     //componenti per le operazioni sui materiali didattici
     private DefaultTableModel tableModel;
@@ -130,12 +126,12 @@ public class DocenteDashboardMateriali {
         descrizioneDashboard.add(lbl_informazioniDocenti, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
         descrizioneDashboard.add(spacer2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        btnLogout = new JButton();
-        Font btnLogoutFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnLogout.getFont());
-        if (btnLogoutFont != null) btnLogout.setFont(btnLogoutFont);
-        btnLogout.setMargin(new Insets(10, 10, 10, 10));
-        btnLogout.setText("Logout");
-        descrizioneDashboard.add(btnLogout, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        btnIndietro = new JButton();
+        Font btnIndietroFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnIndietro.getFont());
+        if (btnIndietroFont != null) btnIndietro.setFont(btnIndietroFont);
+        btnIndietro.setMargin(new Insets(10, 10, 10, 10));
+        btnIndietro.setText("Indietro");
+        descrizioneDashboard.add(btnIndietro, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
         contentPane.add(spacer3, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer4 = new Spacer();
@@ -172,7 +168,7 @@ public class DocenteDashboardMateriali {
     }
 
 
-    public DocenteDashboardMateriali(String emailUtente, String nomeCorso){
+    public DocenteDashboardMateriali(String emailUtente, String nomeCorso) {
         this.emailUtente = emailUtente;
         this.nomeCorso = nomeCorso;
         inizializzaTabella();
@@ -194,7 +190,8 @@ public class DocenteDashboardMateriali {
         this.myFrame = frame;
         frame.setContentPane(contentPane); // Collega il pannello principale
         txtRicerca.setForeground(Color.GRAY);
-
+        lblCorso.setText(nomeCorso);
+        lbl_informazioniDocenti.setText(emailUtente);
 
         frame.setSize(800, 600);
         frame.setLocationRelativeTo(null);
@@ -236,7 +233,7 @@ public class DocenteDashboardMateriali {
             public void mouseClicked(MouseEvent e) {
                 int col = tblMateriali.columnAtPoint(e.getPoint());
                 int row = tblMateriali.rowAtPoint(e.getPoint());
-                if (col == 6 && row >= 0 &&row < tblMateriali.getRowCount()) {
+                if (col == 6 && row >= 0 && row < tblMateriali.getRowCount()) {
                     tblMateriali.setRowSelectionInterval(row, row);
                     contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
@@ -247,7 +244,7 @@ public class DocenteDashboardMateriali {
 
     private void inizializzaTabella() {
         // Definisci i nomi delle colonne
-        String[] nomiColonne = {"Titolo", "Categoria", "Descrizione","Data Pubblicazione", "Sezione", "Stato", "Azioni"};
+        String[] nomiColonne = {"Titolo", "Categoria", "Descrizione", "Data Pubblicazione", "Sezione", "Stato", "Azioni"};
 
         // Crea il modello personalizzato bloccando la modifica delle celle
         tableModel = new DefaultTableModel(nomiColonne, 0) {
@@ -313,7 +310,7 @@ public class DocenteDashboardMateriali {
         //Azione click Modifica
         menuModifica.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 int rigaSelezionata = tblMateriali.getSelectedRow();
                 //recupero dati e passaggio al form
                 if (frameAggiungi == null || !frameAggiungi.isDisplayable()) {
@@ -326,7 +323,7 @@ public class DocenteDashboardMateriali {
 
 
                     DocenteAggiungiModificaMateriali form = new DocenteAggiungiModificaMateriali(
-                            titoloSelezionato,descrizioneSelezionata,
+                            titoloSelezionato, descrizioneSelezionata,
                             categoriaSelezionata, sezioneSelezionata,
                             statoSelezionato, emailUtente, nomeCorso
                     );
@@ -351,7 +348,7 @@ public class DocenteDashboardMateriali {
         //Azione click Rimuovi FATTA
         menuRimuovi.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 int rigaSelezionata = tblMateriali.getSelectedRow();
                 String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 0).toString();
 
@@ -364,12 +361,11 @@ public class DocenteDashboardMateriali {
                         JOptionPane.QUESTION_MESSAGE // Mostra l'icona del punto interrogativo
                 );
 
-                if (scelta == JOptionPane.YES_OPTION){
+                if (scelta == JOptionPane.YES_OPTION) {
                     GestorePiattaforma.eliminaMateriale(nomeCorso, titoloSelezionato);
                     aggiornaTabellaMateriali();
                     JOptionPane.showMessageDialog(myFrame, "Materiale eliminato con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
-                }
-                else{
+                } else {
                     JOptionPane.showMessageDialog(myFrame, "Operazione annullata.", "Attenzione", JOptionPane.WARNING_MESSAGE);
                 }
             }
@@ -382,12 +378,11 @@ public class DocenteDashboardMateriali {
                 int rigaSelezionata = tblMateriali.getSelectedRow();
                 String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 0).toString();
                 if (rigaSelezionata != -1) {
-                    boolean esito=GestorePiattaforma.apriMateriale(nomeCorso,titoloSelezionato);
+                    boolean esito = GestorePiattaforma.apriMateriale(nomeCorso, titoloSelezionato);
 
-                    if(esito){
+                    if (esito) {
                         JOptionPane.showMessageDialog(contentPane, "File aperto con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
-                    }
-                    else{
+                    } else {
                         JOptionPane.showMessageDialog(contentPane, "Errore durante l'apertura del file.", "Errore", JOptionPane.ERROR_MESSAGE);
                     }
 
@@ -397,9 +392,9 @@ public class DocenteDashboardMateriali {
         });
 
         //Azione click test ricerca FATTA
-        txtRicerca.addFocusListener(new java.awt.event.FocusAdapter() {
+        txtRicerca.addFocusListener(new FocusAdapter() {
             @Override
-            public void focusGained(java.awt.event.FocusEvent e) {
+            public void focusGained(FocusEvent e) {
                 if (txtRicerca.getText().equals("Inserisci parola chiave ...")) {
                     txtRicerca.setText("");
                     txtRicerca.setForeground(Color.BLACK);
@@ -407,7 +402,7 @@ public class DocenteDashboardMateriali {
             }
 
             @Override
-            public void focusLost(java.awt.event.FocusEvent e) {
+            public void focusLost(FocusEvent e) {
                 if (txtRicerca.getText().isBlank()) {
                     txtRicerca.setText("Inserisci parola chiave ...");
                     txtRicerca.setForeground(Color.GRAY);
@@ -418,10 +413,10 @@ public class DocenteDashboardMateriali {
         //Azione click ricerca
         btnRicerca.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent e) {
                 List<String[]> datiMateriali = GestorePiattaforma.visualizzaMateriali(nomeCorso,
                         (Object) txtRicerca.getText(),
-                        (String)cmbFiltro.getSelectedItem());
+                        (String) cmbFiltro.getSelectedItem());
 
                 //Ottieni il modello della tua JTable
                 tableModel = (DefaultTableModel) tblMateriali.getModel();
@@ -436,25 +431,16 @@ public class DocenteDashboardMateriali {
             }
         });
 
-        //bottone logout
-        btnLogout.addActionListener(new ActionListener() {
+        //bottone indietro
+        btnIndietro.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e){
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Logout effettuato con successo! Arrivederci.",
-                        "Ritorno al login",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-
+            public void actionPerformed(ActionEvent e) {
                 if (myFrame != null) {
                     myFrame.dispose();
-                    SessionManager.getInstance().logout();
-                    LoginForm form = new LoginForm();
-                    frameLogin = form.apriLoginForm();
-                    frameLogin.setLocationRelativeTo(null);
-                    frameLogin.setVisible(true);
+                    AreaRiservataDocente form = new AreaRiservataDocente(emailUtente);
+                    myFrame = form.apriAreaRiservataDocente();
                 }
+
             }
         });
 

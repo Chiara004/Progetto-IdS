@@ -5,6 +5,7 @@ import entity.*;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -200,7 +201,14 @@ public class GestorePiattaforma {
 
     public static List<String[]> visualizzaElencoCorsi(String emailUtente){
         GestoreIscrizione gestoreIscrizione=new GestoreIscrizione();
-        Set<Corso> elencoCorsi=gestoreIscrizione.visualizzaElencoCorsi(emailUtente);
+        GestoreCorso gestoreCorso=new GestoreCorso();
+        Collection<Corso> elencoCorsi;
+
+        if(SessionManager.getInstance().getUtenteLoggato()instanceof Studente){
+            elencoCorsi=gestoreIscrizione.visualizzaElencoCorsi(emailUtente);
+        }
+        else
+            elencoCorsi = gestoreCorso.getCorsiPerDocente();
         List<String[]> righe = new ArrayList<>();
         if(elencoCorsi.isEmpty()){
             String[] riga = new String[]{

@@ -5,6 +5,7 @@ import database.GestorePersistenza;
 import control.SessionManager;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -147,7 +148,17 @@ public class GestoreCorso {
     }
 
 
-    public Set<Corso> getElencoCorsiDocente(Docente docente) {
-        return docente.getInsegnamenti();
+    //public Set<Corso> getElencoCorsiDocente(Docente docente) {
+    //    return docente.getInsegnamenti();
+    //}
+
+    public List<Corso> getCorsiPerDocente() {
+        GestorePersistenza gestorePersistenza = new GestorePersistenza();
+        Docente d = (Docente) SessionManager.getInstance().getUtenteLoggato();
+        return gestorePersistenza.cercaPerCampo(
+                Corso.class,
+                "docente",
+                d
+        );
     }
 }

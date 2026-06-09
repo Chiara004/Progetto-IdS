@@ -41,7 +41,6 @@ public class StudenteDashboardMateriali {
     private JLabel iconaLogo;
     private JLabel lblStudente;
     private JLabel lbl_informazioniStudenti;
-    private JButton btnLogout;
     private JButton btnIndietro;
 
     private JFrame frameAggiungi;
@@ -124,25 +123,21 @@ public class StudenteDashboardMateriali {
         lblStudente = new JLabel();
         lblStudente.setText("Studente");
         descrizioneDashboard.add(lblStudente, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        btnLogout = new JButton();
-        Font btnLogoutFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnLogout.getFont());
-        if (btnLogoutFont != null) btnLogout.setFont(btnLogoutFont);
-        btnLogout.setMargin(new Insets(10, 10, 10, 10));
-        btnLogout.setText("Logout");
-        descrizioneDashboard.add(btnLogout, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         btnIndietro = new JButton();
         Font btnIndietroFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnIndietro.getFont());
         if (btnIndietroFont != null) btnIndietro.setFont(btnIndietroFont);
         btnIndietro.setMargin(new Insets(10, 10, 10, 10));
         btnIndietro.setText("Indietro");
-        descrizioneDashboard.add(btnIndietro, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        descrizioneDashboard.add(btnIndietro, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         lbl_informazioniStudenti = new JLabel();
         lbl_informazioniStudenti.setText("\"nome studente\"");
         descrizioneDashboard.add(lbl_informazioniStudenti, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer2 = new Spacer();
-        panel1.add(spacer2, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        descrizioneDashboard.add(spacer2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
-        panel1.add(spacer3, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel1.add(spacer3, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer4 = new Spacer();
+        panel1.add(spacer4, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
@@ -191,17 +186,6 @@ public class StudenteDashboardMateriali {
         iconaLogo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         iconaLogo.setHorizontalAlignment(SwingConstants.CENTER);
 
-        btnIndietro.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (myFrame != null) {
-                    myFrame.dispose();
-                    AreaRiservataStudente form = new AreaRiservataStudente(emailUtente);
-                    myFrame = form.apriAreaRiservataStudente();
-                }
-
-            }
-        });
     }
 
     public JFrame apriStudenteDashboard() {
@@ -363,25 +347,15 @@ public class StudenteDashboardMateriali {
             }
         });
 
-        //bottone logout FATTO
-        btnLogout.addActionListener(new ActionListener() {
+        btnIndietro.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Logout effettuato con successo! Arrivederci.",
-                        "Ritorno al login",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
-
                 if (myFrame != null) {
                     myFrame.dispose();
-                    SessionManager.getInstance().logout();
-                    LoginForm form = new LoginForm();
-                    frameLogin = form.apriLoginForm();
-                    frameLogin.setLocationRelativeTo(null);
-                    frameLogin.setVisible(true);
+                    AreaRiservataStudente form = new AreaRiservataStudente(emailUtente);
+                    myFrame = form.apriAreaRiservataStudente();
                 }
+
             }
         });
 

@@ -183,11 +183,7 @@ public class AreaRiservataStudente {
             public void mouseClicked(MouseEvent e) {
                 int col = tblMateriali.columnAtPoint(e.getPoint());
                 int row = tblMateriali.rowAtPoint(e.getPoint());
-<<<<<<< HEAD
                 if (col == 4 && row >= 0 &&row < tblMateriali.getRowCount()) {
-=======
-                if (col == 4 && row >= 0 && row < tblMateriali.getRowCount()) {
->>>>>>> d146afae55cee462df63f146644591177c69d270
                     tblMateriali.setRowSelectionInterval(row, row);
                     contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
@@ -232,10 +228,7 @@ public class AreaRiservataStudente {
                         dashboard.setVisible(true);
                     }
 
-<<<<<<< HEAD
-=======
                     StudenteDashboardMateriali form = new StudenteDashboardMateriali(emailUtente, String.valueOf(tblMateriali.getValueAt(rigaSelezionata, 1)));
->>>>>>> d146afae55cee462df63f146644591177c69d270
 
                 }
             }
@@ -279,10 +272,7 @@ public class AreaRiservataStudente {
         // Imposta il modello della tabella come modello della visualizzazione
         tblMateriali.setModel(tableModel);
 
-<<<<<<< HEAD
-=======
         // Centra il contenuto dell'ultima colonna
->>>>>>> d146afae55cee462df63f146644591177c69d270
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         tblMateriali.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
