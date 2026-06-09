@@ -16,16 +16,9 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.Locale;
 
-//è stato usato il desing pattern: singleton
-public class StudenteDashboardMateriali {
-    private static StudenteDashboardMateriali istance;
 
-    private static StudenteDashboardMateriali getInstance(String emailUtente, String nomeCorso) {
-        if (istance == null) {
-            istance = new StudenteDashboardMateriali(emailUtente, nomeCorso);
-        }
-        return istance;
-    }
+public class StudenteDashboardMateriali {
+
 
     private JPanel contentPane;
     private JPanel contentRicerca;
