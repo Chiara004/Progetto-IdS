@@ -1,6 +1,5 @@
 package entity;
 
-import control.SessionManager;
 import database.GestorePersistenza;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -74,9 +73,6 @@ public class GestoreNotificaTest {
         studente2.getCorsi().add(corso);
         gestorePersistenza.aggiorna(studente1);
         gestorePersistenza.aggiorna(studente2);
-
-        // Imposta il docente come utente loggato nel SessionManager
-        SessionManager.getInstance().setUtenteLoggato(docente);
     }
 
     @AfterEach
@@ -104,14 +100,12 @@ public class GestoreNotificaTest {
         gestorePersistenza.elimina(Utente.class, MATRICOLA_STU3);
         gestorePersistenza.elimina(Utente.class, MATRICOLA_DOCENTE);
 
-        // Resetta la sessione
-        SessionManager.getInstance().logout();
     }
 
     //TEST NOTIFICHE GENERATE CORRETTE
     @Test
     void testInviaNotifica_GeneraNotificaPerOgniStudenteIscritto() {
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
         List<Notifica> notificheS1 = gestorePersistenza.cercaPerCampo(
                 Notifica.class, "studente", studente1);
         List<Notifica> notificheS2 = gestorePersistenza.cercaPerCampo(
@@ -127,7 +121,7 @@ public class GestoreNotificaTest {
     @Test
     void testInviaNotifica_TestoNotificaContieneNomeCorso() {
         // Act
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
         List<Notifica> notifiche = gestorePersistenza.cercaPerCampo(
                 Notifica.class, "studente", studente1);
 
@@ -139,7 +133,7 @@ public class GestoreNotificaTest {
     //TEST NOTIFICHE NON GENERATE PER STUDENTI NON ISCRITTI
     @Test
     void testInviaNotifica_StudenteNonIscrittoNonRiceveNotifica() {
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
         List<Notifica> notifiche = gestorePersistenza.cercaPerCampo(
                 Notifica.class, "studente", studenteNonIscritto);
         assertTrue(notifiche.isEmpty(),
@@ -149,7 +143,7 @@ public class GestoreNotificaTest {
     //TEST NUMERO NOTIFICHE CORRETTO
     @Test
     void testInviaNotifica_NumeroTotaleNotificheUgualeAStudentiIscritti() {
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
         String messaggioAtteso = "Nuovo materiale didattico disponibile per il corso: " + TITOLO_CORSO;
         List<Notifica> tutteLeNotifiche = gestorePersistenza.cercaPerCampo(
                 Notifica.class, "messaggio", messaggioAtteso);
@@ -164,7 +158,7 @@ public class GestoreNotificaTest {
         Corso corsoVuoto = new Corso(9101, "Corso Vuoto", "Nessuno iscritto", "2024/2025");
         corsoVuoto.setDocente(docente);
         gestorePersistenza.salva(corsoVuoto);
-        gestoreNotifica.inviaNotifica("Corso Vuoto");
+        gestoreNotifica.inviaNotifica(docente,"Corso Vuoto");
 
         String messaggioAtteso = "Nuovo materiale didattico disponibile per il corso: Corso Vuoto";
         List<Notifica> notifiche = gestorePersistenza.cercaPerCampo(
@@ -179,10 +173,7 @@ public class GestoreNotificaTest {
     // TEST STUDENTE SENZA NOTIFICHE
     @Test
     void testGetNotifiche_StudenteSenzaNotifiche_ListaVuota() {
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studente1);
-
-        List<Notifica> notifiche = GestoreNotifica.getNotifiche();
+        List<Notifica> notifiche = gestoreNotifica.getNotifiche(studente1);
 
         assertNotNull(notifiche, "La lista non deve essere null");
         assertTrue(notifiche.isEmpty(), "Uno studente senza notifiche deve restituire lista vuota");
@@ -191,11 +182,9 @@ public class GestoreNotificaTest {
     // TEST LISTA NOTIFICA NON VUOTA DOPO INVIO
     @Test
     void testGetNotifiche_DopoInvioNotifica_ListaNonVuota() {
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studente1);
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
 
-        List<Notifica> notifiche = GestoreNotifica.getNotifiche();
+        List<Notifica> notifiche = gestoreNotifica.getNotifiche(studente1);
 
         assertFalse(notifiche.isEmpty(), "Lo studente deve avere almeno una notifica");
         assertEquals(1, notifiche.size(), "Lo studente deve avere esattamente una notifica");
@@ -204,11 +193,9 @@ public class GestoreNotificaTest {
     // TEST getNotifiche() - il contenuto della notifica è corretto
     @Test
     void testGetNotifiche_ContenutoNotificaCorretto() {
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studente1);
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
 
-        List<Notifica> notifiche = GestoreNotifica.getNotifiche();
+        List<Notifica> notifiche = gestoreNotifica.getNotifiche(studente1);
 
         assertFalse(notifiche.isEmpty());
         assertTrue(notifiche.get(0).getMessaggio().contains(TITOLO_CORSO),
@@ -218,14 +205,9 @@ public class GestoreNotificaTest {
     // TEST getNotifiche() - uno studente vede solo le proprie notifiche
     @Test
     void testGetNotifiche_StudentiVedonoSoloLeProprieNotifiche() {
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studente1);
-        List<Notifica> notificheS1 = GestoreNotifica.getNotifiche();
-
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studente2);
-        List<Notifica> notificheS2 = GestoreNotifica.getNotifiche();
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
+        List<Notifica> notificheS1 = gestoreNotifica.getNotifiche(studente1);
+        List<Notifica> notificheS2 = gestoreNotifica.getNotifiche(studente2);
 
         assertEquals(1, notificheS1.size(), "Studente 1 deve vedere solo la propria notifica");
         assertEquals(1, notificheS2.size(), "Studente 2 deve vedere solo la propria notifica");
@@ -237,11 +219,8 @@ public class GestoreNotificaTest {
     // TEST getNotifiche() - studente non iscritto non ha notifiche
     @Test
     void testGetNotifiche_StudenteNonIscritto_ListaVuota() {
-        gestoreNotifica.inviaNotifica(TITOLO_CORSO);
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studenteNonIscritto);
-
-        List<Notifica> notifiche = GestoreNotifica.getNotifiche();
+        gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
+        List<Notifica> notifiche = gestoreNotifica.getNotifiche(studenteNonIscritto);
 
         assertTrue(notifiche.isEmpty(),
                 "Uno studente non iscritto al corso non deve avere notifiche");

@@ -1,7 +1,5 @@
 package entity;
 
-import control.GestorePiattaforma;
-import control.SessionManager;
 import database.GestorePersistenza;
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -10,6 +8,12 @@ import java.util.Map;
 
 
 public class GestoreUtente {
+    public static final int REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE = 0;
+    public static final int REGISTRAZIONE_FALLITA_DOMINIO_ERRATO = 1;
+    public static final int REGISTRAZIONE_AVVENUTA = 2;
+    public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA = 3;
+    public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE = 4;
+    public static final int REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO = 5;
 
     private GestorePersistenza gestorePersistenza;
 
@@ -35,24 +39,24 @@ public class GestoreUtente {
         // Validazione lunghezza campi (varchar 255)
         if ((nome.length()>255) || (cognome.length()>255)
         || (email.length()>255) || (password.length()>255))
-            return GestorePiattaforma.REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO;
+            return REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO;
 
 
         if (isStudente) {
             // Regola Studente: Deve iniziare con N4600 ed essere lunga esattamente 9 caratteri
             if (!mat.startsWith("N4600") || mat.length() != 9) {
-                return GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
+                return REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
             }
         } else {
             // Regola Docente: Deve iniziare con DOC ed essere più lunga di 3 caratteri
             if (!mat.startsWith("DOC") || mat.length() <= 3 || mat.length() > 255) {
-                return GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
+                return REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
             }
         }
 
         String emailLower = email.toLowerCase().trim();
         if (!emailLower.endsWith("@unina.it")) {
-            return GestorePiattaforma.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO;
+            return REGISTRAZIONE_FALLITA_DOMINIO_ERRATO;
         }
 
         List<Utente> utentiEsistenti = gestorePersistenza.cercaPerCampo(
@@ -62,7 +66,7 @@ public class GestoreUtente {
         );
 
         if (!utentiEsistenti.isEmpty()) {
-            return GestorePiattaforma.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE;
+            return REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE;
         }
 
         List<Utente> matricoleEsistenti = gestorePersistenza.cercaPerCampo(
@@ -72,7 +76,7 @@ public class GestoreUtente {
         );
 
         if (!matricoleEsistenti.isEmpty()) {
-            return GestorePiattaforma.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;
+            return REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;
         }
 
         Utente nuovoUtente;
@@ -89,42 +93,33 @@ public class GestoreUtente {
 
         if (salvatoConSuccesso) {
             System.out.println("[GestorePersistenza] Nuovo utente registrato nel DB reale!");
-            return GestorePiattaforma.REGISTRAZIONE_AVVENUTA;
+            return REGISTRAZIONE_AVVENUTA;
         } else {
             return -1;
         }
     }
 
 
-    public int inserimentoCredenziali(String email, String password) {
+    public Utente inserimentoCredenziali(String email, String password) {
         return verificaCredenziali(email.toLowerCase().trim(), password);
     }
 
 
-    private int verificaCredenziali(String email, String password) {
-
-
+    private Utente verificaCredenziali(String email, String password) {
         Utente utente = gestorePersistenza.cercaPrimoPerCampi(
                 Utente.class,
-                Map.of(
-                        "emailIstituzionale", email
-                )
+                Map.of("emailIstituzionale", email)
         );
 
+        // Se non lo trova o la password è errata, restituisce null
         if (utente == null || !verificaPassword(password, utente.getPassword())) {
-            System.out.println("[GestorePersistenza] Login fallito: credenziali non trovate.");
-            return GestorePiattaforma.LOGIN_FALLITO;
+            System.out.println("[GestoreUtente] Login fallito: credenziali errate.");
+            return null;
         }
 
-        System.out.println("[GestorePersistenza] Login accettato per: " + utente.getNome());
-        SessionManager.getInstance().setUtenteLoggato(utente);
+        System.out.println("[GestoreUtente] Login accettato per: " + utente.getNome());
 
-        if (utente instanceof Studente) {
-            return GestorePiattaforma.LOGIN_SUCCESS_STUDENTE;
-        } else if (utente instanceof Docente) {
-            return GestorePiattaforma.LOGIN_SUCCESS_DOCENTE;
-        }
-
-        return GestorePiattaforma.LOGIN_FALLITO;
+        // Se ha successo, restituisce l'oggetto completo
+        return utente;
     }
 }

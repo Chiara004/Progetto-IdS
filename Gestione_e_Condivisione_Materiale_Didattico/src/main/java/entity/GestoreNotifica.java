@@ -1,6 +1,5 @@
 package entity;
 
-import control.SessionManager;
 import database.GestorePersistenza;
 
 import java.util.List;
@@ -8,10 +7,13 @@ import java.util.Map;
 import java.util.Set;
 
 public class GestoreNotifica {
-    public void inviaNotifica(String corso) {
-        GestorePersistenza gestorePersistenza = new GestorePersistenza();
+    private GestorePersistenza gestorePersistenza;
 
-        Docente d = (Docente) SessionManager.getInstance().getUtenteLoggato();
+    public GestoreNotifica() {
+        gestorePersistenza = new GestorePersistenza();
+    }
+    public void inviaNotifica(Docente d, String corso) {
+
         Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of("titolo", corso, "docente", d));
 
         Set<Studente> studenti = c.getStudenti();
@@ -23,10 +25,7 @@ public class GestoreNotifica {
 
         }
     }
-    public static List<Notifica> getNotifiche(){
-
-            Studente s = (Studente) SessionManager.getInstance().getUtenteLoggato();
-            GestorePersistenza gp = new GestorePersistenza();
-            return gp.cercaPerCampo(Notifica.class, "studente", s);
+    public List<Notifica> getNotifiche(Studente s){
+            return gestorePersistenza.cercaPerCampo(Notifica.class, "studente", s);
     }
 }

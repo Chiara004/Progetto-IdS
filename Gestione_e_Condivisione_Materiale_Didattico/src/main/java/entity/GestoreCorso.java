@@ -2,7 +2,6 @@ package entity;
 
 import database.GestoreFile;
 import database.GestorePersistenza;
-import control.SessionManager;
 
 import java.io.File;
 import java.util.List;
@@ -10,23 +9,21 @@ import java.util.Map;
 import java.util.Set;
 
 public class GestoreCorso {
-    GestorePersistenza gestorePersistenza;
-    GestoreFile gestoreFile;
-    Utente utenteLoggato;
+    private GestorePersistenza gestorePersistenza;
+    private GestoreFile gestoreFile;
 
     public GestoreCorso(){
         gestorePersistenza = new GestorePersistenza();
         gestoreFile = new GestoreFile();
     }
 
-    public Set<MaterialeDidattico> recuperaMateriali(String corso){
-        Corso c = recuperaCorso(corso);
+    public Set<MaterialeDidattico> recuperaMateriali(Utente utente, String corso){
+        Corso c = recuperaCorso(utente, corso);
 
         return c.getMaterialeDidattico();
     }
 
-    public boolean rimuoviMateriale(String corso, String titolo){
-        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
+    public boolean rimuoviMateriale(Utente utenteLoggato, String corso, String titolo){
         Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of("titolo", corso, "docente.idUtente", utenteLoggato.getIdUtente()));
         MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);
 
@@ -50,14 +47,12 @@ public class GestoreCorso {
         return false;
     }
 
-    public Set<Sezione> getSezioni(String corso){
-        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
+    public Set<Sezione> getSezioni(Utente utenteLoggato, String corso){
         Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of("titolo", corso, "docente.idUtente", utenteLoggato.getIdUtente()));
         return c.getSezioni();
     }
 
-    public String getPercorsoFile(String corso, String titolo){
-        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
+    public String getPercorsoFile(Utente utenteLoggato, String corso, String titolo){
         Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of("titolo", corso, "docente.idUtente", utenteLoggato.getIdUtente()));
         if (c == null) {
             return null;
@@ -68,9 +63,8 @@ public class GestoreCorso {
         return c.getPercorsoFileMateriale(m);
     }
 
-    public boolean inserisciMateriale(String corso, String titolo, String descrizione, String categoria,
+    public boolean inserisciMateriale(Utente utenteLoggato, String corso, String titolo, String descrizione, String categoria,
                                       String visibilita, File fileScelto, String sezione){
-        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         String percorsoFile = gestoreFile.salvaFile(fileScelto);
         Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of("titolo", corso, "docente.idUtente", utenteLoggato.getIdUtente()));
 
@@ -86,9 +80,8 @@ public class GestoreCorso {
         return esito;
     }
 
-    public boolean modificaMateriale(String corso, String idMateriale, String titolo, String descrizione, String categoria,
+    public boolean modificaMateriale(Utente utenteLoggato, String corso, String idMateriale, String titolo, String descrizione, String categoria,
                                      String visibilita, File fileScelto, String sezione){
-        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
         Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of("titolo", corso, "docente.idUtente", utenteLoggato.getIdUtente()));
 
         String percorsoFileCorrente = c.getMaterialeDidatticoPerId(Integer.parseInt(idMateriale)).getPercorsoFile();
@@ -110,14 +103,13 @@ public class GestoreCorso {
         return esito;
     }
 
-    public int getIdMateriale(String corso, String titolo){
-        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
+    public int getIdMateriale(Utente utenteLoggato, String corso, String titolo){
         Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of("titolo", corso, "docente.idUtente", utenteLoggato.getIdUtente()));
         return c.getMaterialeDidatticoPerTitolo(titolo).getIdMateriale();
     }
 
-    public boolean apriMateriale(String corso, String titolo){
-        Corso c = recuperaCorso(corso);
+    public boolean apriMateriale(Utente utenteLoggato, String corso, String titolo){
+        Corso c = recuperaCorso(utenteLoggato, corso);
         MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);
         // Se il materiale non esiste (o se il suo percorso è null), restituisce false
         if (m == null || m.getPercorsoFile() == null) {
@@ -126,8 +118,8 @@ public class GestoreCorso {
         return gestoreFile.apriMateriale(m.getPercorsoFile());
     }
 
-    public Corso recuperaCorso(String corso){
-        utenteLoggato = SessionManager.getInstance().getUtenteLoggato();
+    public Corso recuperaCorso(Utente utenteLoggato, String corso){
+
         Corso c = null;
         if(utenteLoggato.getRuolo().equals("Studente")){
             Studente studente = gestorePersistenza.trovaPerId(Studente.class, utenteLoggato.getIdUtente());
@@ -147,14 +139,9 @@ public class GestoreCorso {
         return c;
     }
 
-
-    //public Set<Corso> getElencoCorsiDocente(Docente docente) {
-    //    return docente.getInsegnamenti();
-    //}
-
-    public List<Corso> getCorsiPerDocente() {
+    public List<Corso> getCorsiPerDocente(Docente d) {
         GestorePersistenza gestorePersistenza = new GestorePersistenza();
-        Docente d = (Docente) SessionManager.getInstance().getUtenteLoggato();
+
         return gestorePersistenza.cercaPerCampo(
                 Corso.class,
                 "docente",

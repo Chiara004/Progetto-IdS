@@ -1,6 +1,5 @@
 package entity;
 
-import control.SessionManager;
 import database.GestorePersistenza;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,8 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -110,7 +108,6 @@ public class GestoreCorsoTest {
         gestorePersistenza.salva(corso2);
 
         // Imposta il docente loggato PRIMA di istanziare GestoreCorso
-        SessionManager.getInstance().setUtenteLoggato(docente);
         gestoreCorso = new GestoreCorso();
     }
 
@@ -134,14 +131,12 @@ public class GestoreCorsoTest {
         gestorePersistenza.elimina(Corso.class,  CODICE_CORSO);
         gestorePersistenza.elimina(Utente.class, MATRICOLA_DOCENTE);
         gestorePersistenza.elimina(Utente.class, MATRICOLA_DOCENTE2);
-
-        SessionManager.getInstance().logout();
     }
 
     //TEST RECUPERA MATERIALI
     @Test
     void testRecuperaMateriali_RestituisceIMaterialiDelCorso() {
-        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(docente, TITOLO_CORSO);
         assertNotNull(materiali, "Il set dei materiali non deve essere null");
         assertFalse(materiali.isEmpty(), "Il corso ha un materiale: il set non deve essere vuoto");
     }
@@ -149,7 +144,7 @@ public class GestoreCorsoTest {
     //TEST RECUPERA MATERIALI CON UNO PREESISTENTE
     @Test
     void testRecuperaMateriali_ContieneIlMaterialePreesistente() {
-        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(docente, TITOLO_CORSO);
 
         boolean trovato = false;
         for (MaterialeDidattico m : materiali) {
@@ -164,7 +159,7 @@ public class GestoreCorsoTest {
     //TEST RECUPERA MATERIALI ISOLATO
     @Test
     void testRecuperaMateriali_IsolatoPerDocenteLoggato() {
-        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(docente, TITOLO_CORSO);
 
         // i materiali devono essere solo quelli del corso del docente loggato
         // corso2 è vuoto, quindi se arrivassero materiali da lì il conteggio sarebbe sbagliato
@@ -175,7 +170,7 @@ public class GestoreCorsoTest {
     //TEST GET SEZIONE
     @Test
     void testGetSezioni_RestituisceLeSezioniDelCorso() {
-        Set<Sezione> sezioni = gestoreCorso.getSezioni(TITOLO_CORSO);
+        Set<Sezione> sezioni = gestoreCorso.getSezioni(docente, TITOLO_CORSO);
         assertNotNull(sezioni, "Il set delle sezioni non deve essere null");
         assertFalse(sezioni.isEmpty(), "Il corso ha una sezione: il set non deve essere vuoto");
     }
@@ -183,7 +178,7 @@ public class GestoreCorsoTest {
     //TEST GET SEZIONE CON UNA PREESISTENTE
     @Test
     void testGetSezioni_ContieneSezionePreesistente() {
-        Set<Sezione> sezioni = gestoreCorso.getSezioni(TITOLO_CORSO);
+        Set<Sezione> sezioni = gestoreCorso.getSezioni(docente, TITOLO_CORSO);
         boolean trovata = false;
         for (Sezione s : sezioni) {
             if (TITOLO_SEZIONE.equals(s.getTitolo())) {
@@ -198,7 +193,7 @@ public class GestoreCorsoTest {
     @Test
     void testGetSezioni_IsolatoPerDocenteLoggato() {
         //corso2 è dello stesso titolo ma di docente2, non deve interferire
-        Set<Sezione> sezioni = gestoreCorso.getSezioni(TITOLO_CORSO);
+        Set<Sezione> sezioni = gestoreCorso.getSezioni(docente, TITOLO_CORSO);
 
         assertEquals(1, sezioni.size(),
                 "Devono essere restituite solo le sezioni del corso del docente loggato");
@@ -207,7 +202,7 @@ public class GestoreCorsoTest {
     //TEST GET PERCORSO FILE
     @Test
     void testGetPercorsoFile_RestituisceIlNomeFileCorretto() {
-        String percorso = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        String percorso = gestoreCorso.getPercorsoFile(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
         assertEquals(NOME_FILE_MAT_ESISTENTE, percorso,
                 "Il percorso restituito deve corrispondere al nome del file salvato");
@@ -216,7 +211,7 @@ public class GestoreCorsoTest {
     //TEST GET ID MATERIALE
     @Test
     void testGetIdMateriale_RestituisceIdPositivo() {
-        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        int id = gestoreCorso.getIdMateriale(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
         assertTrue(id > 0, "L'id del materiale generato dal DB deve essere positivo");
     }
 
@@ -226,7 +221,7 @@ public class GestoreCorsoTest {
         // Arrange: recupera l'id direttamente dal corso per confronto
         MaterialeDidattico materialeAtteso = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
         assertNotNull(materialeAtteso);
-        int idRestituito = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        int idRestituito = gestoreCorso.getIdMateriale(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
         assertEquals(materialeAtteso.getIdMateriale(), idRestituito,
                 "L'id restituito deve coincidere con quello del materiale nel corso");
@@ -236,6 +231,7 @@ public class GestoreCorsoTest {
     @Test
     void testInserisciMateriale_TitoloNuovo_ReturnTrue() {
         boolean esito = gestoreCorso.inserisciMateriale(
+                docente,
                 TITOLO_CORSO,
                 "Nuovo Materiale",
                 "Descrizione nuova",
@@ -251,12 +247,12 @@ public class GestoreCorsoTest {
     //TEST INSERIMENTO MATERIALE CON FILE DI TEST
     @Test
     void testInserisciMateriale_FileFisicoCopiato() {
-        gestoreCorso.inserisciMateriale(
+        gestoreCorso.inserisciMateriale(docente,
                 TITOLO_CORSO, "Materiale Con File", "desc",
                 "DISPENSE", "PUBBLICATO", fileDiTest, "null"
         );
 
-        String percorso = gestoreCorso.getPercorsoFile(TITOLO_CORSO, "Materiale Con File");
+        String percorso = gestoreCorso.getPercorsoFile(docente, TITOLO_CORSO, "Materiale Con File");
         Path fileCopiato = Paths.get(UPLOAD_DIR_TEST, percorso);
         assertTrue(Files.exists(fileCopiato),
                 "Il file fisico deve essere presente nella upload dir dopo l'inserimento");
@@ -266,6 +262,7 @@ public class GestoreCorsoTest {
     @Test
     void testInserisciMateriale_TitoloOmonimo_ReturnFalse() {
         boolean esito = gestoreCorso.inserisciMateriale(
+                docente,
                 TITOLO_CORSO,
                 TITOLO_MAT_ESISTENTE,   // omonimo
                 "Altra descrizione",
@@ -280,6 +277,7 @@ public class GestoreCorsoTest {
     @Test
     void testInserisciMateriale_TitoloOmonimoCaseDiverso_ReturnFalse() {
         boolean esito = gestoreCorso.inserisciMateriale(
+                docente,
                 TITOLO_CORSO,
                 TITOLO_MAT_ESISTENTE.toLowerCase(),
                 "Altra descrizione",
@@ -294,11 +292,12 @@ public class GestoreCorsoTest {
     @Test
     void testInserisciMateriale_MaterialeVisibileDopoInserimento() {
         gestoreCorso.inserisciMateriale(
+                docente,
                 TITOLO_CORSO, "Materiale Verificato", "desc",
                 "DISPENSE", "PUBBLICATO", fileDiTest, "null"
         );
 
-        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(docente, TITOLO_CORSO);
         boolean trovato = false;
         for (MaterialeDidattico m : materiali) {
             if ("Materiale Verificato".equals(m.getTitolo())) {
@@ -312,14 +311,14 @@ public class GestoreCorsoTest {
     //TEST RIMOZIONE MATERIALE VALIDA
     @Test
     void testRimuoviMateriale_TitoloEsistente_ReturnTrue() {
-        boolean esito = gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        boolean esito = gestoreCorso.rimuoviMateriale(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
         assertTrue(esito, "La rimozione di un materiale esistente deve restituire true");
     }
 
     //TEST RIMOZIONE MATERIALE TITOLO NON PRESENTE
     @Test
     void testRimuoviMateriale_TitoloInesistente_ReturnFalse() {
-        boolean esito = gestoreCorso.rimuoviMateriale(TITOLO_CORSO, "Titolo Inesistente");
+        boolean esito = gestoreCorso.rimuoviMateriale(docente, TITOLO_CORSO, "Titolo Inesistente");
         assertFalse(esito, "La rimozione di un materiale inesistente deve restituire false");
     }
 
@@ -329,7 +328,7 @@ public class GestoreCorsoTest {
         Path fileEsistente = Paths.get(UPLOAD_DIR_TEST, NOME_FILE_MAT_ESISTENTE);
         assertTrue(Files.exists(fileEsistente),
                 "Il file fisico deve esistere prima della rimozione");
-        gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        gestoreCorso.rimuoviMateriale(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
         assertFalse(Files.exists(fileEsistente),
                 "Il file fisico deve essere eliminato dalla upload dir dopo la rimozione");
     }
@@ -340,7 +339,7 @@ public class GestoreCorsoTest {
                 new File(System.getProperty("java.io.tmpdir")));
         Files.writeString(fileConSezione.toPath(), "contenuto con sezione");
 
-        gestoreCorso.inserisciMateriale(
+        gestoreCorso.inserisciMateriale(docente,
                 TITOLO_CORSO,
                 "Materiale In Sezione",
                 "desc",
@@ -357,13 +356,13 @@ public class GestoreCorsoTest {
         assertNotNull(materialeConSezione.getSezione(),
                 "Il materiale deve avere la sezione assegnata prima della rimozione");
 
-        boolean esito = gestoreCorso.rimuoviMateriale(TITOLO_CORSO, "Materiale In Sezione");
+        boolean esito = gestoreCorso.rimuoviMateriale(docente, TITOLO_CORSO, "Materiale In Sezione");
 
         //la rimozione deve avere successo
         assertTrue(esito, "La rimozione di un materiale con sezione deve restituire true");
 
         //il materiale non deve più essere presente nel corso
-        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(docente, TITOLO_CORSO);
         boolean ancoraPresente = false;
         for (MaterialeDidattico m : materiali) {
             if ("Materiale In Sezione".equals(m.getTitolo())) {
@@ -379,7 +378,7 @@ public class GestoreCorsoTest {
                 "Il file fisico deve essere eliminato dalla upload dir");
 
         // Assert 4: la sezione deve ancora esistere nel corso (non deve essere stata eliminata)
-        Set<Sezione> sezioni = gestoreCorso.getSezioni(TITOLO_CORSO);
+        Set<Sezione> sezioni = gestoreCorso.getSezioni(docente, TITOLO_CORSO);
         boolean sezioneAncoraPresente = false;
         for (Sezione s : sezioni) {
             if (TITOLO_SEZIONE.equals(s.getTitolo())) {
@@ -397,9 +396,9 @@ public class GestoreCorsoTest {
     //TEST MATERIALE NON DEVE ESSERE PIU' PRESENTE
     @Test
     void testRimuoviMateriale_MaterialeNonPiuRecuperabile() {
-        gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        gestoreCorso.rimuoviMateriale(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
-        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(docente, TITOLO_CORSO);
         boolean ancoraPresente = false;
         for (MaterialeDidattico m : materiali) {
             if (TITOLO_MAT_ESISTENTE.equals(m.getTitolo())) {
@@ -417,12 +416,12 @@ public class GestoreCorsoTest {
         File secondoFile = File.createTempFile("secondo_materiale_", ".pdf",
                 new File(System.getProperty("java.io.tmpdir")));
         Files.writeString(secondoFile.toPath(), "secondo contenuto");
-        gestoreCorso.inserisciMateriale(
+        gestoreCorso.inserisciMateriale(docente,
                 TITOLO_CORSO, "Materiale Da Tenere", "desc",
                 "DISPENSE", "PUBBLICATO", secondoFile, "null"
         );
-        gestoreCorso.rimuoviMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(TITOLO_CORSO);
+        gestoreCorso.rimuoviMateriale(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        Set<MaterialeDidattico> materiali = gestoreCorso.recuperaMateriali(docente, TITOLO_CORSO);
         boolean tenutoPresente = false;
         for (MaterialeDidattico m : materiali) {
             if ("Materiale Da Tenere".equals(m.getTitolo())) {
@@ -439,10 +438,10 @@ public class GestoreCorsoTest {
     //TEST MODIFICA MATERIALE SENZA AGGIUNGERE NUOVO FILE
     @Test
     void testModificaMateriale_SenzaNuovoFile_ReturnTrue() {
-        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        int id = gestoreCorso.getIdMateriale(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
         // file=null → mantiene il percorso corrente, non chiama salvaFile
-        boolean esito = gestoreCorso.modificaMateriale(
+        boolean esito = gestoreCorso.modificaMateriale(docente,
                 TITOLO_CORSO, String.valueOf(id),
                 TITOLO_MAT_ESISTENTE, "Descrizione aggiornata",
                 "SLIDE", "PUBBLICATO",
@@ -456,16 +455,16 @@ public class GestoreCorsoTest {
     //TEST MODIFICA MATERIALE SENZA CAMBIARE IL FILE
     @Test
     void testModificaMateriale_SenzaNuovoFile_PercorsoInvariato() {
-        String percorsoOriginale = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        String percorsoOriginale = gestoreCorso.getPercorsoFile(docente, TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        int id = gestoreCorso.getIdMateriale(docente,TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
-        gestoreCorso.modificaMateriale(
+        gestoreCorso.modificaMateriale(docente,
                 TITOLO_CORSO, String.valueOf(id),
                 TITOLO_MAT_ESISTENTE, "desc aggiornata",
                 "SLIDE", "PUBBLICATO", null, "null"
         );
 
-        String percorsoDopo = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        String percorsoDopo = gestoreCorso.getPercorsoFile(docente,TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
         assertEquals(percorsoOriginale, percorsoDopo,
                 "Senza nuovo file il percorso deve rimanere invariato");
     }
@@ -478,13 +477,13 @@ public class GestoreCorsoTest {
                 new File(System.getProperty("java.io.tmpdir")));
         Files.writeString(nuovoFile.toPath(), "contenuto aggiornato");
 
-        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
-        gestoreCorso.modificaMateriale(
+        int id = gestoreCorso.getIdMateriale(docente,TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        gestoreCorso.modificaMateriale(docente,
                 TITOLO_CORSO, String.valueOf(id),
                 TITOLO_MAT_ESISTENTE, "desc",
                 "SLIDE", "PUBBLICATO", nuovoFile, "null"
         );
-        String percorsoFile = gestoreCorso.getPercorsoFile(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        String percorsoFile = gestoreCorso.getPercorsoFile(docente,TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
         Path nuovoFileCopiato = Paths.get(UPLOAD_DIR_TEST,percorsoFile);
         assertTrue(Files.exists(nuovoFileCopiato),
                 "Il nuovo file fisico deve essere copiato nella upload dir dopo la modifica");
@@ -501,14 +500,14 @@ public class GestoreCorsoTest {
                 new File(System.getProperty("java.io.tmpdir")));
         Files.writeString(secondoFile.toPath(), "secondo contenuto");
 
-        gestoreCorso.inserisciMateriale(
+        gestoreCorso.inserisciMateriale(docente,
                 TITOLO_CORSO, "Secondo Materiale", "desc",
                 "SLIDE", "PUBBLICATO", secondoFile, "null"
         );
-        int idSecondo = gestoreCorso.getIdMateriale(TITOLO_CORSO, "Secondo Materiale");
+        int idSecondo = gestoreCorso.getIdMateriale(docente,TITOLO_CORSO, "Secondo Materiale");
 
         // Act: provo a rinominarlo con il titolo già usato dal primo
-        boolean esito = gestoreCorso.modificaMateriale(
+        boolean esito = gestoreCorso.modificaMateriale(docente,
                 TITOLO_CORSO, String.valueOf(idSecondo),
                 TITOLO_MAT_ESISTENTE,   // omonimo
                 "desc", "SLIDE", "PUBBLICATO", null, "null"
@@ -523,9 +522,9 @@ public class GestoreCorsoTest {
     //TEST MODIFICA MATERIALE STESSO TITOLO E STESSO FILE
     @Test
     void testModificaMateriale_StessoTitoloStessoMateriale_ReturnTrue() {
-        int id = gestoreCorso.getIdMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        int id = gestoreCorso.getIdMateriale(docente,TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
 
-        boolean esito = gestoreCorso.modificaMateriale(
+        boolean esito = gestoreCorso.modificaMateriale(docente,
                 TITOLO_CORSO, String.valueOf(id),
                 TITOLO_MAT_ESISTENTE,
                 "Descrizione aggiornata",
@@ -538,7 +537,7 @@ public class GestoreCorsoTest {
     // TEST RECUPERA CORSO DOCENTE
     @Test
     void testRecuperaCorso_DocenteLoggato_CorsoTrovato() {
-        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+        Corso recuperato = gestoreCorso.recuperaCorso(docente,TITOLO_CORSO);
         assertNotNull(recuperato, "Il corso deve essere recuperato correttamente dal DB per il docente");
         assertEquals(TITOLO_CORSO, recuperato.getTitolo(), "Il titolo del corso recuperato deve coincidere");
     }
@@ -546,7 +545,7 @@ public class GestoreCorsoTest {
     //TEST RECUPERA CORSO NON VALIDO
     @Test
     void testRecuperaCorso_DocenteLoggato_CorsoInesistente() {
-        Corso recuperato = gestoreCorso.recuperaCorso("Titolo Assolutamente Inesistente");
+        Corso recuperato = gestoreCorso.recuperaCorso(docente,"Titolo Assolutamente Inesistente");
 
         assertNull(recuperato, "Se il corso non esiste, la funzione deve restituire null");
     }
@@ -554,7 +553,7 @@ public class GestoreCorsoTest {
     //TEST RECUPERA CORSO CASO DI OMONIMIA
     @Test
     void testRecuperaCorso_DocenteLoggato_CorsoDiAltroDocente() {
-        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+        Corso recuperato = gestoreCorso.recuperaCorso(docente,TITOLO_CORSO);
         // verifichiamo che restituisca il corso con CODICE_CORSO e non CODICE_CORSO2.
         assertEquals(CODICE_CORSO, recuperato.getCodice(), "Deve recuperare il corso del docente loggato, non l'omonimo di altri");
     }
@@ -570,14 +569,11 @@ public class GestoreCorsoTest {
         gestorePersistenza.aggiorna(studente);
         corso.getStudenti().add(studente);
         gestorePersistenza.aggiorna(corso);
-        // Cambia la sessione per simulare il login dello studente
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studente);
-        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+
+        Corso recuperato = gestoreCorso.recuperaCorso(studente,TITOLO_CORSO);
         assertNotNull(recuperato, "Il corso deve essere trovato se lo studente è regolarmente iscritto");
         assertEquals(TITOLO_CORSO, recuperato.getTitolo());
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(docente); // Ripristina docente
+
         gestorePersistenza.elimina(Utente.class, matricolaStudente);
     }
 
@@ -589,26 +585,59 @@ public class GestoreCorsoTest {
         Studente studente = new Studente(matricolaStudente, "Marco", "Gialli", "marco.gialli@studenti.unina.it", password, "Studente");
         gestorePersistenza.salva(studente);
 
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(studente);
-        Corso recuperato = gestoreCorso.recuperaCorso(TITOLO_CORSO);
+        Corso recuperato = gestoreCorso.recuperaCorso(studente, TITOLO_CORSO);
         assertNull(recuperato, "Se lo studente non ha il corso nella sua lista, deve restituire null");
-        SessionManager.getInstance().logout();
-        SessionManager.getInstance().setUtenteLoggato(docente);
         gestorePersistenza.elimina(Studente.class, matricolaStudente);
     }
 
     // TEST APRI MATERIALE ESISTENTE
     @Test
     void testApriMateriale_MaterialeEsistente_ReturnTrue() {
-        boolean esito = gestoreCorso.apriMateriale(TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
+        boolean esito = gestoreCorso.apriMateriale(docente,TITOLO_CORSO, TITOLO_MAT_ESISTENTE);
         assertTrue(esito, "L'apertura di un file fisico pre-esistente deve restituire true");
     }
 
     //TEST APRI MATERIALE NON TROVATO
     @Test
     void testApriMateriale_MaterialeNonTrovato_ReturnFalse() {
-        boolean esito = gestoreCorso.apriMateriale(TITOLO_CORSO, "Titolo Materiale Falso");
+        boolean esito = gestoreCorso.apriMateriale(docente,TITOLO_CORSO, "Titolo Materiale Falso");
         assertFalse(esito, "Se il materiale non esiste, apriMateriale deve restituire false");
+    }
+
+    // TEST RECUPERO CORSI ASSEGNATI
+    @Test
+    void testGetCorsiPerDocente_RestituisceCorsiAssegnati() {
+        List<Corso> corsi = gestoreCorso.getCorsiPerDocente(docente);
+        assertNotNull(corsi, "La lista dei corsi non deve essere null");
+        assertFalse(corsi.isEmpty(), "Il docente ha un corso, la lista non deve essere vuota");
+        assertEquals(1, corsi.size(), "Il docente dovrebbe avere esattamente un corso assegnato in setUp");
+        assertEquals(CODICE_CORSO, corsi.get(0).getCodice(), "Il codice del corso restituito deve coincidere con quello del docente 1");
+    }
+
+    // TEST ISOLAMENTO (Non deve restituire corsi di altri)
+    @Test
+    void testGetCorsiPerDocente_IsolamentoTraDocenti() {
+        List<Corso> corsiDocente1 = gestoreCorso.getCorsiPerDocente(docente);
+        List<Corso> corsiDocente2 = gestoreCorso.getCorsiPerDocente(docente2);
+        assertEquals(1, corsiDocente1.size());
+        assertEquals(1, corsiDocente2.size());
+        assertNotEquals(corsiDocente1.get(0).getCodice(), corsiDocente2.get(0).getCodice(),
+                "I corsi restituiti per docenti diversi devono essere rigorosamente diversi");
+    }
+
+    // TEST DOCENTE SENZA CORSI
+    @Test
+    void testGetCorsiPerDocente_DocenteSenzaCorsi_RestituisceListaVuota() {
+        String matricolaVuota = "DOC_VUOTO";
+        String passwordCriptata = BCrypt.hashpw("password123", BCrypt.gensalt());
+        Docente docenteSenzaCorsi = new Docente(matricolaVuota, "Mario", "Neri", "doc.vuoto@unina.it", passwordCriptata, "Docente");
+        gestorePersistenza.salva(docenteSenzaCorsi);
+
+        List<Corso> corsi = gestoreCorso.getCorsiPerDocente(docenteSenzaCorsi);
+
+        assertNotNull(corsi, "La lista non deve mai essere null, al massimo vuota");
+        assertTrue(corsi.isEmpty(), "Un docente appena creato e senza corsi deve restituire una lista vuota");
+
+        gestorePersistenza.elimina(Utente.class, matricolaVuota);
     }
 }
