@@ -184,6 +184,11 @@ public class AreaRiservataStudente {
                 int col = tblMateriali.columnAtPoint(e.getPoint());
                 int row = tblMateriali.rowAtPoint(e.getPoint());
                 if (col == 4 && row >= 0 &&row < tblMateriali.getRowCount()) {
+                    String valorePrimaColonna = (String) tblMateriali.getValueAt(row, 0);
+                    if ("Non ci sono corsi".equals(valorePrimaColonna)) {
+                        // Se c'è scritto "Non ci sono corsi", ignoriamo il click.
+                        return;
+                    }
                     tblMateriali.setRowSelectionInterval(row, row);
                     contextMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
