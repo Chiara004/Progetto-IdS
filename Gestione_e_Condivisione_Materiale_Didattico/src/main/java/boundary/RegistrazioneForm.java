@@ -202,7 +202,7 @@ public class RegistrazioneForm {
                 break;
 
             case GestorePiattaforma.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE:
-                // [ESTENSIONE 1.1.a] - Email già utilizzata
+
                 JOptionPane.showMessageDialog(
                         null,
                         "Attenzione: questa email è già associata a un account esistente.",

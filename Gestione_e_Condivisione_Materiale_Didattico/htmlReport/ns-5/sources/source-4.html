@@ -1,0 +1,265 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GestoreCorso</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">entity</a>
+</div>
+
+<h1>Coverage Summary for Class: GestoreCorso (entity)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GestoreCorso</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (11/11)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80,8%
+  </span>
+  <span class="absValue">
+    (21/26)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    98,4%
+  </span>
+  <span class="absValue">
+    (60/61)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package entity;
+&nbsp;
+&nbsp;import database.GestoreFile;
+&nbsp;import database.GestorePersistenza;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;public class GestoreCorso {
+&nbsp;    private GestorePersistenza gestorePersistenza;
+&nbsp;    private GestoreFile gestoreFile;
+&nbsp;
+<b class="fc">&nbsp;    public GestoreCorso(){</b>
+<b class="fc">&nbsp;        gestorePersistenza = new GestorePersistenza();</b>
+<b class="fc">&nbsp;        gestoreFile = new GestoreFile();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Set&lt;MaterialeDidattico&gt; recuperaMateriali(Utente utente, String corso){
+<b class="fc">&nbsp;        Corso c = recuperaCorso(utente, corso);</b>
+&nbsp;
+<b class="fc">&nbsp;        return c.getMaterialeDidattico();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean rimuoviMateriale(Utente utenteLoggato, String corso, String titolo){
+<b class="fc">&nbsp;        Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of(&quot;titolo&quot;, corso, &quot;docente.idUtente&quot;, utenteLoggato.getIdUtente()));</b>
+<b class="fc">&nbsp;        MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);</b>
+&nbsp;
+<b class="fc">&nbsp;        if(m != null){</b>
+&nbsp;            // 1. Elimina il file fisico
+<b class="fc">&nbsp;            gestoreFile.eliminaFileFisico(m.getPercorsoFile());</b>
+&nbsp;
+&nbsp;            // 2. Scollega dalla sezione(se presente)
+<b class="fc">&nbsp;            if (m.getSezione() != null) {</b>
+<b class="fc">&nbsp;                m.setSezione(null);                  // Rimuove il riferimento alla sezione dentro il materiale</b>
+<b class="fc">&nbsp;                gestorePersistenza.aggiorna(m);      // Aggiorna la sezione nel database</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // 3. Scollega dal corso
+<b class="fc">&nbsp;            c.rimuoviMateriale(m); // Rimuove dalla lista del corso</b>
+&nbsp;
+<b class="fc">&nbsp;            gestorePersistenza.aggiorna(c);</b>
+&nbsp;
+<b class="fc">&nbsp;            return true;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return false;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Set&lt;Sezione&gt; getSezioni(Utente utenteLoggato, String corso){
+<b class="fc">&nbsp;        Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of(&quot;titolo&quot;, corso, &quot;docente.idUtente&quot;, utenteLoggato.getIdUtente()));</b>
+<b class="fc">&nbsp;        return c.getSezioni();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPercorsoFile(Utente utenteLoggato, String corso, String titolo){
+<b class="fc">&nbsp;        Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of(&quot;titolo&quot;, corso, &quot;docente.idUtente&quot;, utenteLoggato.getIdUtente()));</b>
+<b class="pc">&nbsp;        if (c == null) {</b>
+<b class="nc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);</b>
+&nbsp;
+<b class="fc">&nbsp;        return c.getPercorsoFileMateriale(m);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean inserisciMateriale(Utente utenteLoggato, String corso, String titolo, String descrizione, String categoria,
+&nbsp;                                      String visibilita, File fileScelto, String sezione){
+<b class="fc">&nbsp;        String percorsoFile = gestoreFile.salvaFile(fileScelto);</b>
+<b class="fc">&nbsp;        Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of(&quot;titolo&quot;, corso, &quot;docente.idUtente&quot;, utenteLoggato.getIdUtente()));</b>
+&nbsp;
+<b class="fc">&nbsp;        boolean esito = c.inserisciMateriale(titolo,descrizione,visibilita, percorsoFile, sezione, categoria);</b>
+<b class="fc">&nbsp;        if (esito){</b>
+<b class="fc">&nbsp;            MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);</b>
+<b class="fc">&nbsp;            gestorePersistenza.salva(m);</b>
+<b class="fc">&nbsp;            gestorePersistenza.aggiorna(c);</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            gestoreFile.eliminaFileFisico(percorsoFile);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return esito;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean modificaMateriale(Utente utenteLoggato, String corso, String idMateriale, String titolo, String descrizione, String categoria,
+&nbsp;                                     String visibilita, File fileScelto, String sezione){
+<b class="fc">&nbsp;        Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of(&quot;titolo&quot;, corso, &quot;docente.idUtente&quot;, utenteLoggato.getIdUtente()));</b>
+&nbsp;
+<b class="fc">&nbsp;        String percorsoFileCorrente = c.getMaterialeDidatticoPerId(Integer.parseInt(idMateriale)).getPercorsoFile();</b>
+&nbsp;        String percorsoFile;
+<b class="fc">&nbsp;        if(fileScelto != null){</b>
+<b class="fc">&nbsp;            gestoreFile.eliminaFileFisico(percorsoFileCorrente);</b>
+<b class="fc">&nbsp;            percorsoFile = gestoreFile.salvaFile(fileScelto);</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            percorsoFile = percorsoFileCorrente;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        boolean esito = c.modificaMateriale(idMateriale,titolo,descrizione,visibilita, percorsoFile, sezione, categoria);</b>
+<b class="fc">&nbsp;        if (esito){</b>
+<b class="fc">&nbsp;            MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);</b>
+<b class="fc">&nbsp;            gestorePersistenza.aggiorna(m);</b>
+<b class="fc">&nbsp;            gestorePersistenza.aggiorna(c);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return esito;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getIdMateriale(Utente utenteLoggato, String corso, String titolo){
+<b class="fc">&nbsp;        Corso c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of(&quot;titolo&quot;, corso, &quot;docente.idUtente&quot;, utenteLoggato.getIdUtente()));</b>
+<b class="fc">&nbsp;        return c.getMaterialeDidatticoPerTitolo(titolo).getIdMateriale();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean apriMateriale(Utente utenteLoggato, String corso, String titolo){
+<b class="fc">&nbsp;        Corso c = recuperaCorso(utenteLoggato, corso);</b>
+<b class="fc">&nbsp;        MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);</b>
+&nbsp;        // Se il materiale non esiste (o se il suo percorso è null), restituisce false
+<b class="pc">&nbsp;        if (m == null || m.getPercorsoFile() == null) {</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return gestoreFile.apriMateriale(m.getPercorsoFile());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Corso recuperaCorso(Utente utenteLoggato, String corso){
+&nbsp;
+<b class="fc">&nbsp;        Corso c = null;</b>
+<b class="fc">&nbsp;        if(utenteLoggato.getRuolo().equals(&quot;Studente&quot;)){</b>
+<b class="fc">&nbsp;            Studente studente = gestorePersistenza.trovaPerId(Studente.class, utenteLoggato.getIdUtente());</b>
+<b class="pc">&nbsp;            if (studente != null &amp;&amp; studente.getCorsi() != null) {</b>
+<b class="fc">&nbsp;                for (Corso corsoDaCercare : studente.getCorsi()) {</b>
+<b class="pc">&nbsp;                    if (corsoDaCercare.getTitolo().equals(corso)) {</b>
+<b class="fc">&nbsp;                        c=corsoDaCercare;</b>
+&nbsp;                        break;
+&nbsp;                    }
+&nbsp;                }
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        else
+<b class="fc">&nbsp;            c = gestorePersistenza.cercaPrimoPerCampi(Corso.class, Map.of(&quot;titolo&quot;, corso, &quot;docente.idUtente&quot;, utenteLoggato.getIdUtente()));</b>
+&nbsp;
+<b class="fc">&nbsp;        return c;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public List&lt;Corso&gt; getCorsiPerDocente(Docente d) {
+<b class="fc">&nbsp;        return gestorePersistenza.cercaPerCampo(</b>
+&nbsp;                Corso.class,
+&nbsp;                &quot;docente&quot;,
+&nbsp;                d
+&nbsp;        );
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

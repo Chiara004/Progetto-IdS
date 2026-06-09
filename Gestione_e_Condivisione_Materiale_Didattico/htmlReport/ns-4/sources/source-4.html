@@ -1,0 +1,172 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > JpaUtil</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">database</a>
+</div>
+
+<h1>Coverage Summary for Class: JpaUtil (database)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">JpaUtil</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (3/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (2/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    85,7%
+  </span>
+  <span class="absValue">
+    (6/7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package database;
+&nbsp;
+&nbsp;import jakarta.persistence.EntityManager;
+&nbsp;import jakarta.persistence.EntityManagerFactory;
+&nbsp;import jakarta.persistence.Persistence;
+&nbsp;
+&nbsp;
+&nbsp;public class JpaUtil {
+&nbsp;
+&nbsp;     //Istanza unica di JpaUtil.(pattern Singleton)
+&nbsp;    private static JpaUtil instance;
+&nbsp;
+&nbsp;    /*
+&nbsp;     * EntityManagerFactory condivisa.
+&nbsp;     *
+&nbsp;     * La factory viene creata una sola volta, perché è un oggetto
+&nbsp;     * costoso da inizializzare: legge la persistence unit dal file
+&nbsp;     * persistence.xml e prepara Hibernate per comunicare con il database.
+&nbsp;     */
+&nbsp;    private EntityManagerFactory emf;
+&nbsp;
+<b class="fc">&nbsp;    private JpaUtil() {</b>
+<b class="fc">&nbsp;        emf = Persistence.createEntityManagerFactory(&quot;db_progetto_studio_paradigm&quot;);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;     //Punto di accesso globale all&#39;unica istanza di JpaUtil.
+&nbsp;    public static JpaUtil getInstance() {
+<b class="fc">&nbsp;        if (instance == null) {</b>
+<b class="fc">&nbsp;            instance = new JpaUtil();</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return instance;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /*
+&nbsp;     * Crea un nuovo EntityManager.
+&nbsp;     *
+&nbsp;     * Attenzione: l&#39;EntityManager non è Singleton.
+&nbsp;     * Ogni operazione di persistenza deve usare un proprio EntityManager,
+&nbsp;     * perché l&#39;EntityManager mantiene lo stato della singola sessione
+&nbsp;     * di lavoro con il database.
+&nbsp;     */
+&nbsp;    public EntityManager getEntityManager() {
+<b class="fc">&nbsp;        return emf.createEntityManager();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /*
+&nbsp;     * Chiude la EntityManagerFactory.
+&nbsp;     *
+&nbsp;     * Questo metodo va chiamato alla fine dell&#39;applicazione,
+&nbsp;     * quando non sono più necessarie operazioni di persistenza.
+&nbsp;     */
+&nbsp;    public void chiudi() {
+<b class="nc">&nbsp;        emf.close();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

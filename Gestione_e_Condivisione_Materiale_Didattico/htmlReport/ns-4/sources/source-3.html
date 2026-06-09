@@ -1,0 +1,341 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GestorePersistenza</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">database</a>
+</div>
+
+<h1>Coverage Summary for Class: GestorePersistenza (database)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GestorePersistenza</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    72,2%
+  </span>
+  <span class="absValue">
+    (13/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,1%
+  </span>
+  <span class="absValue">
+    (58/61)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package database;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;import jakarta.persistence.EntityManager;
+&nbsp;import jakarta.persistence.TypedQuery;
+&nbsp;
+<b class="fc">&nbsp;public class GestorePersistenza {</b>
+&nbsp;
+&nbsp;    /* Salva nel database un oggetto persistente.
+&nbsp;     * L&#39;oggetto passato deve però essere una Entity, cioè una classe
+&nbsp;     * annotata con @Entity.
+&nbsp;     */
+&nbsp;    public boolean salva(Object oggetto) {
+<b class="fc">&nbsp;        EntityManager em = JpaUtil.getInstance().getEntityManager();</b>
+&nbsp;
+&nbsp;        try {
+&nbsp;            /*
+&nbsp;             * Ogni operazione che modifica il database deve essere eseguita
+&nbsp;             * all&#39;interno di una transazione.
+&nbsp;             */
+<b class="fc">&nbsp;            em.getTransaction().begin();</b>
+&nbsp;
+&nbsp;            //persist rende l&#39;oggetto gestito da Hibernate.
+<b class="fc">&nbsp;            em.persist(oggetto);</b>
+&nbsp;
+&nbsp;            //Conferma la transazione
+<b class="fc">&nbsp;            em.getTransaction().commit();</b>
+&nbsp;
+<b class="fc">&nbsp;            return true;</b>
+&nbsp;
+&nbsp;        } catch (RuntimeException e) {
+&nbsp;
+&nbsp;            /*
+&nbsp;             * Se qualcosa va storto durante l&#39;operazione, annulliamo
+&nbsp;             * la transazione per evitare modifiche parziali al database.
+&nbsp;             */
+<b class="pc">&nbsp;            if (em.getTransaction().isActive()) {</b>
+<b class="fc">&nbsp;                em.getTransaction().rollback();</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            //throw e;
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;
+&nbsp;        } finally {
+&nbsp;            /*
+&nbsp;             * L&#39;EntityManager deve essere chiuso dopo l&#39;operazione.
+&nbsp;             * La EntityManagerFactory resta invece aperta e viene chiusa
+&nbsp;             * solo alla fine dell&#39;applicazione.
+&nbsp;             */
+&nbsp;            em.close();
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    //Cerca un oggetto persistente a partire dalla sua classe e dal suo id
+&nbsp;     //Il metodo è generico: può essere usato con qualunque Entity.
+&nbsp;    public &lt;T&gt; T trovaPerId(Class&lt;T&gt; classe, Object id) {
+&nbsp;
+<b class="fc">&nbsp;        EntityManager em = JpaUtil.getInstance().getEntityManager();</b>
+&nbsp;
+&nbsp;        try {
+&nbsp;            /*
+&nbsp;             * find cerca nel database una riga della tabella associata
+&nbsp;             * alla classe indicata, usando l&#39;id come chiave primaria.
+&nbsp;             */
+<b class="fc">&nbsp;            return em.find(classe, id);</b>
+&nbsp;
+&nbsp;        } finally {
+&nbsp;            em.close();
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /*
+&nbsp;     * Cerca tutti gli oggetti persistenti di una certa classe
+&nbsp;     * per cui un campo ha un determinato valore.
+&nbsp;     */
+&nbsp;    public &lt;T&gt; List&lt;T&gt; cercaPerCampo(Class&lt;T&gt; classe,
+&nbsp;                                     String nomeCampo,
+&nbsp;                                     Object valore) {
+&nbsp;
+<b class="fc">&nbsp;        return cercaPerCampi(</b>
+&nbsp;                classe,
+<b class="fc">&nbsp;                Map.of(nomeCampo, valore)</b>
+&nbsp;        );
+&nbsp;    }
+&nbsp;
+&nbsp;    /*
+&nbsp;     * Cerca tutti gli oggetti persistenti che soddisfano un insieme di condizioni.
+&nbsp;     *
+&nbsp;     * La query JPQL viene costruita nel livello database.
+&nbsp;     */
+&nbsp;    public &lt;T&gt; List&lt;T&gt; cercaPerCampi(Class&lt;T&gt; classe,
+&nbsp;                                     Map&lt;String, Object&gt; campi) {
+&nbsp;
+<b class="fc">&nbsp;        EntityManager em = JpaUtil.getInstance().getEntityManager();</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            StringBuilder jpql = new StringBuilder();</b>
+&nbsp;
+<b class="fc">&nbsp;            jpql.append(&quot;SELECT e FROM &quot;)</b>
+<b class="fc">&nbsp;                    .append(classe.getSimpleName())</b>
+<b class="fc">&nbsp;                    .append(&quot; e&quot;);</b>
+&nbsp;
+<b class="pc">&nbsp;            if (!campi.isEmpty()) {</b>
+<b class="fc">&nbsp;                jpql.append(&quot; WHERE &quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;                int contatore = 0;</b>
+&nbsp;
+<b class="fc">&nbsp;                for (String nomeCampo : campi.keySet()) {</b>
+<b class="fc">&nbsp;                    if (contatore &gt; 0) {</b>
+<b class="fc">&nbsp;                        jpql.append(&quot; AND &quot;);</b>
+&nbsp;                    }
+&nbsp;
+<b class="fc">&nbsp;                    String nomeParametro = nomeCampo.replace(&quot;.&quot;, &quot;_&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;                    jpql.append(&quot;e.&quot;)</b>
+<b class="fc">&nbsp;                            .append(nomeCampo)</b>
+<b class="fc">&nbsp;                            .append(&quot; = :&quot;)</b>
+<b class="fc">&nbsp;                            .append(nomeParametro);</b>
+&nbsp;
+<b class="fc">&nbsp;                    contatore++;</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            TypedQuery&lt;T&gt; query = em.createQuery(</b>
+<b class="fc">&nbsp;                    jpql.toString(),</b>
+&nbsp;                    classe
+&nbsp;            );
+&nbsp;
+<b class="fc">&nbsp;            for (String nomeCampo : campi.keySet()) {</b>
+<b class="fc">&nbsp;                String nomeParametro = nomeCampo.replace(&quot;.&quot;, &quot;_&quot;);</b>
+<b class="fc">&nbsp;                query.setParameter(nomeParametro, campi.get(nomeCampo));</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            return query.getResultList();</b>
+&nbsp;
+&nbsp;        } finally {
+&nbsp;            em.close();
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /*
+&nbsp;     * Cerca il primo oggetto persistente che soddisfa un insieme di condizioni.
+&nbsp;     *
+&nbsp;     * Se non trova nessun risultato, restituisce null.
+&nbsp;     */
+&nbsp;    public &lt;T&gt; T cercaPrimoPerCampi(Class&lt;T&gt; classe,
+&nbsp;                                    Map&lt;String, Object&gt; campi) {
+&nbsp;
+<b class="fc">&nbsp;        List&lt;T&gt; risultati = cercaPerCampi(classe, campi);</b>
+&nbsp;
+<b class="fc">&nbsp;        if (risultati.isEmpty()) {</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        return risultati.get(0);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public &lt;T&gt; T aggiorna(T oggetto) {
+&nbsp;
+<b class="fc">&nbsp;        EntityManager em = JpaUtil.getInstance().getEntityManager();</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            em.getTransaction().begin();</b>
+&nbsp;
+<b class="fc">&nbsp;            T oggettoAggiornato = em.merge(oggetto);</b>
+&nbsp;
+<b class="fc">&nbsp;            em.getTransaction().commit();</b>
+&nbsp;
+<b class="fc">&nbsp;            return oggettoAggiornato;</b>
+&nbsp;
+&nbsp;        } catch (RuntimeException e) {
+&nbsp;
+<b class="nc">&nbsp;            if (em.getTransaction().isActive()) {</b>
+<b class="nc">&nbsp;                em.getTransaction().rollback();</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            throw e;
+&nbsp;
+&nbsp;        } finally {
+&nbsp;            em.close();
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    public &lt;T&gt; boolean elimina(Class&lt;T&gt; classe, Object id) {
+&nbsp;
+<b class="fc">&nbsp;        EntityManager em = JpaUtil.getInstance().getEntityManager();</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            em.getTransaction().begin();</b>
+&nbsp;
+&nbsp;            /*
+&nbsp;             * Cerchiamo nel database l&#39;oggetto da eliminare,
+&nbsp;             * usando la sua classe e il suo id.
+&nbsp;             */
+&nbsp;
+<b class="fc">&nbsp;            T oggetto = em.find(classe, id);</b>
+&nbsp;
+&nbsp;            //se l&#39;oggetto esiste, lo eliminiamo
+<b class="fc">&nbsp;            if (oggetto != null) {</b>
+<b class="fc">&nbsp;                em.remove(oggetto);</b>
+<b class="fc">&nbsp;                em.getTransaction().commit();</b>
+<b class="fc">&nbsp;                return true;</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            em.getTransaction().commit();</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;
+&nbsp;        } catch (RuntimeException e) {
+&nbsp;
+<b class="pc">&nbsp;            if (em.getTransaction().isActive()) {</b>
+<b class="nc">&nbsp;                em.getTransaction().rollback();</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            e.printStackTrace();</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;
+&nbsp;        } finally {
+&nbsp;            em.close();
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,246 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Utente</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">entity</a>
+</div>
+
+<h1>Coverage Summary for Class: Utente (entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Utente</td>
+<td class="coverageStat">
+  <span class="percent">
+    52,9%
+  </span>
+  <span class="absValue">
+    (9/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,1%
+  </span>
+  <span class="absValue">
+    (16/28)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Utente$HibernateInstantiator</td>
+  </tr>
+  <tr>
+    <td class="name">Utente$HibernateProxy</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    52,9%
+  </span>
+  <span class="absValue">
+    (9/17)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    25%
+  </span>
+  <span class="absValue">
+    (1/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    57,1%
+  </span>
+  <span class="absValue">
+    (16/28)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package entity;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;@Entity
+&nbsp;@Inheritance(strategy = InheritanceType.JOINED)
+&nbsp;public class Utente {
+&nbsp;    @Id
+&nbsp;    @Column(name = &quot;id_utente&quot;)
+&nbsp;    private String idUtente;
+&nbsp;
+&nbsp;    private String nome;
+&nbsp;    private String cognome;
+&nbsp;    private String emailIstituzionale;
+&nbsp;    private String password;
+&nbsp;    private String ruolo;
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;    public Utente() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Utente(String idUtente, String nome, String cognome,
+<b class="fc">&nbsp;                  String emailIstituzionale, String password, String ruolo) {</b>
+<b class="fc">&nbsp;        this.idUtente = idUtente;</b>
+<b class="fc">&nbsp;        this.nome = nome;</b>
+<b class="fc">&nbsp;        this.cognome = cognome;</b>
+<b class="fc">&nbsp;        this.emailIstituzionale = emailIstituzionale;</b>
+<b class="fc">&nbsp;        this.password = password;</b>
+<b class="fc">&nbsp;        this.ruolo = ruolo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getIdUtente() {
+<b class="fc">&nbsp;        return idUtente;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setIdUtente(String idUtente) {
+<b class="nc">&nbsp;        this.idUtente = idUtente;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getNome() {
+<b class="fc">&nbsp;        return nome;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setNome(String nome) {
+<b class="nc">&nbsp;        this.nome = nome;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getCognome() {
+<b class="nc">&nbsp;        return cognome;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCognome(String cognome) {
+<b class="nc">&nbsp;        this.cognome = cognome;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getEmailIstituzionale() {
+<b class="fc">&nbsp;        return emailIstituzionale;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setEmailIstituzionale(String emailIstituzionale) {
+<b class="nc">&nbsp;        this.emailIstituzionale = emailIstituzionale;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPassword() {
+<b class="fc">&nbsp;        return password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPassword(String password) {
+<b class="nc">&nbsp;        this.password = password;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getRuolo() {
+<b class="fc">&nbsp;        return ruolo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setRuolo(String ruolo) {
+<b class="nc">&nbsp;        this.ruolo = ruolo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString() {
+<b class="nc">&nbsp;        return &quot;Utente{&quot; +</b>
+&nbsp;                &quot;id=&quot; + idUtente +
+&nbsp;                &quot;, nome=&#39;&quot; + nome + &#39;\&#39;&#39; +
+&nbsp;                &quot;, cognome=&#39;&quot; + cognome + &#39;\&#39;&#39; +
+&nbsp;                &quot;, email=&quot; + emailIstituzionale +
+&nbsp;                &quot;, ruolo=&quot; + ruolo +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean equals(Object o) {
+<b class="pc">&nbsp;        if (this == o)</b>
+<b class="fc">&nbsp;            return true;</b>
+&nbsp;
+<b class="nc">&nbsp;        if (!(o instanceof Utente))</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;
+<b class="nc">&nbsp;        Utente altro = (Utente) o;</b>
+<b class="nc">&nbsp;        return Objects.equals(idUtente, altro.idUtente);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public int hashCode() {
+<b class="fc">&nbsp;        return Objects.hash(idUtente);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

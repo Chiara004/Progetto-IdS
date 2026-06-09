@@ -1,0 +1,283 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MaterialeDidattico</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">entity</a>
+</div>
+
+<h1>Coverage Summary for Class: MaterialeDidattico (entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MaterialeDidattico</td>
+<td class="coverageStat">
+  <span class="percent">
+    90,9%
+  </span>
+  <span class="absValue">
+    (20/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,9%
+  </span>
+  <span class="absValue">
+    (29/33)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MaterialeDidattico$HibernateInstantiator</td>
+  </tr>
+  <tr>
+    <td class="name">MaterialeDidattico$HibernateProxy</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    90,9%
+  </span>
+  <span class="absValue">
+    (20/22)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,9%
+  </span>
+  <span class="absValue">
+    (29/33)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package entity;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.Objects;
+&nbsp;
+&nbsp;@Entity
+&nbsp;public class MaterialeDidattico {
+&nbsp;    @Id
+&nbsp;    @GeneratedValue(strategy = GenerationType.IDENTITY)
+&nbsp;    private int idMateriale;
+&nbsp;
+&nbsp;    @Column(nullable = false)
+&nbsp;    private String titolo;
+&nbsp;    private String descrizione;
+&nbsp;    private LocalDate dataPubblicazione;
+&nbsp;    private String percorsoFile;
+&nbsp;
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    private Categoria categoria;
+&nbsp;
+&nbsp;    @Enumerated(EnumType.STRING)
+&nbsp;    private Visibilita visibilita;
+&nbsp;
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;corso_id&quot;, nullable = false)
+&nbsp;    private Corso corso;
+&nbsp;
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;sezione_id&quot;, nullable = true)
+&nbsp;    private Sezione sezione;
+&nbsp;
+<b class="fc">&nbsp;    public MaterialeDidattico() {</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public MaterialeDidattico(String titolo, String descrizione, LocalDate dataPubblicazione,
+<b class="fc">&nbsp;                              String percorsoFile, Categoria categoria, Visibilita visibilita) {</b>
+&nbsp;
+<b class="fc">&nbsp;        this.titolo = titolo;</b>
+<b class="fc">&nbsp;        this.descrizione = descrizione;</b>
+<b class="fc">&nbsp;        this.dataPubblicazione = dataPubblicazione;</b>
+<b class="fc">&nbsp;        this.percorsoFile = percorsoFile;</b>
+<b class="fc">&nbsp;        this.categoria = categoria;</b>
+<b class="fc">&nbsp;        this.visibilita = visibilita;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getIdMateriale() {
+<b class="fc">&nbsp;        return idMateriale;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public String getTitolo() {
+<b class="fc">&nbsp;        return titolo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setTitolo(String titolo) {
+<b class="fc">&nbsp;        this.titolo = titolo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDescrizione() {
+<b class="fc">&nbsp;        return descrizione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDescrizione(String descrizione) {
+<b class="fc">&nbsp;        this.descrizione = descrizione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public LocalDate getDataPubblicazione() {
+<b class="fc">&nbsp;        return dataPubblicazione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDataPubblicazione(LocalDate dataPubblicazione) {
+<b class="fc">&nbsp;        this.dataPubblicazione = dataPubblicazione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPercorsoFile() {
+<b class="fc">&nbsp;        return percorsoFile;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setPercorsoFile(String percorsoFile) {
+<b class="fc">&nbsp;        this.percorsoFile = percorsoFile;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Categoria getCategoria() {
+<b class="fc">&nbsp;        return categoria;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCategoria(Categoria categoria) {
+<b class="fc">&nbsp;        this.categoria = categoria;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Visibilita getVisibilita() {
+<b class="fc">&nbsp;        return visibilita;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setVisibilita(Visibilita visibilita) {
+<b class="fc">&nbsp;        this.visibilita = visibilita;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Corso getCorso() {
+<b class="nc">&nbsp;        return corso;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCorso(Corso corso) {
+<b class="fc">&nbsp;        this.corso = corso;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Sezione getSezione() {
+<b class="fc">&nbsp;        return sezione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSezione(Sezione sezione) {
+<b class="fc">&nbsp;        this.sezione = sezione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString(){
+<b class="nc">&nbsp;        return &quot;MaterialeDidattico{&quot; +</b>
+&nbsp;                &quot;idMateriale=&quot; + idMateriale +
+&nbsp;                &quot;, titolo=&#39;&quot; + titolo + &#39;\&#39;&#39; +
+&nbsp;                &quot;, descrizione=&#39;&quot; + descrizione + &#39;\&#39;&#39; +
+&nbsp;                &quot;, dataPubblicazione=&#39;&quot; + dataPubblicazione + &#39;\&#39;&#39; +
+&nbsp;                &quot;, percorsoFile=&#39;&quot; + percorsoFile + &#39;\&#39;&#39; +
+&nbsp;                &quot;, categoria=&quot; + categoria +
+&nbsp;                &quot;, visibilita=&quot; + visibilita +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean equals(Object o) {
+<b class="pc">&nbsp;        if (this == o)</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;
+<b class="pc">&nbsp;        if (!(o instanceof MaterialeDidattico))</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;
+<b class="fc">&nbsp;        MaterialeDidattico altro = (MaterialeDidattico) o;</b>
+<b class="fc">&nbsp;        return Objects.equals(titolo, altro.titolo);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public int hashCode() {
+<b class="fc">&nbsp;        return Objects.hash(titolo);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

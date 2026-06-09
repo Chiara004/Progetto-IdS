@@ -129,7 +129,7 @@ public class LoginForm {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 400);
         frame.setResizable(false);
-        frame.setLocationRelativeTo(null); //centra la finestra sulla schermo
+        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
         return frame;
@@ -183,7 +183,7 @@ public class LoginForm {
                     JOptionPane.INFORMATION_MESSAGE
                 );
 
-                //qua andrà aperta la dashboard Docente
+
                 if (myFrame != null) {
                     myFrame.dispose();
 

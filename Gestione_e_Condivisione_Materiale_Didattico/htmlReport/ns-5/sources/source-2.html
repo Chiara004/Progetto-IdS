@@ -1,0 +1,390 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Corso</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">entity</a>
+</div>
+
+<h1>Coverage Summary for Class: Corso (entity)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Corso</td>
+<td class="coverageStat">
+  <span class="percent">
+    58,6%
+  </span>
+  <span class="absValue">
+    (17/29)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,3%
+  </span>
+  <span class="absValue">
+    (42/46)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    79,2%
+  </span>
+  <span class="absValue">
+    (76/96)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">Corso$HibernateInstantiator</td>
+  </tr>
+  <tr>
+    <td class="name">Corso$HibernateProxy</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    58,6%
+  </span>
+  <span class="absValue">
+    (17/29)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,3%
+  </span>
+  <span class="absValue">
+    (42/46)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    79,2%
+  </span>
+  <span class="absValue">
+    (76/96)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package entity;
+&nbsp;
+&nbsp;import jakarta.persistence.*;
+&nbsp;
+&nbsp;import java.time.LocalDate;
+&nbsp;import java.util.HashSet;
+&nbsp;import java.util.Objects;
+&nbsp;import java.util.Set;
+&nbsp;
+&nbsp;@Entity
+&nbsp;public class Corso {
+&nbsp;    @Id
+&nbsp;    private int codice;
+&nbsp;
+&nbsp;    private String titolo;
+&nbsp;    private String descrizione;
+&nbsp;
+&nbsp;    //è un parametro opzionale
+&nbsp;    @Column(nullable = true)
+&nbsp;    private String annoAccademico;
+&nbsp;
+&nbsp;    @OneToMany(mappedBy = &quot;corso&quot;, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+&nbsp;    private Set&lt;Sezione&gt; sezioni;
+&nbsp;    @OneToMany(mappedBy = &quot;corso&quot;, cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+&nbsp;    private Set&lt;MaterialeDidattico&gt; materialeDidattico;
+&nbsp;
+&nbsp;    @ManyToOne
+&nbsp;    @JoinColumn(name = &quot;docente_id&quot;)
+&nbsp;    private Docente docente;
+&nbsp;
+<b class="fc">&nbsp;    @ManyToMany(fetch = FetchType.EAGER)</b>
+&nbsp;    @JoinTable(
+&nbsp;            name = &quot;corso_studente&quot;,
+&nbsp;            joinColumns = @JoinColumn(name = &quot;corso_id&quot;),
+&nbsp;            inverseJoinColumns = @JoinColumn(name = &quot;studente_id&quot;)
+&nbsp;    )
+&nbsp;    private Set&lt;Studente&gt; studenti = new HashSet&lt;&gt;();
+&nbsp;
+<b class="fc">&nbsp;    public Corso() {</b>
+&nbsp;    }
+&nbsp;
+<b class="fc">&nbsp;    public Corso(int codice, String titolo, String descrizione, String annoAccademico) {</b>
+<b class="fc">&nbsp;        this.codice = codice;</b>
+<b class="fc">&nbsp;        this.titolo = titolo;</b>
+<b class="fc">&nbsp;        this.descrizione = descrizione;</b>
+<b class="fc">&nbsp;        this.annoAccademico = annoAccademico;</b>
+<b class="fc">&nbsp;        this.sezioni = new HashSet&lt;&gt;();</b>
+<b class="fc">&nbsp;        this.materialeDidattico = new HashSet&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public Corso(int codice,String titolo, String descrizione) {</b>
+<b class="nc">&nbsp;        this.codice = codice;</b>
+<b class="nc">&nbsp;        this.titolo = titolo;</b>
+<b class="nc">&nbsp;        this.descrizione = descrizione;</b>
+<b class="nc">&nbsp;        this.sezioni = new HashSet&lt;&gt;();</b>
+<b class="nc">&nbsp;        this.materialeDidattico = new HashSet&lt;&gt;();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int getCodice() {
+<b class="fc">&nbsp;        return codice;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setCodice(int codice) {
+<b class="nc">&nbsp;        this.codice = codice;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getTitolo() {
+<b class="fc">&nbsp;        return titolo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setTitolo(String titolo) {
+<b class="nc">&nbsp;        this.titolo = titolo;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getDescrizione() {
+<b class="nc">&nbsp;        return descrizione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDescrizione(String descrizione) {
+<b class="nc">&nbsp;        this.descrizione = descrizione;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getAnnoAccademico() {
+<b class="nc">&nbsp;        return annoAccademico;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setAnnoAccademico(String annoAccademico) {
+<b class="nc">&nbsp;        this.annoAccademico = annoAccademico;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Set&lt;Sezione&gt; getSezioni() {
+<b class="fc">&nbsp;        return sezioni;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setSezioni(Set&lt;Sezione&gt; sezioni) {
+<b class="nc">&nbsp;        this.sezioni = sezioni;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Set&lt;MaterialeDidattico&gt; getMaterialeDidattico() {
+<b class="fc">&nbsp;        return materialeDidattico;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setMaterialeDidattico(Set&lt;MaterialeDidattico&gt; materialeDidattico) {
+<b class="nc">&nbsp;        this.materialeDidattico = materialeDidattico;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Docente getDocente() {
+<b class="nc">&nbsp;        return docente;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setDocente(Docente docente) {
+<b class="fc">&nbsp;        this.docente = docente;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Set&lt;Studente&gt; getStudenti() {
+<b class="fc">&nbsp;        return studenti;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setStudenti(Set&lt;Studente&gt; studenti) {
+<b class="nc">&nbsp;        this.studenti = studenti;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void rimuoviMateriale(MaterialeDidattico materiale){
+<b class="fc">&nbsp;        this.materialeDidattico.remove(materiale);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public String getPercorsoFileMateriale(MaterialeDidattico materiale){
+<b class="fc">&nbsp;        return materiale.getPercorsoFile();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public MaterialeDidattico getMaterialeDidatticoPerTitolo(String titolo){
+<b class="fc">&nbsp;        for(MaterialeDidattico materiale : materialeDidattico){</b>
+<b class="fc">&nbsp;            if(materiale.getTitolo().equals(titolo))</b>
+<b class="fc">&nbsp;                return materiale;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public MaterialeDidattico getMaterialeDidatticoPerId(int id){
+<b class="fc">&nbsp;        for(MaterialeDidattico materiale : materialeDidattico){</b>
+<b class="fc">&nbsp;            if(materiale.getIdMateriale() == id)</b>
+<b class="fc">&nbsp;                return materiale;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public Sezione getSezionePerTitolo(String titolo){
+<b class="fc">&nbsp;        for(Sezione sezione : sezioni){</b>
+<b class="fc">&nbsp;            if(sezione.getTitolo().equals(titolo))</b>
+<b class="fc">&nbsp;                return sezione;</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return null;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean inserisciMateriale(String titolo, String descrizione, String visibilita, String percorsoFile, String sezione, String categoria){
+&nbsp;        // Validazione lunghezza campi (boundary varchar 255)
+<b class="fc">&nbsp;        if (descrizione.length() &gt; 255 ||</b>
+<b class="fc">&nbsp;                (titolo.length()&gt;255) ||</b>
+<b class="fc">&nbsp;                (percorsoFile.length() &gt; 255) )</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;
+&nbsp;        // Controllo omonimia (Regola di business)
+<b class="fc">&nbsp;        for (MaterialeDidattico m : this.materialeDidattico) {</b>
+<b class="fc">&nbsp;            if (m.getTitolo().equalsIgnoreCase(titolo)) {</b>
+&nbsp;                // Esiste già un materiale con questo titolo!
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;        // Se passa il controllo, si aggiunge alla lista
+<b class="fc">&nbsp;        Categoria cat = Categoria.valueOf(categoria);</b>
+<b class="fc">&nbsp;        Visibilita vis = Visibilita.valueOf(visibilita);</b>
+<b class="fc">&nbsp;        LocalDate data = LocalDate.now();</b>
+<b class="fc">&nbsp;        MaterialeDidattico nuovoMateriale = new MaterialeDidattico(titolo, descrizione, data, percorsoFile, cat, vis);</b>
+<b class="fc">&nbsp;        nuovoMateriale.setCorso(this);</b>
+<b class="fc">&nbsp;        this.materialeDidattico.add(nuovoMateriale);</b>
+&nbsp;
+<b class="fc">&nbsp;        if(!sezione.equals(&quot;null&quot;)){</b>
+<b class="fc">&nbsp;            Sezione s = getSezionePerTitolo(sezione);</b>
+<b class="fc">&nbsp;            nuovoMateriale.setSezione(s);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public boolean modificaMateriale(String idMateriale, String titolo, String descrizione, String visibilita, String percorsoFile, String sezione, String categoria){
+<b class="fc">&nbsp;        if (descrizione.length() &gt; 255 ||</b>
+<b class="fc">&nbsp;                (titolo.length()&gt;255) ||</b>
+<b class="fc">&nbsp;                (percorsoFile.length() &gt; 255) )</b>
+<b class="fc">&nbsp;            return false;</b>
+&nbsp;
+&nbsp;        // Controllo omonimia (Regola di business)
+<b class="fc">&nbsp;        for (MaterialeDidattico m : this.materialeDidattico) {</b>
+<b class="fc">&nbsp;            if (m.getTitolo().equalsIgnoreCase(titolo) &amp;&amp; m.getIdMateriale() != Integer.parseInt(idMateriale)) {</b>
+&nbsp;                // Esiste già un materiale con questo titolo!
+<b class="fc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+&nbsp;
+&nbsp;        // Se passa il controllo, si aggiunge alla lista
+<b class="fc">&nbsp;        Categoria cat = Categoria.valueOf(categoria);</b>
+<b class="fc">&nbsp;        Visibilita vis = Visibilita.valueOf(visibilita);</b>
+<b class="fc">&nbsp;        LocalDate data = LocalDate.now();</b>
+<b class="fc">&nbsp;        int id = Integer.parseInt(idMateriale);</b>
+<b class="fc">&nbsp;        MaterialeDidattico materialeAggiornato = getMaterialeDidatticoPerId(id);</b>
+<b class="pc">&nbsp;        if(materialeAggiornato.getVisibilita().toString().equals(&quot;PUBBLICATO&quot;) &amp;&amp; visibilita.equals(&quot;NON_PUBBLICATO&quot;))</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;
+<b class="fc">&nbsp;        materialeAggiornato.setTitolo(titolo);</b>
+<b class="fc">&nbsp;        materialeAggiornato.setDescrizione(descrizione);</b>
+<b class="fc">&nbsp;        materialeAggiornato.setDataPubblicazione(data);</b>
+<b class="fc">&nbsp;        materialeAggiornato.setPercorsoFile(percorsoFile);</b>
+<b class="fc">&nbsp;        materialeAggiornato.setCategoria(cat);</b>
+<b class="fc">&nbsp;        materialeAggiornato.setVisibilita(vis);</b>
+<b class="fc">&nbsp;        materialeAggiornato.setCorso(this);</b>
+&nbsp;
+<b class="fc">&nbsp;        this.materialeDidattico.add(materialeAggiornato);</b>
+&nbsp;
+<b class="fc">&nbsp;        if(!sezione.equals(&quot;null&quot;)){</b>
+<b class="fc">&nbsp;            Sezione s = getSezionePerTitolo(sezione);</b>
+<b class="fc">&nbsp;            materialeAggiornato.setSezione(s);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return true;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public String toString(){
+<b class="nc">&nbsp;        return &quot;Corso{&quot; +</b>
+&nbsp;                &quot;codice=&quot; + codice +
+&nbsp;                &quot;, titolo=&#39;&quot; + titolo + &#39;\&#39;&#39; +
+&nbsp;                &quot;, descrizione=&#39;&quot; + descrizione + &#39;\&#39;&#39; +
+&nbsp;                &quot;, annoAccademico=&#39;&quot; + annoAccademico + &#39;\&#39;&#39; +
+&nbsp;                &#39;}&#39;;
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public boolean equals(Object o) {
+<b class="pc">&nbsp;        if (this == o)</b>
+<b class="nc">&nbsp;            return true;</b>
+&nbsp;
+<b class="pc">&nbsp;        if (!(o instanceof Corso))</b>
+<b class="nc">&nbsp;            return false;</b>
+&nbsp;
+<b class="fc">&nbsp;        Corso altro = (Corso) o;</b>
+<b class="fc">&nbsp;        return Objects.equals(codice, altro.codice);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @Override
+&nbsp;    public int hashCode() {
+<b class="fc">&nbsp;        return Objects.hash(codice);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

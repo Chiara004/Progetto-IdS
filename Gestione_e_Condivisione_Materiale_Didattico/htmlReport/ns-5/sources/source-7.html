@@ -1,0 +1,241 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GestoreUtente</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">entity</a>
+</div>
+
+<h1>Coverage Summary for Class: GestoreUtente (entity)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GestoreUtente</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,5%
+  </span>
+  <span class="absValue">
+    (35/40)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    97,6%
+  </span>
+  <span class="absValue">
+    (40/41)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package entity;
+&nbsp;
+&nbsp;import database.GestorePersistenza;
+&nbsp;import org.mindrot.jbcrypt.BCrypt;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;
+&nbsp;public class GestoreUtente {
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE = 0;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_DOMINIO_ERRATO = 1;
+&nbsp;    public static final int REGISTRAZIONE_AVVENUTA = 2;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA = 3;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE = 4;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO = 5;
+&nbsp;
+&nbsp;    private GestorePersistenza gestorePersistenza;
+&nbsp;
+<b class="fc">&nbsp;    public GestoreUtente() {</b>
+&nbsp;
+<b class="fc">&nbsp;        gestorePersistenza = new GestorePersistenza();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private String hashPassword(String passwordInChiaro) {
+<b class="pc">&nbsp;        if (passwordInChiaro == null) return null;</b>
+<b class="fc">&nbsp;        return BCrypt.hashpw(passwordInChiaro, BCrypt.gensalt());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private boolean verificaPassword(String passwordInChiaro, String hashSalvato) {
+<b class="pc">&nbsp;        if (passwordInChiaro == null || hashSalvato == null) return false;</b>
+<b class="fc">&nbsp;        return BCrypt.checkpw(passwordInChiaro, hashSalvato);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public int inserimentoDatiUtente(String email, String matricola, String nome, String cognome, String password, boolean isStudente) {
+&nbsp;
+<b class="fc">&nbsp;        String mat = matricola.trim();</b>
+&nbsp;
+&nbsp;        // Validazione lunghezza campi (varchar 255)
+<b class="fc">&nbsp;        if ((nome.length()&gt;255) || (cognome.length()&gt;255)</b>
+<b class="fc">&nbsp;        || (email.length()&gt;255) || (password.length()&gt;255))</b>
+<b class="fc">&nbsp;            return REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO;</b>
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        if (isStudente) {</b>
+&nbsp;            // Regola Studente: Deve iniziare con N4600 ed essere lunga esattamente 9 caratteri
+<b class="fc">&nbsp;            if (!mat.startsWith(&quot;N4600&quot;) || mat.length() != 9) {</b>
+<b class="fc">&nbsp;                return REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;</b>
+&nbsp;            }
+&nbsp;        } else {
+&nbsp;            // Regola Docente: Deve iniziare con DOC ed essere più lunga di 3 caratteri
+<b class="pc">&nbsp;            if (!mat.startsWith(&quot;DOC&quot;) || mat.length() &lt;= 3 || mat.length() &gt; 255) {</b>
+<b class="fc">&nbsp;                return REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        String emailLower = email.toLowerCase().trim();</b>
+<b class="fc">&nbsp;        if (!emailLower.endsWith(&quot;@unina.it&quot;)) {</b>
+<b class="fc">&nbsp;            return REGISTRAZIONE_FALLITA_DOMINIO_ERRATO;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        List&lt;Utente&gt; utentiEsistenti = gestorePersistenza.cercaPerCampo(</b>
+&nbsp;                Utente.class,
+&nbsp;                &quot;emailIstituzionale&quot;,
+&nbsp;                emailLower
+&nbsp;        );
+&nbsp;
+<b class="fc">&nbsp;        if (!utentiEsistenti.isEmpty()) {</b>
+<b class="fc">&nbsp;            return REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        List&lt;Utente&gt; matricoleEsistenti = gestorePersistenza.cercaPerCampo(</b>
+&nbsp;                Utente.class,
+&nbsp;                &quot;idUtente&quot;,
+&nbsp;                mat
+&nbsp;        );
+&nbsp;
+<b class="fc">&nbsp;        if (!matricoleEsistenti.isEmpty()) {</b>
+<b class="fc">&nbsp;            return REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        Utente nuovoUtente;
+<b class="fc">&nbsp;        String passwordSicura = hashPassword(password);</b>
+&nbsp;
+<b class="fc">&nbsp;        if (isStudente) {</b>
+<b class="fc">&nbsp;            nuovoUtente = new Studente(matricola, nome, cognome, emailLower, passwordSicura, &quot;Studente&quot;);</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            nuovoUtente = new Docente(matricola, nome, cognome, emailLower, passwordSicura, &quot;Docente&quot;);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;
+<b class="fc">&nbsp;        boolean salvatoConSuccesso = gestorePersistenza.salva(nuovoUtente);</b>
+&nbsp;
+<b class="pc">&nbsp;        if (salvatoConSuccesso) {</b>
+<b class="fc">&nbsp;            System.out.println(&quot;[GestorePersistenza] Nuovo utente registrato nel DB reale!&quot;);</b>
+<b class="fc">&nbsp;            return REGISTRAZIONE_AVVENUTA;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            return -1;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public Utente inserimentoCredenziali(String email, String password) {
+<b class="fc">&nbsp;        return verificaCredenziali(email.toLowerCase().trim(), password);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    private Utente verificaCredenziali(String email, String password) {
+<b class="fc">&nbsp;        Utente utente = gestorePersistenza.cercaPrimoPerCampi(</b>
+&nbsp;                Utente.class,
+<b class="fc">&nbsp;                Map.of(&quot;emailIstituzionale&quot;, email)</b>
+&nbsp;        );
+&nbsp;
+&nbsp;        // Se non lo trova o la password è errata, restituisce null
+<b class="fc">&nbsp;        if (utente == null || !verificaPassword(password, utente.getPassword())) {</b>
+<b class="fc">&nbsp;            System.out.println(&quot;[GestoreUtente] Login fallito: credenziali errate.&quot;);</b>
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        System.out.println(&quot;[GestoreUtente] Login accettato per: &quot; + utente.getNome());</b>
+&nbsp;
+&nbsp;        // Se ha successo, restituisce l&#39;oggetto completo
+<b class="fc">&nbsp;        return utente;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

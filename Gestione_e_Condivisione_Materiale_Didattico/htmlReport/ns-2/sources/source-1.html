@@ -1,0 +1,400 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > GestorePiattaforma</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">control</a>
+</div>
+
+<h1>Coverage Summary for Class: GestorePiattaforma (control)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GestorePiattaforma</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33,3%
+  </span>
+  <span class="absValue">
+    (7/21)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    33,3%
+  </span>
+  <span class="absValue">
+    (14/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    41,4%
+  </span>
+  <span class="absValue">
+    (53/128)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package control;
+&nbsp;
+&nbsp;import control.filtro.*;
+&nbsp;import entity.*;
+&nbsp;
+&nbsp;import java.io.File;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Collection;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Set;
+&nbsp;
+<b class="nc">&nbsp;public class GestorePiattaforma {</b>
+&nbsp;    public static final int LOGIN_FALLITO = 0;
+&nbsp;    public static final int LOGIN_SUCCESS_STUDENTE = 1;
+&nbsp;    public static final int LOGIN_SUCCESS_DOCENTE = 2;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE = GestoreUtente.REGISTRAZIONE_FALLITA_EMAIL_ESISTENTE;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_DOMINIO_ERRATO  = GestoreUtente.REGISTRAZIONE_FALLITA_DOMINIO_ERRATO;
+&nbsp;    public static final int REGISTRAZIONE_AVVENUTA= GestoreUtente.REGISTRAZIONE_AVVENUTA;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA = GestoreUtente.REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
+&nbsp;    public static final int REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE = GestoreUtente.REGISTRAZIONE_FALLITA_MATRICOLA_ESISTENTE;
+&nbsp;
+<b class="fc">&nbsp;    private static GestoreCorso gestoreCorso = new GestoreCorso();</b>
+<b class="fc">&nbsp;    private static GestoreIscrizione gestoreIscrizione = new GestoreIscrizione();</b>
+<b class="fc">&nbsp;    private static GestoreUtente gestoreUtente = new GestoreUtente();</b>
+<b class="fc">&nbsp;    private static GestoreNotifica gestoreNotifica = new GestoreNotifica();</b>
+&nbsp;
+&nbsp;
+&nbsp;    public static StrategyFiltro StringToStatoFiltro(String tipologia){
+&nbsp;        // Protezione contro i valori nulli o vuoti
+<b class="fc">&nbsp;        if (tipologia == null || tipologia.trim().isEmpty()) {</b>
+<b class="fc">&nbsp;            return new FiltroNullo();</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        StrategyFiltro filtro;
+<b class="fc">&nbsp;        switch(tipologia.trim().toLowerCase()) // toLowerCase ci mette al sicuro da distrazioni</b>
+&nbsp;        {
+&nbsp;            case &quot;categoria&quot;:
+<b class="fc">&nbsp;                filtro = new FiltroCategoria(); break;</b>
+&nbsp;            case &quot;descrizione&quot;:
+<b class="fc">&nbsp;                filtro = new FiltroDescrizione(); break;</b>
+&nbsp;            case &quot;pubblicato&quot;:
+<b class="fc">&nbsp;                filtro = new FiltroPubblicato(); break;</b>
+&nbsp;            case &quot;titolo&quot;:
+<b class="fc">&nbsp;                filtro = new FiltroTitolo(); break;</b>
+&nbsp;            default:
+<b class="fc">&nbsp;                filtro = new FiltroNullo();</b>
+&nbsp;        }
+<b class="fc">&nbsp;        return filtro;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static List&lt;String[]&gt; materialeInRighe(Set&lt;MaterialeDidattico&gt; materialiDidattici){
+<b class="fc">&nbsp;        List&lt;String[]&gt; righe = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        Utente utente = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="fc">&nbsp;        if(utente instanceof Docente){</b>
+<b class="fc">&nbsp;            for (MaterialeDidattico materialeDidattico : materialiDidattici) {</b>
+<b class="fc">&nbsp;                String[] riga = new String[]{</b>
+<b class="fc">&nbsp;                        materialeDidattico.getTitolo(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getCategoria().toString(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getDescrizione(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getDataPubblicazione().toString(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getSezione().getTitolo(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getVisibilita().toString(),</b>
+&nbsp;                        &quot;⋮&quot;
+&nbsp;                };
+<b class="fc">&nbsp;                righe.add(riga);</b>
+&nbsp;            }
+&nbsp;        }
+&nbsp;        else{
+<b class="fc">&nbsp;            for (MaterialeDidattico materialeDidattico : materialiDidattici) {</b>
+<b class="fc">&nbsp;                String[] riga = new String[]{</b>
+<b class="fc">&nbsp;                        materialeDidattico.getTitolo(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getCategoria().toString(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getDescrizione(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getDataPubblicazione().toString(),</b>
+<b class="fc">&nbsp;                        materialeDidattico.getSezione().getTitolo(),</b>
+&nbsp;                        &quot;⋮&quot;
+&nbsp;                };
+<b class="fc">&nbsp;                righe.add(riga);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="fc">&nbsp;        return righe;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public static List&lt;String[]&gt; visualizzaMateriali(String corso){
+<b class="fc">&nbsp;        return  visualizzaMateriali(corso,null,null);</b>
+&nbsp;    }
+&nbsp;    public static List&lt;String[]&gt; visualizzaMateriali(String corso, Object campo, String tipologia){
+&nbsp;
+<b class="fc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="fc">&nbsp;        Filtro filtro = new Filtro();</b>
+&nbsp;
+<b class="fc">&nbsp;        Set&lt;MaterialeDidattico&gt; materialiOriginali = gestoreCorso.recuperaMateriali(utenteLoggato, corso);</b>
+<b class="fc">&nbsp;        Set&lt;MaterialeDidattico&gt; materialiDidattici = new java.util.HashSet&lt;&gt;(materialiOriginali);</b>
+&nbsp;
+<b class="fc">&nbsp;        filtro.setStato(StringToStatoFiltro(tipologia));</b>
+<b class="fc">&nbsp;        filtro.filtra(materialiDidattici, campo);</b>
+<b class="fc">&nbsp;        return materialeInRighe(materialiDidattici);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static List&lt;String[]&gt; visualizzaMaterialiPubblicati(String corso){
+<b class="fc">&nbsp;        return visualizzaMaterialiPubblicati(corso,null,null);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static List&lt;String[]&gt; visualizzaMaterialiPubblicati(String corso, Object campo, String tipologia){
+<b class="fc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="fc">&nbsp;        Filtro filtro = new Filtro();</b>
+&nbsp;
+&nbsp;        // RECUPERA E COPIA IL SET per evitare danni al DB
+<b class="fc">&nbsp;        Set&lt;MaterialeDidattico&gt; materialiOriginali = gestoreCorso.recuperaMateriali(utenteLoggato, corso);</b>
+<b class="fc">&nbsp;        Set&lt;MaterialeDidattico&gt; materialiDidattici = new java.util.HashSet&lt;&gt;(materialiOriginali);</b>
+&nbsp;
+<b class="fc">&nbsp;        List&lt;String[]&gt; righe = new ArrayList&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        filtro.setStato(StringToStatoFiltro(tipologia));</b>
+<b class="fc">&nbsp;        filtro.filtra(materialiDidattici, campo);</b>
+<b class="fc">&nbsp;        filtro.setStato(new FiltroPubblicato());</b>
+<b class="fc">&nbsp;        filtro.filtra(materialiDidattici, null);</b>
+<b class="fc">&nbsp;        return materialeInRighe(materialiDidattici);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String getIdMateriale(String corso, String titolo){
+<b class="nc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        int idMateriale = gestoreCorso.getIdMateriale(utenteLoggato, corso,titolo);</b>
+<b class="nc">&nbsp;        return String.valueOf(idMateriale);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String[] getCategorieMateriali(){
+<b class="nc">&nbsp;        Categoria[] valoriEnum = Categoria.values();</b>
+&nbsp;
+<b class="nc">&nbsp;        String[] valoriStringa = new String[valoriEnum.length+1];</b>
+<b class="nc">&nbsp;        valoriStringa[0] = &quot;Seleziona la categoria&quot;;</b>
+&nbsp;
+<b class="nc">&nbsp;        for (int i = 0; i &lt; valoriEnum.length; i++) {</b>
+<b class="nc">&nbsp;            valoriStringa[i+1] = valoriEnum[i].toString();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return  valoriStringa;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String[] getVisibilita(){
+<b class="nc">&nbsp;        Visibilita[] valoriEnum = Visibilita.values();</b>
+&nbsp;
+<b class="nc">&nbsp;        String[] valoriStringa = new String[valoriEnum.length+1];</b>
+&nbsp;
+<b class="nc">&nbsp;        valoriStringa[0] = &quot;Seleziona la visibilità&quot;;</b>
+<b class="nc">&nbsp;        for (int i = 0; i &lt; valoriEnum.length; i++) {</b>
+<b class="nc">&nbsp;            valoriStringa[i+1] = valoriEnum[i].toString();</b>
+&nbsp;        }
+<b class="nc">&nbsp;        return  valoriStringa;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String[] getSezioni(String corso){
+<b class="nc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        Set&lt;Sezione&gt; valoriSezione = gestoreCorso.getSezioni(utenteLoggato, corso);</b>
+&nbsp;
+<b class="nc">&nbsp;        String[] valoriStringa = new String[valoriSezione.size()+1];</b>
+&nbsp;
+<b class="nc">&nbsp;        int i = 1;</b>
+<b class="nc">&nbsp;        valoriStringa[0] = &quot;Seleziona una sezione&quot;;</b>
+<b class="nc">&nbsp;        for (Sezione sezione : valoriSezione) {</b>
+<b class="nc">&nbsp;            valoriStringa[i] = sezione.getTitolo();</b>
+<b class="nc">&nbsp;            i++;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return  valoriStringa;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String getPercorsoFile(String corso, String titolo){
+<b class="nc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        return gestoreCorso.getPercorsoFile(utenteLoggato, corso, titolo);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean eliminaMateriale(String corso, String titolo){
+<b class="nc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        return gestoreCorso.rimuoviMateriale(utenteLoggato, corso, titolo);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean inserisciMateriale(String corso, String titolo, String descrizione,
+&nbsp;                                             String categoria, String visibilita, File fileScelto, String sezione){
+<b class="nc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        boolean esito = gestoreCorso.inserisciMateriale(utenteLoggato, corso, titolo, descrizione,</b>
+&nbsp;                categoria, visibilita,fileScelto,sezione);
+<b class="nc">&nbsp;        if(esito &amp;&amp; visibilita.equals(&quot;PUBBLICATO&quot;)){</b>
+<b class="nc">&nbsp;            gestoreNotifica.inviaNotifica((Docente) utenteLoggato, corso);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return esito;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    public static boolean modificaMateriale(String corso, String idMateriale, String titolo, String descrizione,
+&nbsp;                                            String categoria, String visibilita, File fileScelto, String sezione){
+<b class="nc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        boolean esito =gestoreCorso.modificaMateriale(utenteLoggato, corso, idMateriale, titolo, descrizione,</b>
+&nbsp;                categoria, visibilita,fileScelto,sezione);
+&nbsp;
+<b class="nc">&nbsp;        if(esito &amp;&amp; visibilita.equals(&quot;PUBBLICATO&quot;)){</b>
+<b class="nc">&nbsp;            gestoreNotifica.inviaNotifica((Docente) utenteLoggato, corso);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return esito;</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public static boolean apriMateriale(String corso, String titolo){
+<b class="nc">&nbsp;        Utente utenteLoggato = SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        return gestoreCorso.apriMateriale(utenteLoggato, corso, titolo);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static int inserimentoDatiUtente(String email, String matricola, String nome, String cognome, String password, boolean isStudente) {
+<b class="nc">&nbsp;        return gestoreUtente.inserimentoDatiUtente(email, matricola, nome, cognome, password, isStudente);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static int inserimentoCredenziali(String email, String password) {
+<b class="nc">&nbsp;        Utente utente = gestoreUtente.inserimentoCredenziali(email, password);</b>
+<b class="nc">&nbsp;        if (utente == null) {</b>
+<b class="nc">&nbsp;            return GestorePiattaforma.LOGIN_FALLITO;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        SessionManager.getInstance().setUtenteLoggato(utente);</b>
+&nbsp;
+&nbsp;        // Viene restituito alla GUI il codice corretto per aprire il frame giusto
+<b class="nc">&nbsp;        if (utente instanceof Studente) {</b>
+<b class="nc">&nbsp;            return GestorePiattaforma.LOGIN_SUCCESS_STUDENTE;</b>
+<b class="nc">&nbsp;        } else if (utente instanceof Docente) {</b>
+<b class="nc">&nbsp;            return GestorePiattaforma.LOGIN_SUCCESS_DOCENTE;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return GestorePiattaforma.LOGIN_FALLITO;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static List&lt;String[]&gt; visualizzaElencoCorsi(String emailUtente){
+&nbsp;        Collection&lt;Corso&gt; elencoCorsi;
+&nbsp;
+<b class="nc">&nbsp;        if(SessionManager.getInstance().getUtenteLoggato()instanceof Studente){</b>
+<b class="nc">&nbsp;            elencoCorsi=gestoreIscrizione.visualizzaElencoCorsi(emailUtente);</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="nc">&nbsp;            Docente d = (Docente) SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;            elencoCorsi = gestoreCorso.getCorsiPerDocente(d);</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        List&lt;String[]&gt; righe = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        if(elencoCorsi.isEmpty()){</b>
+<b class="nc">&nbsp;            String[] riga = new String[]{</b>
+&nbsp;                    &quot;Non ci sono corsi&quot;,
+&nbsp;                    &quot;&quot;,
+&nbsp;                    &quot;&quot;,
+&nbsp;                    &quot;&quot;,
+&nbsp;                    &quot;&quot;
+&nbsp;            };
+<b class="nc">&nbsp;            righe.add(riga);</b>
+&nbsp;        }
+&nbsp;        else{
+<b class="nc">&nbsp;            for (Corso corso : elencoCorsi) {</b>
+<b class="nc">&nbsp;                String[] riga = new String[]{</b>
+<b class="nc">&nbsp;                        String.valueOf(corso.getCodice()),</b>
+<b class="nc">&nbsp;                        corso.getTitolo(),</b>
+<b class="nc">&nbsp;                        corso.getDescrizione(),</b>
+<b class="nc">&nbsp;                        corso.getAnnoAccademico(),</b>
+&nbsp;                        &quot;⋮&quot;
+&nbsp;                };
+<b class="nc">&nbsp;                righe.add(riga);</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        return righe;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String[] visualizzaNotificheStudente(){
+<b class="nc">&nbsp;        Studente studente = (Studente) SessionManager.getInstance().getUtenteLoggato();</b>
+<b class="nc">&nbsp;        List&lt;Notifica&gt; notifiche =  gestoreNotifica.getNotifiche(studente);</b>
+<b class="nc">&nbsp;        String[] righe = new String[notifiche.size()];</b>
+&nbsp;
+<b class="nc">&nbsp;        int i = 0;</b>
+&nbsp;
+<b class="nc">&nbsp;        for (Notifica notifica : notifiche) {</b>
+<b class="nc">&nbsp;            righe[i] = notifica.getMessaggio();</b>
+<b class="nc">&nbsp;            i++;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        return righe;</b>
+&nbsp;        }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

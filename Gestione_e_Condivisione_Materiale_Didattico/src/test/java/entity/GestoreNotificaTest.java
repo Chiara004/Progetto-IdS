@@ -190,7 +190,7 @@ public class GestoreNotificaTest {
         assertEquals(1, notifiche.size(), "Lo studente deve avere esattamente una notifica");
     }
 
-    // TEST getNotifiche() - il contenuto della notifica è corretto
+    // TEST CONTENUTO CORRETTO DELLA NOTIFICA
     @Test
     void testGetNotifiche_ContenutoNotificaCorretto() {
         gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
@@ -202,7 +202,7 @@ public class GestoreNotificaTest {
                 "Il messaggio della notifica deve contenere il titolo del corso");
     }
 
-    // TEST getNotifiche() - uno studente vede solo le proprie notifiche
+    // TEST NOTIFICHE DISTINTE PER STUDENTI DIVERSI
     @Test
     void testGetNotifiche_StudentiVedonoSoloLeProprieNotifiche() {
         gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);
@@ -216,7 +216,7 @@ public class GestoreNotificaTest {
                 "Le notifiche dei due studenti devono essere distinte");
     }
 
-    // TEST getNotifiche() - studente non iscritto non ha notifiche
+    // TEST NOTIFICHE A STUDENTE NON ISCRITTO AL CORSO
     @Test
     void testGetNotifiche_StudenteNonIscritto_ListaVuota() {
         gestoreNotifica.inviaNotifica(docente, TITOLO_CORSO);

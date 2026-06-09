@@ -1,0 +1,503 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DocenteAggiungiModificaMateriali</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">boundary</a>
+</div>
+
+<h1>Coverage Summary for Class: DocenteAggiungiModificaMateriali (boundary)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DocenteAggiungiModificaMateriali</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/107)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">DocenteAggiungiModificaMateriali$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/20)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/21)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">DocenteAggiungiModificaMateriali$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">DocenteAggiungiModificaMateriali$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/6)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/44)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/137)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package boundary;
+&nbsp;
+&nbsp;import com.intellij.uiDesigner.core.GridConstraints;
+&nbsp;import com.intellij.uiDesigner.core.GridLayoutManager;
+&nbsp;import com.intellij.uiDesigner.core.Spacer;
+&nbsp;import control.GestorePiattaforma;
+&nbsp;
+&nbsp;import javax.swing.*;
+&nbsp;import javax.swing.plaf.FontUIResource;
+&nbsp;import javax.swing.text.StyleContext;
+&nbsp;import java.awt.*;
+&nbsp;import java.awt.event.ActionEvent;
+&nbsp;import java.awt.event.ActionListener;
+&nbsp;import java.io.File;
+&nbsp;import java.util.Locale;
+&nbsp;
+&nbsp;public class DocenteAggiungiModificaMateriali {
+&nbsp;    private JPanel contentPane;
+&nbsp;    private JLabel lbl_Aggiungi;
+&nbsp;    private JLabel lblTitolo;
+&nbsp;    private JLabel lblCategoria;
+&nbsp;    private JLabel lblSezione;
+&nbsp;    private JLabel lblFile;
+&nbsp;    private JLabel lblDescrizione;
+&nbsp;    private JLabel lblVisibilità;
+&nbsp;    private JTextField txtTitolo;
+&nbsp;    private JTextField txtDescrizione;
+&nbsp;    private JLabel lblPercorsoFile;
+&nbsp;    private JButton btnCarica;
+&nbsp;    private JComboBox cmbCategoria;
+&nbsp;    private JComboBox cmbSezione;
+&nbsp;    private JComboBox cmbVisibilita;
+&nbsp;    private JButton btnSalva;
+&nbsp;    private JButton btnAnnulla;
+&nbsp;
+<b class="nc">&nbsp;    private boolean isModifica = false;</b>
+&nbsp;    private JFrame myFrame;
+&nbsp;
+&nbsp;    //dati del docente
+&nbsp;    private String emailUtente;
+&nbsp;    private String corso;
+&nbsp;
+&nbsp;    private String idMateriale;
+<b class="nc">&nbsp;    private File fileScelto=null;</b>
+&nbsp;    private Runnable onSuccesso;
+&nbsp;
+&nbsp;    {
+&nbsp;// GUI initializer generated by IntelliJ IDEA GUI Designer
+&nbsp;// &gt;&gt;&gt; IMPORTANT!! &lt;&lt;&lt;
+&nbsp;// DO NOT EDIT OR ADD ANY CODE HERE!
+<b class="nc">&nbsp;        $$$setupUI$$$();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Method generated by IntelliJ IDEA GUI Designer
+&nbsp;     * &gt;&gt;&gt; IMPORTANT!! &lt;&lt;&lt;
+&nbsp;     * DO NOT edit this method OR call it in your code!
+&nbsp;     *
+&nbsp;     * @noinspection ALL
+&nbsp;     */
+&nbsp;    private void $$$setupUI$$$() {
+<b class="nc">&nbsp;        contentPane = new JPanel();</b>
+<b class="nc">&nbsp;        contentPane.setLayout(new GridLayoutManager(9, 4, new Insets(15, 20, 15, 20), 15, 15));</b>
+<b class="nc">&nbsp;        lbl_Aggiungi = new JLabel();</b>
+<b class="nc">&nbsp;        Font lbl_AggiungiFont = this.$$$getFont$$$(null, Font.BOLD, 16, lbl_Aggiungi.getFont());</b>
+<b class="nc">&nbsp;        if (lbl_AggiungiFont != null) lbl_Aggiungi.setFont(lbl_AggiungiFont);</b>
+<b class="nc">&nbsp;        lbl_Aggiungi.setHorizontalAlignment(0);</b>
+<b class="nc">&nbsp;        lbl_Aggiungi.setHorizontalTextPosition(0);</b>
+<b class="nc">&nbsp;        lbl_Aggiungi.setText(&quot;Aggiungi Nuovo Materiale&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lbl_Aggiungi, new GridConstraints(0, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lblTitolo = new JLabel();</b>
+<b class="nc">&nbsp;        lblTitolo.setText(&quot;Titolo Materiale:&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lblTitolo, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lblCategoria = new JLabel();</b>
+<b class="nc">&nbsp;        lblCategoria.setText(&quot;Categoria:&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lblCategoria, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lblSezione = new JLabel();</b>
+<b class="nc">&nbsp;        lblSezione.setText(&quot;Sezione:&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lblSezione, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lblFile = new JLabel();</b>
+<b class="nc">&nbsp;        lblFile.setText(&quot;File:&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lblFile, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lblDescrizione = new JLabel();</b>
+<b class="nc">&nbsp;        lblDescrizione.setText(&quot;Descrizione:&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lblDescrizione, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lblVisibilità = new JLabel();</b>
+<b class="nc">&nbsp;        lblVisibilità.setText(&quot;Visibilità&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lblVisibilità, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        txtTitolo = new JTextField();</b>
+<b class="nc">&nbsp;        contentPane.add(txtTitolo, new GridConstraints(1, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));</b>
+<b class="nc">&nbsp;        txtDescrizione = new JTextField();</b>
+<b class="nc">&nbsp;        contentPane.add(txtDescrizione, new GridConstraints(2, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));</b>
+<b class="nc">&nbsp;        lblPercorsoFile = new JLabel();</b>
+<b class="nc">&nbsp;        lblPercorsoFile.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(lblPercorsoFile, new GridConstraints(6, 2, 1, 2, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));</b>
+<b class="nc">&nbsp;        cmbCategoria = new JComboBox();</b>
+<b class="nc">&nbsp;        cmbCategoria.setToolTipText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(cmbCategoria, new GridConstraints(3, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        cmbSezione = new JComboBox();</b>
+<b class="nc">&nbsp;        contentPane.add(cmbSezione, new GridConstraints(4, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        cmbVisibilita = new JComboBox();</b>
+<b class="nc">&nbsp;        contentPane.add(cmbVisibilita, new GridConstraints(5, 1, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        btnCarica = new JButton();</b>
+<b class="nc">&nbsp;        btnCarica.setText(&quot;Carica File...&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(btnCarica, new GridConstraints(6, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        btnAnnulla = new JButton();</b>
+<b class="nc">&nbsp;        btnAnnulla.setText(&quot;Annulla&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(btnAnnulla, new GridConstraints(8, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(118, 34), null, 0, false));</b>
+<b class="nc">&nbsp;        btnSalva = new JButton();</b>
+<b class="nc">&nbsp;        btnSalva.setText(&quot;Salva&quot;);</b>
+<b class="nc">&nbsp;        contentPane.add(btnSalva, new GridConstraints(8, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(118, 34), null, 0, false));</b>
+<b class="nc">&nbsp;        final Spacer spacer1 = new Spacer();</b>
+<b class="nc">&nbsp;        contentPane.add(spacer1, new GridConstraints(7, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @noinspection ALL
+&nbsp;     */
+&nbsp;    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+<b class="nc">&nbsp;        if (currentFont == null) return null;</b>
+&nbsp;        String resultName;
+<b class="nc">&nbsp;        if (fontName == null) {</b>
+<b class="nc">&nbsp;            resultName = currentFont.getName();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            Font testFont = new Font(fontName, Font.PLAIN, 10);</b>
+<b class="nc">&nbsp;            if (testFont.canDisplay(&#39;a&#39;) &amp;&amp; testFont.canDisplay(&#39;1&#39;)) {</b>
+<b class="nc">&nbsp;                resultName = fontName;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                resultName = currentFont.getName();</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        Font font = new Font(resultName, style &gt;= 0 ? style : currentFont.getStyle(), size &gt;= 0 ? size : currentFont.getSize());</b>
+<b class="nc">&nbsp;        boolean isMac = System.getProperty(&quot;os.name&quot;, &quot;&quot;).toLowerCase(Locale.ENGLISH).startsWith(&quot;mac&quot;);</b>
+<b class="nc">&nbsp;        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());</b>
+<b class="nc">&nbsp;        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @noinspection ALL
+&nbsp;     */
+&nbsp;    public JComponent $$$getRootComponent$$$() {
+<b class="nc">&nbsp;        return contentPane;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public DocenteAggiungiModificaMateriali(String emailUtente, String corso) {</b>
+<b class="nc">&nbsp;        this.emailUtente = emailUtente;</b>
+<b class="nc">&nbsp;        this.corso = corso;</b>
+&nbsp;
+&nbsp;        //recupera i tipi e le sezioni
+<b class="nc">&nbsp;        cmbCategoria.setModel(new DefaultComboBoxModel(GestorePiattaforma.getCategorieMateriali()));</b>
+<b class="nc">&nbsp;        cmbVisibilita.setModel(new DefaultComboBoxModel(GestorePiattaforma.getVisibilita()));</b>
+<b class="nc">&nbsp;        cmbSezione.setModel(new DefaultComboBoxModel(GestorePiattaforma.getSezioni(this.corso)));</b>
+&nbsp;
+<b class="nc">&nbsp;        setAzioni();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public DocenteAggiungiModificaMateriali(String titolo, String descrizione, String categoria,
+<b class="nc">&nbsp;                                            String sezione, String visibilita, String emailUtente, String corso) {</b>
+<b class="nc">&nbsp;        this.isModifica = true;</b>
+<b class="nc">&nbsp;        this.emailUtente = emailUtente;</b>
+<b class="nc">&nbsp;        this.corso = corso;</b>
+&nbsp;
+&nbsp;        //recupera i tipi e le sezioni
+<b class="nc">&nbsp;        cmbCategoria.setModel(new DefaultComboBoxModel(GestorePiattaforma.getCategorieMateriali()));</b>
+<b class="nc">&nbsp;        cmbVisibilita.setModel(new DefaultComboBoxModel(GestorePiattaforma.getVisibilita()));</b>
+<b class="nc">&nbsp;        cmbSezione.setModel(new DefaultComboBoxModel(GestorePiattaforma.getSezioni(this.corso)));</b>
+<b class="nc">&nbsp;        lbl_Aggiungi.setText(&quot;Modifica Materiale&quot;);</b>
+<b class="nc">&nbsp;        txtTitolo.setText(titolo);</b>
+<b class="nc">&nbsp;        txtDescrizione.setText(descrizione);</b>
+<b class="nc">&nbsp;        cmbCategoria.setSelectedItem(categoria);</b>
+<b class="nc">&nbsp;        cmbSezione.setSelectedItem(sezione);</b>
+<b class="nc">&nbsp;        cmbVisibilita.setSelectedItem(visibilita);</b>
+<b class="nc">&nbsp;        lblPercorsoFile.setText(GestorePiattaforma.getPercorsoFile(this.corso, titolo));</b>
+<b class="nc">&nbsp;        this.idMateriale = GestorePiattaforma.getIdMateriale(this.corso, titolo);</b>
+<b class="nc">&nbsp;        setAzioni();</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    public JFrame apriDocenteAggiungiModificaMateriali() {
+&nbsp;        // Impostazioni base della finestra
+<b class="nc">&nbsp;        String titolo = &quot;Aggiungi Materiale&quot;;</b>
+<b class="nc">&nbsp;        if (isModifica) {</b>
+<b class="nc">&nbsp;            titolo = &quot;Modifica Materiale&quot;;</b>
+&nbsp;        }
+&nbsp;
+<b class="nc">&nbsp;        JFrame frame = new JFrame(&quot;Studio Paradigm - Dashboard Docente &quot; + titolo);</b>
+<b class="nc">&nbsp;        this.myFrame = frame;</b>
+<b class="nc">&nbsp;        frame.setContentPane(contentPane); // Collega il pannello principale</b>
+&nbsp;
+<b class="nc">&nbsp;        frame.setSize(750, 550);</b>
+<b class="nc">&nbsp;        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); //questo fa si che si chiuda solo il frame</b>
+&nbsp;
+<b class="nc">&nbsp;        frame.pack();</b>
+<b class="nc">&nbsp;        frame.setLocationRelativeTo(null);</b>
+<b class="nc">&nbsp;        frame.setVisible(true);</b>
+<b class="nc">&nbsp;        frame.setResizable(false);</b>
+&nbsp;
+<b class="nc">&nbsp;        return frame;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public void setOnSuccesso(Runnable onSuccesso) {
+<b class="nc">&nbsp;        this.onSuccesso = onSuccesso;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setAzioni() {
+&nbsp;        //azione bottone salva
+<b class="nc">&nbsp;        btnSalva.addActionListener(new ActionListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void actionPerformed(ActionEvent e) {
+<b class="nc">&nbsp;                String titolo = txtTitolo.getText();</b>
+<b class="nc">&nbsp;                String descrizione = txtDescrizione.getText();</b>
+<b class="nc">&nbsp;                String categoria = cmbCategoria.getSelectedItem().toString();</b>
+<b class="nc">&nbsp;                String visibilita = cmbVisibilita.getSelectedItem().toString();</b>
+<b class="nc">&nbsp;                String percorsoFile = lblPercorsoFile.getText();</b>
+<b class="nc">&nbsp;                String sezione = cmbSezione.getSelectedItem().toString();</b>
+<b class="nc">&nbsp;                if (titolo.isEmpty() || descrizione.isEmpty() || categoria.equals(&quot;Seleziona la categoria&quot;) || visibilita.equals(&quot;Seleziona la visibilità&quot;) || percorsoFile.isEmpty()) {</b>
+<b class="nc">&nbsp;                    JOptionPane.showMessageDialog(</b>
+&nbsp;                            null,
+&nbsp;                            &quot;Tutti i campi di testo eccetto la sezione sono obbligatori.&quot;,
+&nbsp;                            &quot;Errore di inserimento&quot;,
+&nbsp;                            JOptionPane.ERROR_MESSAGE
+&nbsp;                    );
+&nbsp;                    return;
+&nbsp;                }
+<b class="nc">&nbsp;                if(sezione.equals(&quot;Seleziona la sezione&quot;)){</b>
+<b class="nc">&nbsp;                    sezione=&quot;null&quot;;</b>
+&nbsp;                }
+&nbsp;
+&nbsp;                boolean esito;
+<b class="nc">&nbsp;                if(isModifica){</b>
+<b class="nc">&nbsp;                    esito = GestorePiattaforma.modificaMateriale(corso, idMateriale, titolo,descrizione,</b>
+&nbsp;                            categoria,visibilita,fileScelto,sezione);
+&nbsp;                }
+&nbsp;                else{
+<b class="nc">&nbsp;                    esito = GestorePiattaforma.inserisciMateriale(corso, titolo, descrizione,</b>
+&nbsp;                            categoria, visibilita,fileScelto,sezione);
+&nbsp;                }
+&nbsp;
+<b class="nc">&nbsp;                if(esito){</b>
+<b class="nc">&nbsp;                    JOptionPane.showMessageDialog(</b>
+&nbsp;                            null,
+&nbsp;                            &quot;Operazione completata con successo.&quot;,
+&nbsp;                            &quot;Operazione completata&quot;,
+&nbsp;                            JOptionPane.INFORMATION_MESSAGE
+&nbsp;                    );
+<b class="nc">&nbsp;                    if(onSuccesso != null){</b>
+<b class="nc">&nbsp;                        onSuccesso.run();</b>
+&nbsp;                    }
+<b class="nc">&nbsp;                    if (myFrame != null) {</b>
+<b class="nc">&nbsp;                        myFrame.dispose();</b>
+&nbsp;                    }
+&nbsp;                }
+&nbsp;                else{
+<b class="nc">&nbsp;                    JOptionPane.showMessageDialog(</b>
+&nbsp;                            null,
+&nbsp;                            &quot;Errore durante l&#39;operazione.&quot;,
+&nbsp;                            &quot;Errore durante l&#39;operazione&quot;,
+&nbsp;                            JOptionPane.ERROR_MESSAGE
+&nbsp;                    );
+&nbsp;                }
+&nbsp;
+&nbsp;
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;        //azione bottone annulla FATTO
+<b class="nc">&nbsp;        btnAnnulla.addActionListener(new ActionListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void actionPerformed(ActionEvent e) {
+<b class="nc">&nbsp;                if (myFrame != null) {</b>
+<b class="nc">&nbsp;                    myFrame.dispose();</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;        //azione bottone carica file fatto
+<b class="nc">&nbsp;        btnCarica.addActionListener(new ActionListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void actionPerformed(ActionEvent e) {
+<b class="nc">&nbsp;                JFileChooser fileChooser = new JFileChooser();</b>
+<b class="nc">&nbsp;                int risultato = fileChooser.showOpenDialog(myFrame);</b>
+<b class="nc">&nbsp;                if (risultato == JFileChooser.APPROVE_OPTION) {</b>
+<b class="nc">&nbsp;                    fileScelto = fileChooser.getSelectedFile();</b>
+<b class="nc">&nbsp;                    lblPercorsoFile.setText(fileScelto.getName());</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

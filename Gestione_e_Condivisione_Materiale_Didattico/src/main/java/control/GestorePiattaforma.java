@@ -220,7 +220,6 @@ public class GestorePiattaforma {
 
         SessionManager.getInstance().setUtenteLoggato(utente);
 
-        // Viene restituito alla GUI il codice corretto per aprire il frame giusto
         if (utente instanceof Studente) {
             return GestorePiattaforma.LOGIN_SUCCESS_STUDENTE;
         } else if (utente instanceof Docente) {

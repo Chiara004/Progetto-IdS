@@ -1,0 +1,516 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > AreaRiservataDocente</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">boundary</a>
+</div>
+
+<h1>Coverage Summary for Class: AreaRiservataDocente (boundary)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AreaRiservataDocente</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/90)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">AreaRiservataDocente$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/12)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AreaRiservataDocente$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/8)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AreaRiservataDocente$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/9)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">AreaRiservataDocente$4</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/19)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/42)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/121)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package boundary;
+&nbsp;
+&nbsp;import com.intellij.uiDesigner.core.GridConstraints;
+&nbsp;import com.intellij.uiDesigner.core.GridLayoutManager;
+&nbsp;import com.intellij.uiDesigner.core.Spacer;
+&nbsp;import control.GestorePiattaforma;
+&nbsp;import control.SessionManager;
+&nbsp;
+&nbsp;import javax.swing.*;
+&nbsp;import javax.swing.plaf.FontUIResource;
+&nbsp;import javax.swing.table.DefaultTableCellRenderer;
+&nbsp;import javax.swing.table.DefaultTableModel;
+&nbsp;import javax.swing.text.StyleContext;
+&nbsp;import java.awt.*;
+&nbsp;import java.awt.event.ActionEvent;
+&nbsp;import java.awt.event.ActionListener;
+&nbsp;import java.awt.event.MouseAdapter;
+&nbsp;import java.awt.event.MouseEvent;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Locale;
+&nbsp;
+&nbsp;public class AreaRiservataDocente {
+&nbsp;    private JPanel contentPane;
+&nbsp;    private JScrollPane contentMateriali;
+&nbsp;    private JTable tblMateriali;
+&nbsp;    private JPanel contentInformazioniDocente;
+&nbsp;    private JLabel lblCorsi;
+&nbsp;    private JLabel lbl_informazioniDocente;
+&nbsp;    private JPanel descrizioneDashboard;
+&nbsp;    private JLabel iconaLogo;
+&nbsp;    private JButton btnLogout;
+&nbsp;
+&nbsp;    private JFrame myFrame;
+&nbsp;    private JFrame frameLogin;
+&nbsp;
+&nbsp;    //componenti per le operazioni sui materiali didattici
+&nbsp;    private DefaultTableModel tableModel;
+&nbsp;    private JPopupMenu contextMenu;
+&nbsp;    private JMenuItem menuApri;
+&nbsp;
+&nbsp;    private String emailUtente;
+&nbsp;
+&nbsp;
+&nbsp;    {
+&nbsp;// GUI initializer generated by IntelliJ IDEA GUI Designer
+&nbsp;// &gt;&gt;&gt; IMPORTANT!! &lt;&lt;&lt;
+&nbsp;// DO NOT EDIT OR ADD ANY CODE HERE!
+<b class="nc">&nbsp;        $$$setupUI$$$();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Method generated by IntelliJ IDEA GUI Designer
+&nbsp;     * &gt;&gt;&gt; IMPORTANT!! &lt;&lt;&lt;
+&nbsp;     * DO NOT edit this method OR call it in your code!
+&nbsp;     *
+&nbsp;     * @noinspection ALL
+&nbsp;     */
+&nbsp;    private void $$$setupUI$$$() {
+<b class="nc">&nbsp;        contentPane = new JPanel();</b>
+<b class="nc">&nbsp;        contentPane.setLayout(new GridLayoutManager(3, 2, new Insets(10, 10, 10, 10), -1, -1));</b>
+<b class="nc">&nbsp;        descrizioneDashboard = new JPanel();</b>
+<b class="nc">&nbsp;        descrizioneDashboard.setLayout(new GridLayoutManager(3, 1, new Insets(0, 0, 0, 0), -1, -1));</b>
+<b class="nc">&nbsp;        contentPane.add(descrizioneDashboard, new GridConstraints(0, 0, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        iconaLogo = new JLabel();</b>
+<b class="nc">&nbsp;        iconaLogo.setText(&quot;&quot;);</b>
+<b class="nc">&nbsp;        descrizioneDashboard.add(iconaLogo, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        btnLogout = new JButton();</b>
+<b class="nc">&nbsp;        Font btnLogoutFont = this.$$$getFont$$$(null, Font.BOLD, 14, btnLogout.getFont());</b>
+<b class="nc">&nbsp;        if (btnLogoutFont != null) btnLogout.setFont(btnLogoutFont);</b>
+<b class="nc">&nbsp;        btnLogout.setMargin(new Insets(10, 10, 10, 10));</b>
+<b class="nc">&nbsp;        btnLogout.setText(&quot;Logout&quot;);</b>
+<b class="nc">&nbsp;        descrizioneDashboard.add(btnLogout, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        final Spacer spacer1 = new Spacer();</b>
+<b class="nc">&nbsp;        descrizioneDashboard.add(spacer1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        contentMateriali = new JScrollPane();</b>
+<b class="nc">&nbsp;        contentPane.add(contentMateriali, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        tblMateriali = new JTable();</b>
+<b class="nc">&nbsp;        tblMateriali.setMaximumSize(new Dimension(2147483647, 50));</b>
+<b class="nc">&nbsp;        tblMateriali.setPreferredSize(new Dimension(150, 50));</b>
+<b class="nc">&nbsp;        tblMateriali.setRowHeight(25);</b>
+<b class="nc">&nbsp;        contentMateriali.setViewportView(tblMateriali);</b>
+<b class="nc">&nbsp;        contentInformazioniDocente = new JPanel();</b>
+<b class="nc">&nbsp;        contentInformazioniDocente.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));</b>
+<b class="nc">&nbsp;        contentPane.add(contentInformazioniDocente, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lblCorsi = new JLabel();</b>
+<b class="nc">&nbsp;        Font lblCorsiFont = this.$$$getFont$$$(null, Font.BOLD, 16, lblCorsi.getFont());</b>
+<b class="nc">&nbsp;        if (lblCorsiFont != null) lblCorsi.setFont(lblCorsiFont);</b>
+<b class="nc">&nbsp;        lblCorsi.setText(&quot;Area Riservata del Docente&quot;);</b>
+<b class="nc">&nbsp;        contentInformazioniDocente.add(lblCorsi, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        lbl_informazioniDocente = new JLabel();</b>
+<b class="nc">&nbsp;        Font lbl_informazioniDocenteFont = this.$$$getFont$$$(null, Font.BOLD, 16, lbl_informazioniDocente.getFont());</b>
+<b class="nc">&nbsp;        if (lbl_informazioniDocenteFont != null) lbl_informazioniDocente.setFont(lbl_informazioniDocenteFont);</b>
+<b class="nc">&nbsp;        lbl_informazioniDocente.setText(&quot;Label&quot;);</b>
+<b class="nc">&nbsp;        contentInformazioniDocente.add(lbl_informazioniDocente, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));</b>
+<b class="nc">&nbsp;        final Spacer spacer2 = new Spacer();</b>
+<b class="nc">&nbsp;        contentPane.add(spacer2, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @noinspection ALL
+&nbsp;     */
+&nbsp;    private Font $$$getFont$$$(String fontName, int style, int size, Font currentFont) {
+<b class="nc">&nbsp;        if (currentFont == null) return null;</b>
+&nbsp;        String resultName;
+<b class="nc">&nbsp;        if (fontName == null) {</b>
+<b class="nc">&nbsp;            resultName = currentFont.getName();</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            Font testFont = new Font(fontName, Font.PLAIN, 10);</b>
+<b class="nc">&nbsp;            if (testFont.canDisplay(&#39;a&#39;) &amp;&amp; testFont.canDisplay(&#39;1&#39;)) {</b>
+<b class="nc">&nbsp;                resultName = fontName;</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                resultName = currentFont.getName();</b>
+&nbsp;            }
+&nbsp;        }
+<b class="nc">&nbsp;        Font font = new Font(resultName, style &gt;= 0 ? style : currentFont.getStyle(), size &gt;= 0 ? size : currentFont.getSize());</b>
+<b class="nc">&nbsp;        boolean isMac = System.getProperty(&quot;os.name&quot;, &quot;&quot;).toLowerCase(Locale.ENGLISH).startsWith(&quot;mac&quot;);</b>
+<b class="nc">&nbsp;        Font fontWithFallback = isMac ? new Font(font.getFamily(), font.getStyle(), font.getSize()) : new StyleContext().getFont(font.getFamily(), font.getStyle(), font.getSize());</b>
+<b class="nc">&nbsp;        return fontWithFallback instanceof FontUIResource ? fontWithFallback : new FontUIResource(fontWithFallback);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @noinspection ALL
+&nbsp;     */
+&nbsp;    public JComponent $$$getRootComponent$$$() {
+<b class="nc">&nbsp;        return contentPane;</b>
+&nbsp;    }
+&nbsp;
+<b class="nc">&nbsp;    public AreaRiservataDocente(String emailUtente) {</b>
+<b class="nc">&nbsp;        this.emailUtente = emailUtente;</b>
+<b class="nc">&nbsp;        inizializzaTabella();</b>
+<b class="nc">&nbsp;        inizializzaMenu();</b>
+<b class="nc">&nbsp;        setAzioni();</b>
+<b class="nc">&nbsp;        aggiornaTabellaMateriali();</b>
+<b class="nc">&nbsp;        lbl_informazioniDocente.setText(emailUtente);</b>
+&nbsp;
+<b class="nc">&nbsp;        ImageIcon logoIcon = new ImageIcon(getClass().getResource(&quot;/logoPiattaforma.png&quot;));</b>
+<b class="nc">&nbsp;        Image img = logoIcon.getImage().getScaledInstance(80, 80, Image.SCALE_SMOOTH);</b>
+<b class="nc">&nbsp;        iconaLogo.setIcon(new ImageIcon(img));</b>
+<b class="nc">&nbsp;        iconaLogo.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));</b>
+<b class="nc">&nbsp;        iconaLogo.setHorizontalAlignment(SwingConstants.CENTER);</b>
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void inizializzaMenu() {
+<b class="nc">&nbsp;        contextMenu = new JPopupMenu();</b>
+<b class="nc">&nbsp;        menuApri = new JMenuItem(&quot;Apri Materiale&quot;);</b>
+&nbsp;
+<b class="nc">&nbsp;        contextMenu.add(menuApri);</b>
+&nbsp;
+&nbsp;        //collegamento per far apparire il menu
+<b class="nc">&nbsp;        tblMateriali.addMouseListener(new MouseAdapter() {</b>
+&nbsp;
+&nbsp;            // tasto destro
+&nbsp;            @Override
+&nbsp;            public void mousePressed(MouseEvent e) {
+<b class="nc">&nbsp;                if (e.isPopupTrigger())</b>
+<b class="nc">&nbsp;                    mouseClicked(e);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            @Override
+&nbsp;            public void mouseReleased(MouseEvent e) {
+<b class="nc">&nbsp;                if (e.isPopupTrigger())</b>
+<b class="nc">&nbsp;                    mouseClicked(e);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // click sinistro sulla colonna ⋮
+&nbsp;            @Override
+&nbsp;            public void mouseClicked(MouseEvent e) {
+<b class="nc">&nbsp;                int col = tblMateriali.columnAtPoint(e.getPoint());</b>
+<b class="nc">&nbsp;                int row = tblMateriali.rowAtPoint(e.getPoint());</b>
+<b class="nc">&nbsp;                if (col == 4 &amp;&amp; row &gt;= 0 &amp;&amp; row &lt; tblMateriali.getRowCount()) {</b>
+<b class="nc">&nbsp;                    String valorePrimaColonna = (String) tblMateriali.getValueAt(row, 0);</b>
+<b class="nc">&nbsp;                    if (&quot;Non ci sono corsi&quot;.equals(valorePrimaColonna)) {</b>
+&nbsp;                        // Se c&#39;è scritto &quot;Non ci sono corsi&quot;, ignoriamo il click.
+&nbsp;                        return;
+&nbsp;                    }
+<b class="nc">&nbsp;                    tblMateriali.setRowSelectionInterval(row, row);</b>
+<b class="nc">&nbsp;                    contextMenu.show(e.getComponent(), e.getX(), e.getY());</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+&nbsp;        });
+&nbsp;    }
+&nbsp;
+&nbsp;    public JFrame apriAreaRiservataDocente() {
+&nbsp;        // 1. Impostazioni base della finestra
+<b class="nc">&nbsp;        JFrame frame = new JFrame(&quot;Studio Paradigm - Area Riservata Docente&quot;);</b>
+<b class="nc">&nbsp;        this.myFrame = frame;</b>
+<b class="nc">&nbsp;        frame.setContentPane(contentPane); // Collega il pannello principale</b>
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;        frame.setSize(800, 600);</b>
+<b class="nc">&nbsp;        frame.setLocationRelativeTo(null);</b>
+<b class="nc">&nbsp;        frame.setVisible(true);</b>
+<b class="nc">&nbsp;        frame.setResizable(false);</b>
+<b class="nc">&nbsp;        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);</b>
+&nbsp;
+<b class="nc">&nbsp;        return frame;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void setAzioni() {
+&nbsp;        //Azione click Apri
+<b class="nc">&nbsp;        menuApri.addActionListener(new ActionListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void actionPerformed(ActionEvent e) {
+<b class="nc">&nbsp;                int rigaSelezionata = tblMateriali.getSelectedRow();</b>
+&nbsp;
+&nbsp;                // Prima controlliamo che una riga sia effettivamente selezionata!
+<b class="nc">&nbsp;                if (rigaSelezionata != -1) {</b>
+<b class="nc">&nbsp;                    String titoloSelezionato = tblMateriali.getValueAt(rigaSelezionata, 1).toString();</b>
+<b class="nc">&nbsp;                    if (myFrame != null) {</b>
+<b class="nc">&nbsp;                        myFrame.dispose();</b>
+&nbsp;
+<b class="nc">&nbsp;                        DocenteDashboardMateriali form = new DocenteDashboardMateriali(emailUtente, String.valueOf(tblMateriali.getValueAt(rigaSelezionata, 1)));</b>
+&nbsp;
+<b class="nc">&nbsp;                        form.apriDocenteDashboard();</b>
+&nbsp;                    }
+&nbsp;
+&nbsp;
+&nbsp;                }
+&nbsp;            }
+&nbsp;        });
+&nbsp;        //bottone logout FATTO
+<b class="nc">&nbsp;        btnLogout.addActionListener(new ActionListener() {</b>
+&nbsp;            @Override
+&nbsp;            public void actionPerformed(ActionEvent e) {
+<b class="nc">&nbsp;                JOptionPane.showMessageDialog(</b>
+&nbsp;                        null,
+&nbsp;                        &quot;Logout effettuato con successo! Arrivederci.&quot;,
+&nbsp;                        &quot;Ritorno al login&quot;,
+&nbsp;                        JOptionPane.INFORMATION_MESSAGE
+&nbsp;                );
+&nbsp;
+<b class="nc">&nbsp;                if (myFrame != null) {</b>
+<b class="nc">&nbsp;                    myFrame.dispose();</b>
+<b class="nc">&nbsp;                    SessionManager.getInstance().logout();</b>
+<b class="nc">&nbsp;                    LoginForm form = new LoginForm();</b>
+<b class="nc">&nbsp;                    frameLogin = form.apriLoginForm();</b>
+<b class="nc">&nbsp;                    frameLogin.setLocationRelativeTo(null);</b>
+<b class="nc">&nbsp;                    frameLogin.setVisible(true);</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;        });
+&nbsp;
+&nbsp;    }
+&nbsp;
+&nbsp;    private void inizializzaTabella() {
+&nbsp;        // Definisci i nomi delle colonne
+<b class="nc">&nbsp;        String[] nomiColonne = {&quot;Codice&quot;, &quot;Titolo&quot;, &quot;Descrizione&quot;, &quot;Anno Accademico&quot;, &quot;Materiale&quot;};</b>
+&nbsp;
+&nbsp;        // Crea il modello personalizzato bloccando la modifica delle celle
+<b class="nc">&nbsp;        tableModel = new DefaultTableModel(nomiColonne, 0) {</b>
+&nbsp;            @Override
+&nbsp;            public boolean isCellEditable(int row, int column) {
+<b class="nc">&nbsp;                return false;</b>
+&nbsp;            }
+&nbsp;        };
+&nbsp;
+&nbsp;        // Imposta il modello della tabella come modello della visualizzazione
+<b class="nc">&nbsp;        tblMateriali.setModel(tableModel);</b>
+&nbsp;
+<b class="nc">&nbsp;        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();</b>
+<b class="nc">&nbsp;        centerRenderer.setHorizontalAlignment(JLabel.CENTER);</b>
+<b class="nc">&nbsp;        tblMateriali.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);</b>
+<b class="nc">&nbsp;        tblMateriali.getColumnModel().getColumn(4).setPreferredWidth(50);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    //metodo per popolare la tabella
+&nbsp;    public void aggiornaTabellaMateriali() {
+&nbsp;        // Richiama il tuo metodo per ottenere i dati
+<b class="nc">&nbsp;        List&lt;String[]&gt; datiCorsi = GestorePiattaforma.visualizzaElencoCorsi(emailUtente);</b>
+&nbsp;
+&nbsp;        //Ottieni il modello della tua JTable
+<b class="nc">&nbsp;        tableModel = (DefaultTableModel) tblMateriali.getModel();</b>
+&nbsp;
+&nbsp;        // Pulire la tabella dai dati vecchi
+<b class="nc">&nbsp;        tableModel.setRowCount(0);</b>
+&nbsp;
+&nbsp;        //Cicla la lista e aggiunge ogni array come riga al modello
+<b class="nc">&nbsp;        for (String[] riga : datiCorsi) {</b>
+<b class="nc">&nbsp;            tableModel.addRow(riga);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>

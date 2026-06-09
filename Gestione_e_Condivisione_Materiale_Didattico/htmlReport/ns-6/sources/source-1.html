@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > MainApp</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">eseguibile</a>
+</div>
+
+<h1>Coverage Summary for Class: MainApp (eseguibile)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MainApp</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/15)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">MainApp$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/3)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/18)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package eseguibile;
+&nbsp;import boundary.LoginForm;
+&nbsp;import database.JpaUtil;
+&nbsp;import jakarta.persistence.EntityManager;
+&nbsp;import database.Popolamento;
+&nbsp;import boundary.LoginForm.*;
+&nbsp;import javax.swing.*;
+&nbsp;
+<b class="nc">&nbsp;public class MainApp {</b>
+&nbsp;
+&nbsp;    public static void main(String[] args) {
+<b class="nc">&nbsp;        System.out.println(&quot;=== AVVIO APPLICAZIONE ===&quot;);</b>
+&nbsp;
+&nbsp;        try {
+&nbsp;            // 1. Singleton JpaUtil
+<b class="nc">&nbsp;            JpaUtil jpaUtil = JpaUtil.getInstance();</b>
+&nbsp;
+&nbsp;            // 2. EntityManager per il seeding
+<b class="nc">&nbsp;            EntityManager em = jpaUtil.getEntityManager();</b>
+<b class="nc">&nbsp;            System.out.println(&quot;Connessione al database stabilita.&quot;);</b>
+&nbsp;
+&nbsp;            // 3. Popolamento da CSV (solo se tabelle vuote)
+<b class="nc">&nbsp;            Popolamento dataset = new Popolamento(em);</b>
+<b class="nc">&nbsp;            dataset.popolaDatabase();</b>
+&nbsp;
+&nbsp;            // 4. Chiudiamo l&#39;EntityManager del seeding
+&nbsp;            em.close();
+&nbsp;
+<b class="nc">&nbsp;            System.out.println(&quot;Database pronto.&quot;);</b>
+&nbsp;
+&nbsp;            // 5. Avvio GUI sul thread di Swing
+&nbsp;
+&nbsp;
+<b class="nc">&nbsp;            SwingUtilities.invokeLater(new Runnable() {</b>
+&nbsp;                @Override
+&nbsp;                public void run() {
+<b class="nc">&nbsp;                    LoginForm mainFrame = new LoginForm();</b>
+<b class="nc">&nbsp;                    mainFrame.apriLoginForm();</b>
+&nbsp;                }
+&nbsp;            });
+&nbsp;
+<b class="nc">&nbsp;            System.out.println(&quot;=== DATABASE INIZIALIZZATO E GUI AVVIATA ===&quot;);</b>
+&nbsp;
+&nbsp;            // La factory deve restare aperta per tutta la vita dell&#39;applicazione.
+<b class="nc">&nbsp;            Runtime.getRuntime().addShutdownHook(new Thread(() -&gt; {</b>
+<b class="nc">&nbsp;                System.out.println(&quot;Chiusura risorse JPA...&quot;);</b>
+<b class="nc">&nbsp;                jpaUtil.chiudi();</b>
+&nbsp;            }));
+&nbsp;
+&nbsp;        } catch (Exception e) {
+<b class="nc">&nbsp;            System.err.println(&quot;Errore critico durante l&#39;avvio:&quot;);</b>
+<b class="nc">&nbsp;            e.printStackTrace();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2026-06-09 18:26</div>
+</div>
+</body>
+</html>
