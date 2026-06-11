@@ -29,7 +29,9 @@ public class GestoreCorso {
 
         if(m != null){
             // 1. Elimina il file fisico
-            gestoreFile.eliminaFileFisico(m.getPercorsoFile());
+            boolean esito = gestoreFile.eliminaFileFisico(m.getPercorsoFile());
+            if(!esito)
+                return false;
 
             // 2. Scollega dalla sezione(se presente)
             if (m.getSezione() != null) {
@@ -87,7 +89,6 @@ public class GestoreCorso {
         String percorsoFileCorrente = c.getMaterialeDidatticoPerId(Integer.parseInt(idMateriale)).getPercorsoFile();
         String percorsoFile;
         if(fileScelto != null){
-            gestoreFile.eliminaFileFisico(percorsoFileCorrente);
             percorsoFile = gestoreFile.salvaFile(fileScelto);
         }
         else{
@@ -96,10 +97,17 @@ public class GestoreCorso {
 
         boolean esito = c.modificaMateriale(idMateriale,titolo,descrizione,visibilita, percorsoFile, sezione, categoria);
         if (esito){
+            if(fileScelto != null)
+                gestoreFile.eliminaFileFisico(percorsoFileCorrente);
             MaterialeDidattico m = c.getMaterialeDidatticoPerTitolo(titolo);
             gestorePersistenza.aggiorna(m);
             gestorePersistenza.aggiorna(c);
         }
+        else{
+            if(fileScelto != null)
+                gestoreFile.eliminaFileFisico(percorsoFile);
+        }
+
         return esito;
     }
 

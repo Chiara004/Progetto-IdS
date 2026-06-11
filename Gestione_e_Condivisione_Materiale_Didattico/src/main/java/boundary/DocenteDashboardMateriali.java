@@ -362,9 +362,16 @@ public class DocenteDashboardMateriali {
                 );
 
                 if (scelta == JOptionPane.YES_OPTION) {
-                    GestorePiattaforma.eliminaMateriale(nomeCorso, titoloSelezionato);
-                    aggiornaTabellaMateriali();
-                    JOptionPane.showMessageDialog(myFrame, "Materiale eliminato con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
+                    boolean esito = GestorePiattaforma.eliminaMateriale(nomeCorso, titoloSelezionato);
+                    if (esito) {
+                        // Successo
+                        aggiornaTabellaMateriali();
+                        JOptionPane.showMessageDialog(myFrame, "Materiale eliminato con successo.", "Operazione completata", JOptionPane.INFORMATION_MESSAGE);
+                    } else {
+                        // Fallimento
+                        JOptionPane.showMessageDialog(myFrame, "Errore: Impossibile eliminare il materiale. Potrebbe essere già stato rimosso o il file risulta bloccato.", "Errore di eliminazione", JOptionPane.ERROR_MESSAGE);
+                    }
+
                 } else {
                     JOptionPane.showMessageDialog(myFrame, "Operazione annullata.", "Attenzione", JOptionPane.WARNING_MESSAGE);
                 }

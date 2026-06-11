@@ -224,8 +224,9 @@ public class GestoreUtenteTest {
     //TEST REGISTRAZIONE MATRICOLA 256 CARATTERI
     @Test
     void testRegistrazione_MatricolaDocente256Caratteri_Rifiutato() {
+        String matricola256 = "DOC"+stringa(253);
         int esito = gestoreUtente.inserimentoDatiUtente(
-                EMAIL_STUDENTE_NUOVA, MATRICOLA_STUDENTE_NUOVA, "Mario", STRINGA_256, "pwd", true);
+                EMAIL_DOCENTE_NUOVA, matricola256, "Mario", "Rossi", "pwd", false);
 
         assertEquals(GestoreUtente.REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO, esito,
                 "Un matricola di 256 caratteri deve essere rifiutato");

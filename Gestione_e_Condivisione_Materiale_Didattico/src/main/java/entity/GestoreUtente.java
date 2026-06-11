@@ -49,9 +49,11 @@ public class GestoreUtente {
             }
         } else {
             // Regola Docente: Deve iniziare con DOC ed essere più lunga di 3 caratteri
-            if (!mat.startsWith("DOC") || mat.length() <= 3 || mat.length() > 255) {
+            if (!mat.startsWith("DOC") || mat.length() <= 3) {
                 return REGISTRAZIONE_FALLITA_MATRICOLA_ERRATA;
             }
+            else if(mat.length() > 255)
+                return REGISTRAZIONE_FALLITA_CAMPO_TROPPO_LUNGO;
         }
 
         String emailLower = email.toLowerCase().trim();

@@ -74,6 +74,10 @@ public class CorsoTest {
         gestorePersistenza.elimina(Utente.class, MATRICOLA_DOCENTE);
     }
 
+    //----------------------
+    //TEST BLACK BOX
+    //----------------------
+
     //INSERIMENTO MATERIALE VALIDO SENZA SEZIONE
     @Test
     void testInserisciMateriale_DatiValidi_SenzaSezione() {
@@ -125,35 +129,7 @@ public class CorsoTest {
         assertFalse(esito, "Un titolo già esistente (stesso case) deve essere rifiutato");
     }
 
-    //INSERIMENTO INVALIDO PERCHE TITOLO NON VALIDO (OMINIMO CON CASE DIVERSO
-    @Test
-    void testInserisciMateriale_TitoloOmonimo_CaseDiverso() {
-        boolean esito = corso.inserisciMateriale(
-                TITOLO_MAT_ESISTENTE.toLowerCase(),
-                "Altra descrizione",
-                "PUBBLICATO",
-                "/files/altro.pdf",
-                "null",
-                "SLIDE"
-        );
-        assertFalse(esito, "Un titolo omonimo (case diverso) deve essere rifiutato per equalsIgnoreCase");
-    }
 
-    //INSERIMENTO VALIDO DOPO TITOLO NON VALIDO
-    @Test
-    void testInserisciMateriale_TitoloNuovoDopoOmonimiaRifiutata() {
-        corso.inserisciMateriale(TITOLO_MAT_ESISTENTE, "desc", "PUBBLICO", "/f.pdf", "null", "SLIDE");
-        boolean esito = corso.inserisciMateriale(
-                "Titolo Completamente Nuovo",
-                "desc",
-                "PUBBLICATO",
-                "/files/nuovo.pdf",
-                "null",
-                "SLIDE"
-        );
-
-        assertTrue(esito, "Dopo un rifiuto per omonimia, un titolo diverso deve essere accettato");
-    }
 
     //TEST MODIFICA MATERIALE VALIDO
     @Test
@@ -201,25 +177,6 @@ public class CorsoTest {
         assertFalse(esito, "Non si può rinominare un materiale con un titolo già usato da un altro");
     }
 
-    //TEST MODIFICA MATERIALE VALIDO (NON CAMBIARE IL TITOLO NON E' OMINIMIA)
-    @Test
-    void testModificaMateriale_StessoTitoloStessoMateriale() {
-        MaterialeDidattico esistente = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
-        assertNotNull(esistente);
-        String idStr = String.valueOf(esistente.getIdMateriale());
-
-        boolean esito = corso.modificaMateriale(
-                idStr,
-                TITOLO_MAT_ESISTENTE,   // stesso titolo — non è omonimia con un ALTRO materiale
-                "Descrizione aggiornata",
-                "PUBBLICATO",
-                "/files/slide_intro_v2.pdf",
-                "null",
-                "SLIDE"
-        );
-
-        assertTrue(esito, "Mantenere lo stesso titolo sullo stesso materiale non è omonimia e deve passare");
-    }
 
     //TEST MODIFICA MATERIALE CON SEZIONE VALIDO
     @Test
@@ -260,124 +217,6 @@ public class CorsoTest {
         // Assert
         assertNull(corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE),
                 "Il materiale deve essere assente dopo la rimozione");
-    }
-
-    //TEST RIMOZIONE MATERIALE
-    @Test
-    void testRimuoviMateriale_AltriMaterialiNonInfluenzati() {
-        // Arrange: inserisco un secondo materiale, poi rimuovo solo il primo
-        corso.inserisciMateriale("Materiale Da Tenere", "desc", "PUBBLICATO", "/f.pdf", "null", "SLIDE");
-        MaterialeDidattico daTenere  = corso.getMaterialeDidatticoPerTitolo("Materiale Da Tenere");
-        MaterialeDidattico daRimuovere = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
-
-        // Act
-        corso.rimuoviMateriale(daRimuovere);
-
-        // Assert
-        assertNotNull(corso.getMaterialeDidatticoPerTitolo("Materiale Da Tenere"),
-                "Gli altri materiali non devono essere rimossi");
-        assertNull(corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE),
-                "Solo il materiale rimosso deve sparire");
-    }
-
-    //TEST TROVA MATERIALE PER TITOLO
-    @Test
-    void testGetMaterialePerTitolo_Trovato() {
-        // Act
-        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
-
-        // Assert
-        assertNotNull(trovato, "Deve trovare il materiale con il titolo esatto");
-        assertEquals(TITOLO_MAT_ESISTENTE, trovato.getTitolo());
-    }
-
-    //TEST TROVA MATERIALE PER TITOLO NON TROVATO
-    @Test
-    void testGetMaterialePerTitolo_NonTrovato() {
-        // Act
-        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerTitolo("Titolo Inesistente");
-
-        // Assert
-        assertNull(trovato, "Deve restituire null se nessun materiale ha quel titolo");
-    }
-
-    //TEST TROVA MATERIALE PER TITOLO CON CASE DIVERSO
-    @Test
-    void testGetMaterialePerTitolo_CaseSensitive() {
-        // getMaterialeDidatticoPerTitolo usa equals (case-sensitive), a differenza di inserisciMateriale
-        // Act
-        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE.toLowerCase());
-
-        // Assert
-        assertNull(trovato, "La ricerca per titolo è case-sensitive: il lowercase non deve trovare il materiale");
-    }
-
-    //TEST TROVA MATERIALE PER ID
-    @Test
-    void testGetMaterialePerId_Trovato() {
-        // Arrange
-        MaterialeDidattico esistente = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
-        assertNotNull(esistente);
-        int id = esistente.getIdMateriale();
-
-        // Act
-        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerId(id);
-
-        // Assert
-        assertNotNull(trovato, "Deve trovare il materiale con l'id corretto");
-        assertEquals(id, trovato.getIdMateriale());
-    }
-
-    //TEST TROVA MATERIALE PER ID NON TROVATO
-    @Test
-    void testGetMaterialePerId_NonTrovato() {
-        // Act
-        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerId(-999);
-
-        // Assert
-        assertNull(trovato, "Deve restituire null per un id inesistente");
-    }
-
-    //TEST TROVA SEZIONE PER TITOLO
-    @Test
-    void testGetSezionePerTitolo_Trovata() {
-        // Act
-        Sezione trovata = corso.getSezionePerTitolo(TITOLO_SEZIONE);
-
-        // Assert
-        assertNotNull(trovata, "Deve trovare la sezione con il titolo corretto");
-        assertEquals(TITOLO_SEZIONE, trovata.getTitolo());
-    }
-
-    //TEST TROVA SEZIONE PER TITOLO NON TROVATA
-    @Test
-    void testGetSezionePerTitolo_NonTrovata() {
-        // Act
-        Sezione trovata = corso.getSezionePerTitolo("Sezione Inesistente");
-
-        // Assert
-        assertNull(trovata, "Deve restituire null per una sezione con titolo non presente");
-    }
-
-    //TEST TROVA SEZIONE PER TITOLO CON CASE DIVERSO
-    @Test
-    void testGetSezionePerTitolo_CaseSensitive() {
-        // getSezionePerTitolo usa equals, quindi il case conta
-        Sezione trovata = corso.getSezionePerTitolo(TITOLO_SEZIONE.toLowerCase());
-
-        assertNull(trovata, "La ricerca sezione è case-sensitive: il lowercase non deve trovare la sezione");
-    }
-
-    //TEST EQUALS E HASCODE
-    @Test
-    void testEqualsEHashCode() {
-        Corso c1 = new Corso(100, "Math", "Desc", "2024");
-        Corso c2 = new Corso(100, "Storia", "Diversa", "2025");
-        Corso c3 = new Corso(200, "Math", "Desc", "2024");
-
-        assertEquals(c1, c2, "Due corsi con lo stesso codice devono essere uguali");
-        assertNotEquals(c1, c3, "Due corsi con codice diverso non devono essere uguali");
-        assertEquals(c1.hashCode(), c2.hashCode(), "L'hashcode deve essere uguale se i codici sono uguali");
     }
 
     //TEST INSERIMENTO CASO LIMITE CON 255 CARATTERI
@@ -469,4 +308,155 @@ public class CorsoTest {
 
         assertTrue(esito, "La modifica con titolo di esattamente 255 caratteri deve essere accettata");
     }
+
+
+    //TEST RIMOZIONE MATERIALE
+    @Test
+    void testRimuoviMateriale_AltriMaterialiNonInfluenzati() {
+        // inserisco un secondo materiale, poi rimuovo solo il primo
+        corso.inserisciMateriale("Materiale Da Tenere", "desc", "PUBBLICATO", "/f.pdf", "null", "SLIDE");
+        MaterialeDidattico daTenere  = corso.getMaterialeDidatticoPerTitolo("Materiale Da Tenere");
+        MaterialeDidattico daRimuovere = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        corso.rimuoviMateriale(daRimuovere);
+        assertNotNull(corso.getMaterialeDidatticoPerTitolo("Materiale Da Tenere"),
+                "Gli altri materiali non devono essere rimossi");
+        assertNull(corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE),
+                "Solo il materiale rimosso deve sparire");
+    }
+
+    //TEST TROVA MATERIALE PER TITOLO
+    @Test
+    void testGetMaterialePerTitolo_Trovato() {
+        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        assertNotNull(trovato, "Deve trovare il materiale con il titolo esatto");
+        assertEquals(TITOLO_MAT_ESISTENTE, trovato.getTitolo());
+    }
+
+    //TEST TROVA MATERIALE PER TITOLO NON TROVATO
+    @Test
+    void testGetMaterialePerTitolo_NonTrovato() {
+        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerTitolo("Titolo Inesistente");
+        assertNull(trovato, "Deve restituire null se nessun materiale ha quel titolo");
+    }
+
+    //TEST TROVA MATERIALE PER TITOLO CON CASE DIVERSO
+    @Test
+    void testGetMaterialePerTitolo_CaseSensitive() {
+        // getMaterialeDidatticoPerTitolo usa equals (case-sensitive), a differenza di inserisciMateriale
+        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE.toLowerCase());
+        assertNull(trovato, "La ricerca per titolo è case-sensitive: il lowercase non deve trovare il materiale");
+    }
+
+    //TEST TROVA MATERIALE PER ID
+    @Test
+    void testGetMaterialePerId_Trovato() {
+        MaterialeDidattico esistente = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        assertNotNull(esistente);
+        int id = esistente.getIdMateriale();
+
+        MaterialeDidattico trovato = corso.getMaterialeDidatticoPerId(id);
+
+        assertNotNull(trovato, "Deve trovare il materiale con l'id corretto");
+        assertEquals(id, trovato.getIdMateriale());
+    }
+
+    //TEST TROVA MATERIALE PER ID NON TROVATO
+    @Test
+    void testGetMaterialePerId_NonTrovato() {
+       MaterialeDidattico trovato = corso.getMaterialeDidatticoPerId(-999);
+       assertNull(trovato, "Deve restituire null per un id inesistente");
+    }
+
+    //TEST TROVA SEZIONE PER TITOLO
+    @Test
+    void testGetSezionePerTitolo_Trovata() {
+        Sezione trovata = corso.getSezionePerTitolo(TITOLO_SEZIONE);
+        assertNotNull(trovata, "Deve trovare la sezione con il titolo corretto");
+        assertEquals(TITOLO_SEZIONE, trovata.getTitolo());
+    }
+
+    //TEST TROVA SEZIONE PER TITOLO NON TROVATA
+    @Test
+    void testGetSezionePerTitolo_NonTrovata() {
+        Sezione trovata = corso.getSezionePerTitolo("Sezione Inesistente");
+        assertNull(trovata, "Deve restituire null per una sezione con titolo non presente");
+    }
+
+    //TEST TROVA SEZIONE PER TITOLO CON CASE DIVERSO
+    @Test
+    void testGetSezionePerTitolo_CaseSensitive() {
+        // getSezionePerTitolo usa equals, quindi il case conta
+        Sezione trovata = corso.getSezionePerTitolo(TITOLO_SEZIONE.toLowerCase());
+
+        assertNull(trovata, "La ricerca sezione è case-sensitive: il lowercase non deve trovare la sezione");
+    }
+
+    //INSERIMENTO INVALIDO PERCHE TITOLO NON VALIDO (OMINIMO CON CASE DIVERSO
+    @Test
+    void testInserisciMateriale_TitoloOmonimo_CaseDiverso() {
+        boolean esito = corso.inserisciMateriale(
+                TITOLO_MAT_ESISTENTE.toLowerCase(),
+                "Altra descrizione",
+                "PUBBLICATO",
+                "/files/altro.pdf",
+                "null",
+                "SLIDE"
+        );
+        assertFalse(esito, "Un titolo omonimo (case diverso) deve essere rifiutato per equalsIgnoreCase");
+    }
+
+    //INSERIMENTO VALIDO DOPO TITOLO NON VALIDO
+    @Test
+    void testInserisciMateriale_TitoloNuovoDopoOmonimiaRifiutata() {
+        corso.inserisciMateriale(TITOLO_MAT_ESISTENTE, "desc", "PUBBLICO", "/f.pdf", "null", "SLIDE");
+        boolean esito = corso.inserisciMateriale(
+                "Titolo Completamente Nuovo",
+                "desc",
+                "PUBBLICATO",
+                "/files/nuovo.pdf",
+                "null",
+                "SLIDE"
+        );
+
+        assertTrue(esito, "Dopo un rifiuto per omonimia, un titolo diverso deve essere accettato");
+    }
+
+    //TEST MODIFICA MATERIALE VALIDO (NON CAMBIARE IL TITOLO NON E' OMINIMIA)
+    @Test
+    void testModificaMateriale_StessoTitoloStessoMateriale() {
+        MaterialeDidattico esistente = corso.getMaterialeDidatticoPerTitolo(TITOLO_MAT_ESISTENTE);
+        assertNotNull(esistente);
+        String idStr = String.valueOf(esistente.getIdMateriale());
+
+        boolean esito = corso.modificaMateriale(
+                idStr,
+                TITOLO_MAT_ESISTENTE,   // stesso titolo — non è omonimia con un ALTRO materiale
+                "Descrizione aggiornata",
+                "PUBBLICATO",
+                "/files/slide_intro_v2.pdf",
+                "null",
+                "SLIDE"
+        );
+
+        assertTrue(esito, "Mantenere lo stesso titolo sullo stesso materiale non è omonimia e deve passare");
+    }
+
+
+    //----------------------
+    //TEST WHITE BOX
+    //----------------------
+
+
+    //TEST EQUALS E HASCODE
+    @Test
+    void testEqualsEHashCode() {
+        Corso c1 = new Corso(100, "Math", "Desc", "2024");
+        Corso c2 = new Corso(100, "Storia", "Diversa", "2025");
+        Corso c3 = new Corso(200, "Math", "Desc", "2024");
+
+        assertEquals(c1, c2, "Due corsi con lo stesso codice devono essere uguali");
+        assertNotEquals(c1, c3, "Due corsi con codice diverso non devono essere uguali");
+        assertEquals(c1.hashCode(), c2.hashCode(), "L'hashcode deve essere uguale se i codici sono uguali");
+    }
+
 }
